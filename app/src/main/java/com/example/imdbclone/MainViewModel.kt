@@ -24,7 +24,7 @@ class MainViewModel : ViewModel() {
                 val response = imdbService.getShows("in","netflix","series")
                 _showState.value = _showState.value.copy(
                     error = null,
-                    list = response.shows,
+                    list = response,
                     loading = false
                 )
 

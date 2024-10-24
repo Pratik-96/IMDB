@@ -1,5 +1,6 @@
 package com.example.imdbclone
 
+import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.DataClasses.ShowResponse
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
@@ -25,6 +26,6 @@ interface ApiService {
         @Query("country") country: String,
         @Query("service") service: String,
         @Query("show_type") showType: String
-    ): ShowResponse
+    ): List<ShowDetails>
 
 }
