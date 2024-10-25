@@ -17,7 +17,6 @@ import com.example.imdbclone.ui.theme.IMDBCloneTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             IMDBCloneTheme {
                 val navController = rememberNavController()

@@ -21,7 +21,8 @@ data class GenreDetails(
 )
 
 data class VerticalPoster(
-    val verticalPoster: VerticalPosterDetails?
+    val verticalPoster: VerticalPosterDetails?,
+    val horizontalPoster : HorizontalPosterDetails?
 )
 
 data class VerticalPosterDetails(
@@ -30,6 +31,16 @@ data class VerticalPosterDetails(
     val w480:String,
     val w600:String,
     val w720:String
+
+)
+
+data class HorizontalPosterDetails(
+    val w360:String,
+    val w480:String,
+    val w720:String,
+    val w1080:String,
+    val w1440:String
+
 
 )
 
