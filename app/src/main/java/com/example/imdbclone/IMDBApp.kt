@@ -8,6 +8,5 @@ import androidx.navigation.NavController
 @Composable
 fun IMDBApp(navController: NavController){
     val showViewModel:MainViewModel = viewModel()
-    val viewState by showViewModel.showState
-    TopShowScreen(viewState)
+    TopShowScreen(showViewModel)
 }

@@ -15,34 +15,56 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import com.example.imdbclone.DataClasses.ShowDetails
 
 @Composable
-fun TopShowScreen(viewState: MainViewModel.ShowState) {
-    Box(
-        modifier = Modifier.fillMaxSize()
-    ) {
-        when {
-            viewState.loading -> {
-                CircularProgressIndicator(Modifier.align(Alignment.Center))
+fun TopShowScreen(viewModel: MainViewModel) {
+
+    val netflixState by viewModel.netflixShowState
+    val appleState by viewModel.appleShowState
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        StateScreen(title = "Top 10 Netflix Shows",netflixState)
+        StateScreen(title = "Top 10 Apple Shows",appleState)
+    }
+}
+
+@Composable
+fun StateScreen(title:String,showState:MainViewModel.ShowState){
+
+    Column(modifier = Modifier.fillMaxSize()) {
+        Text(text = title, fontSize = 16.sp , modifier = Modifier.padding(8.dp))
+
+        when{
+
+            showState.loading->{
+                CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally))
             }
 
-            viewState.error != null -> {
-                Text(viewState.error, modifier = Modifier.align(Alignment.Center))
+            showState.error != null->{
+                Text(showState.error)
             }
-
-            else -> {
-                ShowsScreen(shows = viewState.list)
+            else->{
+                ShowsScreen(showState.list)
             }
         }
     }
+
 }
+
 
 @Composable
 fun ShowsScreen(shows: List<ShowDetails>) {
@@ -84,6 +106,7 @@ fun ShowItem(item: ShowDetails) {
 @Preview(showBackground = true)
 @Composable
 fun ItemPreview() {
+
 
 }
 

@@ -10,26 +10,50 @@ import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
 
-    private val _showState = mutableStateOf(ShowState())
-    val showState: State<ShowState> = _showState
+    private val _netflixShowState = mutableStateOf(ShowState())
+    val netflixShowState: State<ShowState> = _netflixShowState
+
+    private val _appleShowState = mutableStateOf(ShowState())
+    val appleShowState: State<ShowState> = _appleShowState
 
     init {
-        fetchShows()
+        fetchNetflixShows()
+        fetchAppleShows()
     }
 
-    private fun fetchShows() {
+    private fun fetchNetflixShows() {
         viewModelScope.launch {
             try {
 
                 val response = imdbService.getShows("in","netflix","series")
-                _showState.value = _showState.value.copy(
+                _netflixShowState.value = _netflixShowState.value.copy(
                     error = null,
                     list = response,
                     loading = false
                 )
 
             }catch (e:Exception){
-                _showState.value = _showState.value.copy(
+                _netflixShowState.value = _netflixShowState.value.copy(
+                    error = e.message,
+                    loading = false
+                )
+            }
+        }
+    }
+
+    private fun fetchAppleShows() {
+        viewModelScope.launch {
+            try {
+
+                val response = imdbService.getShows("in","apple","series")
+                _appleShowState.value = _appleShowState.value.copy(
+                    error = null,
+                    list = response,
+                    loading = false
+                )
+
+            }catch (e:Exception){
+                _appleShowState.value = _appleShowState.value.copy(
                     error = e.message,
                     loading = false
                 )
