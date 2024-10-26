@@ -1,7 +1,9 @@
 package com.example.imdbclone
 
 
+import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -37,7 +39,7 @@ import coil.size.Size
 import com.example.imdbclone.DataClasses.ShowDetails
 
 @Composable
-fun TopShowScreen(viewModel: MainViewModel) {
+fun TopShowScreen(viewModel: MainViewModel,navigateToDetail:(ShowDetails)->Unit) {
 
     val netflixState by viewModel.netflixShowState
     val netflixMovieState by viewModel.netflixMovieState
@@ -49,17 +51,17 @@ fun TopShowScreen(viewModel: MainViewModel) {
 
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
-        item { StateScreen(title = "Top Netflix Shows", netflixState) }
-        item { StateScreen(title = "Top Netflix Movies", netflixMovieState) }
-        item { StateScreen(title = "Top Apple Tv Shows", appleState) }
-        item { StateScreen(title = "Top Apple Tv Movies", appleMovieState) }
-        item { StateScreen(title = "Top Shows on Prime", primeState) }
-        item { StateScreen(title = "Top Movies on Prime", primeMovieState) }
+        item { StateScreen(title = "Top Netflix Shows", netflixState,navigateToDetail) }
+//        item { StateScreen(title = "Top Netflix Movies", netflixMovieState) }
+//        item { StateScreen(title = "Top Apple Tv Shows", appleState) }
+//        item { StateScreen(title = "Top Apple Tv Movies", appleMovieState) }
+//        item { StateScreen(title = "Top Shows on Prime", primeState) }
+//        item { StateScreen(title = "Top Movies on Prime", primeMovieState) }
     }
 }
 
 @Composable
-fun StateScreen(title: String, showState: MainViewModel.ShowState) {
+fun StateScreen(title: String, showState: MainViewModel.ShowState,navigateToDetail: (ShowDetails) -> Unit) {
 
     Column(modifier = Modifier.wrapContentSize()) {
 
@@ -74,7 +76,7 @@ fun StateScreen(title: String, showState: MainViewModel.ShowState) {
             }
 
             else -> {
-                ShowsScreen(showState.list, title)
+                ShowsScreen(showState.list, title,navigateToDetail)
             }
         }
     }
@@ -83,9 +85,8 @@ fun StateScreen(title: String, showState: MainViewModel.ShowState) {
 
 
 @Composable
-fun ShowsScreen(shows: List<ShowDetails>, title: String) {
+fun ShowsScreen(shows: List<ShowDetails>, title: String,navigateToDetail: (ShowDetails) -> Unit) {
     val context = LocalContext.current
-    val scrollState = rememberScrollState()
 
     val logo = shows.get(0).streamingOptions?.`in`?.get(0)?.service?.imageSet?.lightThemeImage
 
@@ -132,7 +133,7 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String) {
         ) {
             items(shows) { item ->
 
-                ShowItem(item)
+                ShowItem(item,navigateToDetail)
 
             }
         }
@@ -144,7 +145,7 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String) {
 
 
 @Composable
-fun ShowItem(item: ShowDetails) {
+fun ShowItem(item: ShowDetails,navigateToDetail: (ShowDetails) -> Unit) {
 
 
     val context = LocalContext.current
@@ -158,7 +159,15 @@ fun ShowItem(item: ShowDetails) {
         .build()
 
     Column(
-        horizontalAlignment = Alignment.CenterHorizontally
+        modifier = Modifier.clickable {
+            try {
+
+                navigateToDetail(item)
+            }catch (e:Exception){
+                Log.d("nav", "ShowItem: "+e.message)
+            }
+                                      },
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
         val painter = rememberAsyncImagePainter(

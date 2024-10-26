@@ -41,7 +41,9 @@ android {
 }
 
 dependencies {
-    implementation("io.coil-kt:coil-svg:2.2.2")
+    implementation (libs.accompanist.pager)
+    implementation (libs.accompanist.pager.indicators)
+    implementation(libs.coil.svg)
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
     implementation(libs.androidx.navigation.compose)
     implementation(libs.coil.compose)
