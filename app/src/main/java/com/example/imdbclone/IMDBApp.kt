@@ -25,12 +25,11 @@ fun IMDBApp(navHostController: NavHostController){
             val showData = navHostController.previousBackStackEntry?.
             savedStateHandle?.get<ShowDetails>("ShowData")
             if (showData != null) {
-                DetailScreen()
+                DetailScreen(showData)
             }
         }
     }
 
-//        DetailScreen()
 
 
 }
