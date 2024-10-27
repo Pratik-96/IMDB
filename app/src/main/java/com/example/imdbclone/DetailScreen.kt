@@ -1,5 +1,10 @@
 package com.example.imdbclone
 
+import android.content.Intent
+import android.net.Uri
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -14,6 +19,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -45,121 +51,151 @@ import com.example.imdbclone.ui.theme.IMDBCloneTheme
 
 @Composable
 fun DetailScreen(data:ShowDetails) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black)
-    ) {
-        Box(
-            modifier = Modifier
-        ) {
-            BackgroundPoster(data.imageSet.horizontalBackdrop?.w720 ?: "")//populate
 
-        }
-        Text(
-            text = data.title,
-            fontWeight = FontWeight.Bold,
-            color = Color.White,
-            fontSize = 24.sp,
-            modifier = Modifier.padding(8.dp)
-        )
-        Row(
-            modifier = Modifier.wrapContentSize(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            if (data.showType.equals("movie")) {
-                NormalText(data.releaseYear) // modify
-                NormalText("${data.runtime}m")
-            }else{
-                NormalText(data.firstAirYear)
-                NormalText("${data.seasonCount} Season")
-            }
-            NormalText(data.genres.get(0)?.name?:"")
-            Icon(
-                imageVector = Icons.Filled.Star,
-                contentDescription = null,
-                tint = Color.Gray,
-                modifier = Modifier.padding(top = 8.dp, start = 8.dp)
-            )
-            Text(text = "${data.rating}%", color = Gray, modifier = Modifier.padding(top = 8.dp))
-
-        }
-
-        Row(
-            modifier = Modifier.wrapContentSize(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            ImportantText("Streaming on: ")
-            Logo(data.streamingOptions?.`in`?.get(0)?.service?.imageSet?.darkThemeImage?:"")
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
 
 
-            Box(modifier = Modifier
-                .padding(8.dp)
-                .border(1.dp, color = Gray, RoundedCornerShape(4.dp))){
-                Text(data.streamingOptions?.`in`?.get(0)?.quality.toString().toUpperCase(), fontWeight = FontWeight.Bold, modifier = Modifier.padding(1.dp), color = Gray, fontSize = 12.sp)
-            }
-        }
-        Button(
-            onClick = {}, modifier = Modifier
-                .fillMaxWidth()
-                .padding(8.dp)
-                .clip(
-                    RoundedCornerShape(4.dp)
-                ),
-            colors = ButtonDefaults.buttonColors(
-                contentColor = Color.Black,
-                containerColor = Color.White
-            )
+        item {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.Black)
+            ) {
+                Box(
+                    modifier = Modifier
+                ) {
+                    BackgroundPoster(data.imageSet.horizontalBackdrop?.w720 ?: "")//populate
 
-        ) {
-            Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play")
-            ButtonText("WATCH")
-        }
-        NormalText(data.overview)
-
-        Row(
-            modifier = Modifier.wrapContentSize(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            val cast: List<String> = data.cast
-            val castString = cast.joinToString(",") { it }
-            Text(
-                "Starring: ",
-                color = Color.Gray,
-                fontSize = 14.sp,
-                modifier = Modifier.padding(start = 8.dp, top = 8.dp),
-                fontWeight = FontWeight.Bold
-            )
-            SmallText(castString)
-
-        }
-
-        Row(
-            modifier = Modifier.wrapContentSize(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp)
-        ) {
-            if(data.showType.equals("movie")){
-                val directors: List<String> = data.directors
-                val directorString = directors.joinToString(",") { it }
+                }
                 Text(
-                    "Directors: ",
-                    color = Color.Gray,
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(start = 8.dp, top = 8.dp),
-                    fontWeight = FontWeight.Bold
+                    text = data.title,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.White,
+                    fontSize = 32.sp,
+                    modifier = Modifier.padding(8.dp)
                 )
-                SmallText(directorString)
-            }else{
-                val creators: List<String> = data.creators
-                val createrString = creators.joinToString(",") { it }
-                Text(
-                    "Creators: ",
-                    color = Color.Gray,
-                    fontSize = 14.sp,
-                    modifier = Modifier.padding(start = 8.dp, top = 8.dp),
-                    fontWeight = FontWeight.Bold
-                )
-                SmallText(createrString)
+                Row(
+                    modifier = Modifier.wrapContentSize(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    if (data.showType.equals("movie")) {
+                        NormalText(data.releaseYear) // modify
+                        NormalText("${data.runtime}m")
+                    } else {
+                        NormalText(data.firstAirYear)
+                        NormalText("${data.seasonCount} Season")
+                    }
+                    NormalText(data.genres.get(0)?.name ?: "")
+                    Icon(
+                        imageVector = Icons.Filled.Star,
+                        contentDescription = null,
+                        tint = Color.Gray,
+                        modifier = Modifier.padding(top = 8.dp, start = 8.dp)
+                    )
+                    Text(
+                        text = "${data.rating}%",
+                        color = Gray,
+                        modifier = Modifier.padding(top = 8.dp)
+                    )
+
+                }
+
+                Row(
+                    modifier = Modifier.wrapContentSize(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    ImportantText("Streaming on: ")
+                    Logo(
+                        data.streamingOptions?.`in`?.get(0)?.service?.imageSet?.darkThemeImage ?: ""
+                    )
+
+
+                    Box(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .border(1.dp, color = Gray, RoundedCornerShape(4.dp))
+                    ) {
+                        Text(
+                            data.streamingOptions?.`in`?.get(0)?.quality.toString().toUpperCase(),
+                            fontWeight = FontWeight.Bold,
+                            modifier = Modifier.padding(1.dp),
+                            color = Gray,
+                            fontSize = 12.sp
+                        )
+                    }
+                }
+                val context = LocalContext.current
+                val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()){}
+                Button(
+                    onClick = {
+                        try{
+                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(data.streamingOptions?.`in`?.get(0)?.link))
+                            launcher.launch(intent)
+                        }catch (e:Exception){
+                            Toast.makeText(context,e.message,Toast.LENGTH_SHORT)
+                        }
+                    }, modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .clip(
+                            RoundedCornerShape(4.dp)
+                        ),
+                    colors = ButtonDefaults.buttonColors(
+                        contentColor = Color.Black,
+                        containerColor = Color.White
+                    )
+
+                ) {
+                    Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play")
+                    ButtonText("WATCH")
+                }
+                NormalText(data.overview)
+
+                Row(
+                    modifier = Modifier.wrapContentSize(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    val cast: List<String> = data.cast
+                    val castString = cast.joinToString(",") { it }
+                    Text(
+                        "Starring: ",
+                        color = Color.Gray,
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(start = 8.dp, top = 8.dp),
+                        fontWeight = FontWeight.Bold
+                    )
+                    SmallText(castString)
+
+                }
+
+                Row(
+                    modifier = Modifier.wrapContentSize(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    if (data.showType.equals("movie")) {
+                        val directors: List<String> = data.directors
+                        val directorString = directors.joinToString(",") { it }
+                        Text(
+                            "Directors: ",
+                            color = Color.Gray,
+                            fontSize = 14.sp,
+                            modifier = Modifier.padding(start = 8.dp, top = 8.dp),
+                            fontWeight = FontWeight.Bold
+                        )
+                        SmallText(directorString)
+                    } else {
+                        val creators: List<String> = data.creators
+                        val createrString = creators.joinToString(",") { it }
+                        Text(
+                            "Creators: ",
+                            color = Color.Gray,
+                            fontSize = 14.sp,
+                            modifier = Modifier.padding(start = 8.dp, top = 8.dp),
+                            fontWeight = FontWeight.Bold
+                        )
+                        SmallText(createrString)
+                    }
+                }
             }
         }
     }
