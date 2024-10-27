@@ -3,6 +3,7 @@ package com.example.imdbclone
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,7 +18,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
@@ -26,8 +26,12 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.Font
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -39,7 +43,7 @@ import coil.size.Size
 import com.example.imdbclone.DataClasses.ShowDetails
 
 @Composable
-fun TopShowScreen(viewModel: MainViewModel,navigateToDetail:(ShowDetails)->Unit) {
+fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> Unit) {
 
     val netflixState by viewModel.netflixShowState
     val netflixMovieState by viewModel.netflixMovieState
@@ -50,18 +54,25 @@ fun TopShowScreen(viewModel: MainViewModel,navigateToDetail:(ShowDetails)->Unit)
 
 
 
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
-        item { StateScreen(title = "Top Netflix Shows", netflixState,navigateToDetail) }
-//        item { StateScreen(title = "Top Netflix Movies", netflixMovieState) }
-//        item { StateScreen(title = "Top Apple Tv Shows", appleState) }
-//        item { StateScreen(title = "Top Apple Tv Movies", appleMovieState) }
-//        item { StateScreen(title = "Top Shows on Prime", primeState) }
-//        item { StateScreen(title = "Top Movies on Prime", primeMovieState) }
+    LazyColumn(
+        modifier = Modifier.fillMaxSize().background(Color.Black),
+
+    ) {
+        item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
+        item { StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail) }
+        item { StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail) }
+        item { StateScreen(title = "Top Apple Tv Movies", appleMovieState,navigateToDetail) }
+        item { StateScreen(title = "Top Shows on Prime", primeState,navigateToDetail) }
+        item { StateScreen(title = "Top Movies on Prime", primeMovieState,navigateToDetail) }
     }
 }
 
 @Composable
-fun StateScreen(title: String, showState: MainViewModel.ShowState,navigateToDetail: (ShowDetails) -> Unit) {
+fun StateScreen(
+    title: String,
+    showState: MainViewModel.ShowState,
+    navigateToDetail: (ShowDetails) -> Unit
+) {
 
     Column(modifier = Modifier.wrapContentSize()) {
 
@@ -76,7 +87,7 @@ fun StateScreen(title: String, showState: MainViewModel.ShowState,navigateToDeta
             }
 
             else -> {
-                ShowsScreen(showState.list, title,navigateToDetail)
+                ShowsScreen(showState.list, title, navigateToDetail)
             }
         }
     }
@@ -85,10 +96,10 @@ fun StateScreen(title: String, showState: MainViewModel.ShowState,navigateToDeta
 
 
 @Composable
-fun ShowsScreen(shows: List<ShowDetails>, title: String,navigateToDetail: (ShowDetails) -> Unit) {
+fun ShowsScreen(shows: List<ShowDetails>, title: String, navigateToDetail: (ShowDetails) -> Unit) {
     val context = LocalContext.current
 
-    val logo = shows.get(0).streamingOptions?.`in`?.get(0)?.service?.imageSet?.lightThemeImage
+    val logo = shows.get(0).streamingOptions?.`in`?.get(0)?.service?.imageSet?.darkThemeImage
 
     // Configure Coil with an ImageLoader that includes the SvgDecoder
     val imageLoader = ImageLoader.Builder(context)
@@ -96,12 +107,16 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String,navigateToDetail: (ShowD
             add(SvgDecoder.Factory())  // Add SVG decoder explicitly
         }
         .build()
-    Column(modifier = Modifier
-        .wrapContentSize(unbounded = false)
-        .padding(8.dp)) {
-        Row(modifier = Modifier
+    Column(
+        modifier = Modifier
             .wrapContentSize(unbounded = false)
-            .padding(8.dp)) {
+            .padding(8.dp)
+    ) {
+        Row(
+            modifier = Modifier
+                .wrapContentSize(unbounded = false)
+                .padding(8.dp)
+        ) {
 
             // Use the custom ImageLoader with the ImageRequest
             val painter = rememberAsyncImagePainter(
@@ -120,7 +135,7 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String,navigateToDetail: (ShowD
             )
 
             Spacer(Modifier.padding(4.dp))
-            Text(text = title, fontSize = 16.sp)
+            Text(text = title, fontSize = 16.sp, color = Color.White, fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Bold)
         }
 
 
@@ -133,7 +148,7 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String,navigateToDetail: (ShowD
         ) {
             items(shows) { item ->
 
-                ShowItem(item,navigateToDetail)
+                ShowItem(item, navigateToDetail)
 
             }
         }
@@ -145,7 +160,7 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String,navigateToDetail: (ShowD
 
 
 @Composable
-fun ShowItem(item: ShowDetails,navigateToDetail: (ShowDetails) -> Unit) {
+fun ShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
 
 
     val context = LocalContext.current
@@ -163,10 +178,10 @@ fun ShowItem(item: ShowDetails,navigateToDetail: (ShowDetails) -> Unit) {
             try {
 
                 navigateToDetail(item)
-            }catch (e:Exception){
-                Log.d("nav", "ShowItem: "+e.message)
+            } catch (e: Exception) {
+                Log.d("nav", "ShowItem: " + e.message)
             }
-                                      },
+        },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 

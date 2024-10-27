@@ -29,7 +29,15 @@ data class GenreDetails(
 @Parcelize
 data class VerticalPoster(
     val verticalPoster: VerticalPosterDetails?,
-    val horizontalPoster : HorizontalPosterDetails?
+    val horizontalPoster : HorizontalPosterDetails?,
+    val horizontalBackdrop: HorizontalBackDropPosterDetails?
+):Parcelable
+
+@Parcelize
+data class HorizontalBackDropPosterDetails(
+    val w360:String,
+    val w480:String,
+    val w720:String,
 ):Parcelable
 
 @Parcelize
