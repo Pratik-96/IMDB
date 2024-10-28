@@ -45,6 +45,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import coil.size.Size
+import com.example.imdbclone.DataClasses.ServiceMetaData
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.ui.theme.Gray
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
@@ -52,7 +53,7 @@ import com.example.imdbclone.ui.theme.IMDBCloneTheme
 @Composable
 fun DetailScreen(data:ShowDetails) {
 
-    LazyColumn(modifier = Modifier.fillMaxSize()) {
+    LazyColumn(modifier = Modifier.fillMaxSize().background(Color.Black)) {
 
 
         item {
@@ -64,7 +65,7 @@ fun DetailScreen(data:ShowDetails) {
                 Box(
                     modifier = Modifier
                 ) {
-                    BackgroundPoster(data.imageSet.horizontalBackdrop?.w720 ?: "")//populate
+                    BackgroundPoster(data.imageSet.horizontalBackdrop?.w720 ?: "")
 
                 }
                 Text(
@@ -105,9 +106,15 @@ fun DetailScreen(data:ShowDetails) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     ImportantText("Streaming on: ")
-                    Logo(
-                        data.streamingOptions?.`in`?.get(0)?.service?.imageSet?.darkThemeImage ?: ""
-                    )
+
+                   for(i in 0 until (data.streamingOptions?.`in`?.size ?: 0)) {
+                       Logo(
+                           data.streamingOptions?.`in`?.get(i)?.service?.imageSet?.darkThemeImage
+                               ?: ""
+                       )
+
+
+                   }
 
 
                     Box(
@@ -128,6 +135,9 @@ fun DetailScreen(data:ShowDetails) {
                 val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()){}
                 Button(
                     onClick = {
+
+
+                        //TODO: Add one view options dialog which will display the streaming options
                         try{
                             val intent = Intent(Intent.ACTION_VIEW, Uri.parse(data.streamingOptions?.`in`?.get(0)?.link))
                             launcher.launch(intent)
@@ -212,7 +222,7 @@ fun Logo(url: String) {
     // Configure Coil with an ImageLoader that includes the SvgDecoder
     val imageLoader = ImageLoader.Builder(context)
         .components {
-            add(SvgDecoder.Factory())  // Add SVG decoder explicitly
+             add(SvgDecoder.Factory())  // Add SVG decoder explicitly
         }
         .build()
     val painter = rememberAsyncImagePainter(

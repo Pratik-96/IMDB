@@ -28,4 +28,19 @@ interface ApiService {
         @Query("show_type") showType: String
     ): List<ShowDetails>
 
+    @GET("shows/search/filters")
+    suspend fun getFilteredShows(
+        @Query("country") country: String,
+        @Query("service") service: String,
+        @Query("catalogs") catalogs: String,
+        @Query("show_type") showType: String,
+        @Query("genres") genres: String,
+        @Query("rating_min") rating_min: Int,
+        @Query("order_by") order_by: Int,
+
+    ): List<ShowDetails>
+
+
+
+
 }
