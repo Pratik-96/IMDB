@@ -28,6 +28,13 @@ interface ApiService {
         @Query("show_type") showType: String
     ): List<ShowDetails>
 
+
+    @GET("shows/")
+    suspend fun searchShow(
+        @Query("id") id: String,
+
+    ): List<ShowDetails>
+
     @GET("shows/search/filters")
     suspend fun getFilteredShows(
         @Query("country") country: String,
