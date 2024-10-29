@@ -1,16 +1,12 @@
 package com.example.imdbclone
 
-import android.icu.text.CaseMap.Title
-import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.annotation.RequiresApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -18,21 +14,17 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material3.DrawerDefaults
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
-import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.NavigationDrawerItem
-import androidx.compose.material3.NavigationDrawerItemColors
 import androidx.compose.material3.NavigationDrawerItemDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -45,22 +37,33 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import coil.size.Size
+import com.example.imdbclone.DataClasses.ShowDetails
+import com.example.imdbclone.Screen.AppleScreen
+import com.example.imdbclone.Screen.HotstarScreen
+import com.example.imdbclone.Screen.NetflixScreen
+import com.example.imdbclone.Screen.PrimeScreen
+import com.example.imdbclone.Screen.SonyScreen
+import com.example.imdbclone.Screen.ZeeScreen
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import kotlinx.coroutines.launch
-import org.w3c.dom.Text
 
 
 data class NavigationItem(
@@ -134,17 +137,36 @@ fun NavDrawer() {
         modifier = Modifier.fillMaxSize(), color = Color.Black
     ) {
 
+
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
         var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
+
+
+        // Navigation
+        val showViewModel: MainViewModel = viewModel()
+        val navHostController = rememberNavController()
+
+
+
+
+
         ModalNavigationDrawer(
             drawerContent = {
 
                 ModalDrawerSheet(
                     drawerContainerColor = Color.Black,
-                    drawerContentColor = Color.Gray
+                    drawerContentColor = Color.Gray,
                 ) {
-
+                    Text(
+                        "Hey Pratik..!!",
+                        color = Color.White,
+                        modifier = Modifier
+                            .align(Alignment.CenterHorizontally)
+                            .padding(8.dp),
+                        fontWeight = FontWeight.Bold,
+                        fontSize = 24.sp
+                    )
                     Spacer(Modifier.height(16.dp))
                     items.forEachIndexed { index, navigationItem ->
                         NavigationDrawerItem(
@@ -179,9 +201,26 @@ fun NavDrawer() {
                             selected = index == selectedItemIndex,
                             onClick = {
                                 selectedItemIndex = index
+
+                                // Navigation
+
+
+
+
                                 scope.launch {
 
+
+                                    when (index) {
+                                        0 -> navHostController.navigate(Screens.HomeScreen.route)
+                                        1 -> navHostController.navigate(Screens.NetflixScreen.route)
+                                        2 -> navHostController.navigate(Screens.PrimeScreen.route)
+                                        3 -> navHostController.navigate(Screens.HotstarScreen.route)
+                                        4 -> navHostController.navigate(Screens.AppleScreen.route)
+                                        5 -> navHostController.navigate(Screens.SonyScreen.route)
+                                        6 -> navHostController.navigate(Screens.ZeeScreen.route)
+                                    }
                                     drawerState.close()
+
                                 }
                             },
                             modifier = Modifier
@@ -190,7 +229,8 @@ fun NavDrawer() {
                             colors = NavigationDrawerItemDefaults.colors(
                                 unselectedContainerColor = Color.Black, // Set black for unselected items
                                 selectedContainerColor = Color.DarkGray // Set dark gray for selected item
-                            ))
+                            )
+                        )
 
                     }
                 }
@@ -201,12 +241,13 @@ fun NavDrawer() {
                 .fillMaxSize()
                 .background(color = Color.Black)
         ) {
-
-
             Scaffold(modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black), topBar = {
-                TopAppBar(title = { Text("STREAM-MATE") }, navigationIcon = {
+                .background(Color.White), topBar = {
+                TopAppBar(title = {
+                        Text("STREAM-MATE")
+
+                }, navigationIcon = {
                     IconButton(onClick = {
 
                         scope.launch {
@@ -217,11 +258,64 @@ fun NavDrawer() {
                         Icon(imageVector = Icons.Filled.Menu, contentDescription = null)
                     }
                 })
-            }) {}
+            }) { innerPadding ->
+                val showViewModel: MainViewModel = viewModel()
+
+                NavHost(
+                    navController = navHostController,
+                    startDestination = Screens.HomeScreen.route,
+                    modifier = Modifier.padding(innerPadding)
+                ) {
+                    composable(route = Screens.HomeScreen.route) {
+                        TopShowScreen(showViewModel, navigateToDetail = {
+                            navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                                "ShowData",
+                                it
+                            )
+                            navHostController.navigate(Screens.DetailScreen.route)
+                        })
+
+                    }
+
+                    composable(route = Screens.DetailScreen.route) {
+                        val showData =
+                            navHostController.previousBackStackEntry?.savedStateHandle?.get<ShowDetails>(
+                                "ShowData"
+                            )
+                        if (showData != null) {
+                            DetailScreen(showData)
+                        }
+                    }
+                    composable(route = Screens.NetflixScreen.route) {
+                        NetflixScreen()
+                    }
+
+//
+                    composable(route = Screens.PrimeScreen.route) {
+                        PrimeScreen()
+                    }
+                    composable(route = Screens.HotstarScreen.route) {
+                        HotstarScreen()
+                    }
+                    composable(route = Screens.AppleScreen.route) {
+                        AppleScreen()
+                    }
+                    composable(route = Screens.SonyScreen.route) {
+                        SonyScreen()
+                    }
+                    composable(route = Screens.ZeeScreen.route) {
+                        ZeeScreen()
+                    }
+
+                }
+
+
+            }
 
         }
     }
 }
+
 
 @Composable
 fun NavLogo(url: String) {

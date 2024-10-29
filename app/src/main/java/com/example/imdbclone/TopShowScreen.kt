@@ -59,11 +59,11 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
     ) {
         item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
-        item { StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail) }
-        item { StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail) }
-        item { StateScreen(title = "Top Apple Tv Movies", appleMovieState,navigateToDetail) }
-        item { StateScreen(title = "Top Shows on Prime", primeState,navigateToDetail) }
-        item { StateScreen(title = "Top Movies on Prime", primeMovieState,navigateToDetail) }
+//        item { StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail) }
+//        item { StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail) }
+//        item { StateScreen(title = "Top Apple Tv Movies", appleMovieState,navigateToDetail) }
+//        item { StateScreen(title = "Top Shows on Prime", primeState,navigateToDetail) }
+//        item { StateScreen(title = "Top Movies on Prime", primeMovieState,navigateToDetail) }
     }
 }
 
