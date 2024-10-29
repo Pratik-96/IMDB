@@ -218,7 +218,6 @@ fun DetailScreen(data:ShowDetails) {
 fun Logo(url: String) {
     val context = LocalContext.current
     // Redundant code make a fun
-
     // Configure Coil with an ImageLoader that includes the SvgDecoder
     val imageLoader = ImageLoader.Builder(context)
         .components {
