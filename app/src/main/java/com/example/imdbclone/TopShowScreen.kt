@@ -38,6 +38,8 @@ import androidx.compose.ui.unit.sp
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
 import coil.request.ImageRequest
 import coil.size.Size
 import com.example.imdbclone.DataClasses.ShowDetails
@@ -51,6 +53,7 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
     val appleMovieState by viewModel.appleMovieState
     val primeState by viewModel.primeShowDetails
     val primeMovieState by viewModel.primeMovieDetails
+    val hostarState by viewModel.hotstarShowDetails
 
 
 
@@ -64,6 +67,7 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
         item { StateScreen(title = "Top Apple Tv Movies", appleMovieState,navigateToDetail) }
         item { StateScreen(title = "Top Shows on Prime", primeState,navigateToDetail) }
         item { StateScreen(title = "Top Movies on Prime", primeMovieState,navigateToDetail) }
+        item { StateScreen(title = "Top Shows on Hotstar", hostarState,navigateToDetail) }
     }
 }
 
@@ -170,6 +174,14 @@ fun ShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
     val imageLoader = ImageLoader.Builder(context)
         .components {
             add(SvgDecoder.Factory())  // Add SVG decoder explicitly
+        }.memoryCache {
+            MemoryCache.Builder(context)
+                .maxSizePercent(0.25)
+                .build()
+        }
+        .diskCache {
+            DiskCache.Builder().directory(context.cacheDir.resolve("image_cache"))
+                .maxSizeBytes(512*1024*1024).build()
         }
         .build()
 

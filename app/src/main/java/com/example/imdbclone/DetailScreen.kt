@@ -2,6 +2,7 @@ package com.example.imdbclone
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -17,7 +18,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -27,9 +27,13 @@ import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -37,23 +41,27 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
 import coil.request.ImageRequest
 import coil.size.Size
-import com.example.imdbclone.DataClasses.ServiceMetaData
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.ui.theme.Gray
-import com.example.imdbclone.ui.theme.IMDBCloneTheme
 
 @Composable
-fun DetailScreen(data:ShowDetails) {
+fun DetailScreen(data: ShowDetails) {
 
-    LazyColumn(modifier = Modifier.fillMaxSize().background(Color.Black)) {
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    ) {
 
 
         item {
@@ -107,14 +115,14 @@ fun DetailScreen(data:ShowDetails) {
                 ) {
                     ImportantText("Streaming on: ")
 
-                   for(i in 0 until (data.streamingOptions?.`in`?.size ?: 0)) {
-                       Logo(
-                           data.streamingOptions?.`in`?.get(i)?.service?.imageSet?.darkThemeImage
-                               ?: ""
-                       )
+                    for (i in 0 until (data.streamingOptions?.`in`?.size ?: 0)) {
+                        Logo(
+                            data.streamingOptions?.`in`?.get(i)?.service?.imageSet?.darkThemeImage
+                                ?: ""
+                        )
 
 
-                   }
+                    }
 
 
                     Box(
@@ -122,28 +130,31 @@ fun DetailScreen(data:ShowDetails) {
                             .padding(8.dp)
                             .border(1.dp, color = Gray, RoundedCornerShape(4.dp))
                     ) {
-                        Text(
-                            data.streamingOptions?.`in`?.get(0)?.quality.toString().toUpperCase(),
-                            fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(1.dp),
-                            color = Gray,
-                            fontSize = 12.sp
-                        )
+                        if (data.streamingOptions?.`in`?.get(0)?.quality.toString().toUpperCase()
+                                .isNullOrEmpty()
+                        ) {
+                            Text(
+                                data.streamingOptions?.`in`?.get(0)?.quality.toString()
+                                    .toUpperCase(),
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(1.dp),
+                                color = Gray,
+                                fontSize = 12.sp
+                            )
+                        }
+
                     }
                 }
-                val context = LocalContext.current
-                val launcher = rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()){}
+                var showDialog by remember { mutableStateOf(false) }
+
                 Button(
                     onClick = {
 
+                        showDialog = true
+
 
                         //TODO: Add one view options dialog which will display the streaming options
-                        try{
-                            val intent = Intent(Intent.ACTION_VIEW, Uri.parse(data.streamingOptions?.`in`?.get(0)?.link))
-                            launcher.launch(intent)
-                        }catch (e:Exception){
-                            Toast.makeText(context,e.message,Toast.LENGTH_SHORT)
-                        }
+
                     }, modifier = Modifier
                         .fillMaxWidth()
                         .padding(8.dp)
@@ -158,6 +169,9 @@ fun DetailScreen(data:ShowDetails) {
                 ) {
                     Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play")
                     ButtonText("WATCH")
+                    if (showDialog) {
+                        ServiceDialog ({ showDialog = false },data)
+                    }
                 }
                 NormalText(data.overview)
 
@@ -215,13 +229,60 @@ fun DetailScreen(data:ShowDetails) {
 
 
 @Composable
+fun ServiceDialog(onDismiss: () -> Unit,data: ShowDetails) {
+    val context = LocalContext.current
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
+    Dialog(onDismissRequest = onDismiss) {
+
+        Column(modifier = Modifier
+            .background(Color.DarkGray)
+            .padding(16.dp)) {
+            for (i in 0 until (data.streamingOptions?.`in`?.size ?: 0)) {
+                IconButton(onClick = {
+                    try {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse(data.streamingOptions?.`in`?.get(i)?.link)
+                        )
+                        launcher.launch(intent)
+                    } catch (e: Exception) {
+                        Toast.makeText(context, e.message, Toast.LENGTH_SHORT)
+                    }
+                }) {
+                    NavLogo(
+                        data.streamingOptions?.`in`?.get(i)?.service?.imageSet?.darkThemeImage
+                            ?: ""
+                    )
+
+                }
+
+
+            }
+
+        }
+    }
+}
+
+
+
+@Composable
 fun Logo(url: String) {
     val context = LocalContext.current
     // Redundant code make a fun
     // Configure Coil with an ImageLoader that includes the SvgDecoder
     val imageLoader = ImageLoader.Builder(context)
         .components {
-             add(SvgDecoder.Factory())  // Add SVG decoder explicitly
+            add(SvgDecoder.Factory())  // Add SVG decoder explicitly
+        }
+        .memoryCache {
+            MemoryCache.Builder(context)
+                .maxSizePercent(0.25)
+                .build()
+        }
+        .diskCache {
+            DiskCache.Builder().directory(context.cacheDir.resolve("image_cache"))
+                .maxSizeBytes(512 * 1024 * 1024).build()
         }
         .build()
     val painter = rememberAsyncImagePainter(
@@ -236,14 +297,12 @@ fun Logo(url: String) {
         modifier = Modifier
             .padding(top = 8.dp)
             .size(width = 50.dp, height = 24.dp),
-        contentDescription = null,
-        contentScale = ContentScale.Crop
-
+        contentDescription = null
     )
 }
 
 @Composable
-fun BackgroundPoster(url:String) {
+fun BackgroundPoster(url: String) {
     val context = LocalContext.current
 
 

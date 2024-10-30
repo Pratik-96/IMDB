@@ -1,5 +1,6 @@
 package com.example.imdbclone
 
+import com.example.imdbclone.DataClasses.Show
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.DataClasses.ShowResponse
 import okhttp3.OkHttpClient
@@ -41,11 +42,10 @@ interface ApiService {
         @Query("service") service: String,
         @Query("catalogs") catalogs: String,
         @Query("show_type") showType: String,
-        @Query("genres") genres: String,
         @Query("rating_min") rating_min: Int,
-        @Query("order_by") order_by: Int,
 
-    ): List<ShowDetails>
+
+    ): Show
 
 
 

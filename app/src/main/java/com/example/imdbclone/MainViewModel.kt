@@ -30,6 +30,9 @@ class MainViewModel : ViewModel() {
     private val _primeMovieState = mutableStateOf(ShowState())
     val primeMovieDetails:State<ShowState> = _primeMovieState
 
+    private val _hotstarShowState = mutableStateOf(ShowState())
+    val hotstarShowDetails:State<ShowState> = _hotstarShowState
+
     init {
         fetchNetflixShows()
         fetchNetflixMovies()
@@ -37,6 +40,7 @@ class MainViewModel : ViewModel() {
         fetchAppleMovies()
         fetchPrimeShows()
         fetchPrimeMovies()
+        fetchHotstarShows()
     }
 
     private fun fetchNetflixShows() {
@@ -52,6 +56,27 @@ class MainViewModel : ViewModel() {
 
             }catch (e:Exception){
                 _netflixShowState.value = _netflixShowState.value.copy(
+                    error = e.message,
+                    loading = false
+                )
+            }
+        }
+    }
+
+
+    private fun fetchHotstarShows() {
+        viewModelScope.launch {
+            try {
+
+                val response = imdbService.getFilteredShows("in","hotstar","hotstar","series",75)
+                _hotstarShowState.value = _hotstarShowState.value.copy(
+                    error = null,
+                    list = response.shows,
+                    loading = false
+                )
+
+            }catch (e:Exception){
+                _hotstarShowState.value = _hotstarShowState.value.copy(
                     error = e.message,
                     loading = false
                 )
