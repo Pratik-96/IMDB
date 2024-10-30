@@ -17,7 +17,9 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -30,7 +32,9 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberDrawerState
+import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -143,6 +147,7 @@ fun NavDrawer() {
         val scope = rememberCoroutineScope()
         var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
         var selectedItem by remember{ mutableStateOf("") }
+        val scrollState = rememberTopAppBarState()
 
         // Navigation
         val showViewModel: MainViewModel = viewModel()
@@ -244,14 +249,26 @@ fun NavDrawer() {
         ) {
             Scaffold(modifier = Modifier
                 .fillMaxSize()
-                .background(Color.White), topBar = {
+                .background(Color.Black), topBar = {
                 TopAppBar(title = {
 
-                    if (selectedItem.isNotEmpty()){
-                        NavLogo(selectedItem)
+                    Row(
+                        modifier = Modifier.wrapContentSize(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        if (selectedItem.isNotEmpty()){
+                            NavLogo(selectedItem)
+//                        Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search", modifier = Modifier.padding(8.dp))
+                        }
+                        Spacer(Modifier.weight(1f))
+                        IconButton(onClick = {}) {
+                            Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
+                        }
+
                     }
 
                 }, navigationIcon = {
+
                     IconButton(onClick = {
 
                         scope.launch {
@@ -260,6 +277,7 @@ fun NavDrawer() {
 
                     }) {
                         Icon(imageVector = Icons.Filled.Menu, contentDescription = null)
+
                     }
                 })
             }) { innerPadding ->
