@@ -24,6 +24,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
@@ -99,10 +100,10 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     if (data.showType.equals("movie")) {
-                        NormalText(data.releaseYear) // modify
+                        NormalText(data.releaseYear.toString()) // modify
                         NormalText("${data.runtime}m")
                     } else {
-                        NormalText(data.firstAirYear)
+                        NormalText(data.firstAirYear.toString())
                         NormalText("${data.seasonCount} Season")
                     }
                     NormalText(data.genres.get(0)?.name ?: "")
@@ -207,8 +208,8 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                     horizontalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
                     if (data.showType.equals("movie")) {
-                        val directors: List<String> = data.directors
-                        val directorString = directors.joinToString(",") { it }
+                        val directors: List<String?> = data.directors
+                        val directorString = directors.joinToString(",") { it.toString() }
                         Text(
                             "Directors: ",
                             color = Color.Gray,
@@ -218,8 +219,8 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                         )
                         SmallText(directorString)
                     } else {
-                        val creators: List<String> = data.creators
-                        val createrString = creators.joinToString(",") { it }
+                        val creators: List<String?> = data.creators
+                        val createrString = creators.joinToString(",") { it.toString() }
                         Text(
                             "Creators: ",
                             color = Color.Gray,
@@ -379,11 +380,11 @@ fun BackgroundPoster(url: String,navHostController: NavHostController) {
             onClick = {
                 navHostController.popBackStack()
             },
-            modifier = Modifier.padding(8.dp).shadow(elevation = 10.dp).align(Alignment.TopStart),
+            modifier = Modifier.padding(8.dp).shadow(elevation = 10.dp).align(Alignment.TopEnd),
             colors = IconButtonDefaults.iconButtonColors(containerColor = Color.Black.copy(alpha = 0.6f))
         ) {
             Icon(
-                imageVector = Icons.Filled.ArrowBack,
+                imageVector = Icons.Filled.Close,
                 contentDescription = null,
                 tint = Color.White
             )

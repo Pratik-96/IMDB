@@ -48,6 +48,13 @@ interface ApiService {
     ): Show
 
 
+@GET("shows/search/filters")
+    suspend fun searchShow(
+        @Query("country") country: String,
+        @Query("title") title: String
+    ): ShowDetails
+
+
 
 
 }

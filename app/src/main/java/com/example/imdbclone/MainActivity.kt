@@ -1,7 +1,7 @@
 package com.example.imdbclone
 
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -19,7 +19,6 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -33,9 +32,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarColors
-import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.material3.rememberTopAppBarState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -153,7 +150,7 @@ fun NavDrawer() {
         val showViewModel: MainViewModel = viewModel()
         val navHostController = rememberNavController()
 
-
+        val context = LocalContext.current
 
 
 
@@ -264,7 +261,10 @@ fun NavDrawer() {
 //                        Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search", modifier = Modifier.padding(8.dp))
                                         }
                                         Spacer(Modifier.weight(1f))
-                                        IconButton(onClick = {}) {
+                                        IconButton(onClick = {
+                                            context.startActivity(Intent(context,SearchActivity::class.java))
+
+                                        }) {
                                             Icon(
                                                 imageVector = Icons.Default.Search,
                                                 contentDescription = "Search"
@@ -312,6 +312,8 @@ fun NavDrawer() {
                 ) {
                     composable(route = Screens.HomeScreen.route) {
                         TopShowScreen(showViewModel, navigateToDetail = {
+
+
                             navHostController.currentBackStackEntry?.savedStateHandle?.set(
                                 "ShowData",
                                 it
@@ -334,7 +336,8 @@ fun NavDrawer() {
                         NetflixScreen()
                     }
 
-//
+
+
                     composable(route = Screens.PrimeScreen.route) {
                         PrimeScreen()
                     }
