@@ -3,13 +3,18 @@ package com.example.imdbclone
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imdbclone.DataClasses.ShowDetails
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
+
+
 
     private val _netflixShowState = mutableStateOf(ShowState())
     val netflixShowState: State<ShowState> = _netflixShowState

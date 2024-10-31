@@ -23,12 +23,15 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,14 +41,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
@@ -58,7 +66,7 @@ import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.ui.theme.Gray
 
 @Composable
-fun DetailScreen(data: ShowDetails) {
+fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
 
     LazyColumn(
         modifier = Modifier
@@ -76,7 +84,7 @@ fun DetailScreen(data: ShowDetails) {
                 Box(
                     modifier = Modifier
                 ) {
-                    BackgroundPoster(data.imageSet.horizontalBackdrop?.w720 ?: "")
+                    BackgroundPoster(data.imageSet.horizontalBackdrop?.w720 ?: "",navHostController)
 
                 }
                 Text(
@@ -156,7 +164,6 @@ fun DetailScreen(data: ShowDetails) {
                         showDialog = true
 
 
-                        //TODO: Add one view options dialog which will display the streaming options
 
                     }, modifier = Modifier
                         .fillMaxWidth()
@@ -246,7 +253,6 @@ fun ServiceDialog(onDismiss: () -> Unit, data: ShowDetails) {
         ) {
 
             LargeText("Select Platform:")
-            //TODO: Design the dialog box
             for (i in 0 until (data.streamingOptions?.`in`?.size ?: 0)) {
 
                     data.streamingOptions?.`in`?.get(i)?.let {
@@ -339,10 +345,9 @@ fun Logo(url: String) {
 }
 
 @Composable
-fun BackgroundPoster(url: String) {
+fun BackgroundPoster(url: String,navHostController: NavHostController) {
     val context = LocalContext.current
-
-
+    val viewModel:MainViewModel = viewModel()
     // Configure Coil with an ImageLoader that includes the SvgDecoder
     val imageLoader = ImageLoader.Builder(context)
         .components {
@@ -356,16 +361,36 @@ fun BackgroundPoster(url: String) {
             .build(),
         imageLoader = imageLoader
     )
-    Image(
-        painter = painter,
-        contentDescription = null,
-        modifier = Modifier
-            .fillMaxWidth()
-            .aspectRatio(16f / 9f),
-        contentScale = ContentScale.Crop
 
-    )
+    Box(modifier = Modifier.fillMaxSize()) {
+
+        Image(
+            painter = painter,
+            contentDescription = null,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(8.dp)
+                .clip(shape = RoundedCornerShape(24.dp))
+                .aspectRatio(16f / 9f),
+            contentScale = ContentScale.Crop
+
+        )
+        IconButton(
+            onClick = {
+                navHostController.popBackStack()
+            },
+            modifier = Modifier.padding(8.dp).shadow(elevation = 10.dp).align(Alignment.TopStart),
+            colors = IconButtonDefaults.iconButtonColors(containerColor = Color.Black.copy(alpha = 0.6f))
+        ) {
+            Icon(
+                imageVector = Icons.Filled.ArrowBack,
+                contentDescription = null,
+                tint = Color.White
+            )
+        }
+    }
 }
+
 
 
 @Composable

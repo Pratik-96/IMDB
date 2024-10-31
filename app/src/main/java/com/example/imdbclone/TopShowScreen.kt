@@ -57,6 +57,8 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
 
 
+
+
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
@@ -89,7 +91,7 @@ fun StateScreen(
             }
 
             showState.error != null -> {
-                Text(showState.error)
+                Text(showState.error, color = Color.White)
             }
 
             else -> {

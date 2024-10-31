@@ -32,6 +32,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.TopAppBarScrollBehavior
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.material3.rememberTopAppBarState
@@ -83,7 +84,7 @@ data class NavigationItem(
 val items = listOf(
     NavigationItem(
         name = "Home",
-        url = "",
+        url = "https://img10.hotstar.com/image/upload/f_auto,q_90,w_3840/sources/r1/cms/prod/3782/1443782-h-afdfe6e7c6cb",
         unSelectedItem = Icons.Outlined.Home,
         selectedIcon = Icons.Filled.Home,
         route = Screens.HomeScreen.route
@@ -147,7 +148,6 @@ fun NavDrawer() {
         val scope = rememberCoroutineScope()
         var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
         var selectedItem by remember{ mutableStateOf("") }
-        val scrollState = rememberTopAppBarState()
 
         // Navigation
         val showViewModel: MainViewModel = viewModel()
@@ -249,37 +249,59 @@ fun NavDrawer() {
         ) {
             Scaffold(modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black), topBar = {
-                TopAppBar(title = {
+                .background(Color.Black),
+                topBar = {
 
-                    Row(
-                        modifier = Modifier.wrapContentSize(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        if (selectedItem.isNotEmpty()){
-                            NavLogo(selectedItem)
+                                TopAppBar(title = {
+
+
+                                    Row(
+                                        modifier = Modifier.wrapContentSize(),
+                                        horizontalArrangement = Arrangement.SpaceBetween
+                                    ) {
+                                        if (selectedItem.isNotEmpty()) {
+                                            NavLogo(selectedItem)
 //                        Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search", modifier = Modifier.padding(8.dp))
-                        }
-                        Spacer(Modifier.weight(1f))
-                        IconButton(onClick = {}) {
-                            Icon(imageVector = Icons.Default.Search, contentDescription = "Search")
-                        }
+                                        }
+                                        Spacer(Modifier.weight(1f))
+                                        IconButton(onClick = {}) {
+                                            Icon(
+                                                imageVector = Icons.Default.Search,
+                                                contentDescription = "Search"
+                                            )
+                                        }
 
-                    }
+                                    }
 
-                }, navigationIcon = {
 
-                    IconButton(onClick = {
+                                },
+                                    navigationIcon = {
 
-                        scope.launch {
-                            drawerState.open()
-                        }
+                                        IconButton(onClick = {
 
-                    }) {
-                        Icon(imageVector = Icons.Filled.Menu, contentDescription = null)
+                                            scope.launch {
+                                                drawerState.open()
+                                            }
 
-                    }
-                })
+                                        }) {
+                                            Icon(
+                                                imageVector = Icons.Filled.Menu,
+                                                contentDescription = null
+                                            )
+
+                                        }
+                                    },
+                                    modifier = Modifier.wrapContentSize()
+                                        .background(Color.DarkGray),
+                                    colors = TopAppBarColors(
+                                        containerColor = Color.DarkGray,
+                                        scrolledContainerColor = Color.DarkGray,
+                                        navigationIconContentColor = Color.White,
+                                        titleContentColor = Color.White,
+                                        actionIconContentColor = Color.White
+                                    )
+                                )
+
             }) { innerPadding ->
                 val showViewModel: MainViewModel = viewModel()
 
@@ -305,7 +327,7 @@ fun NavDrawer() {
                                 "ShowData"
                             )
                         if (showData != null) {
-                            DetailScreen(showData)
+                            DetailScreen(showData,navHostController)
                         }
                     }
                     composable(route = Screens.NetflixScreen.route) {
