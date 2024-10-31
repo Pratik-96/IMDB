@@ -58,7 +58,9 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
 
     LazyColumn(
-        modifier = Modifier.fillMaxSize().background(Color.Black),
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black),
 
     ) {
         item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
@@ -198,10 +200,8 @@ fun ShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
     ) {
 
         val painter = rememberAsyncImagePainter(
-            model = ImageRequest.Builder(context)
-                .data(item.imageSet.horizontalPoster?.w360)
-                .size(Size.ORIGINAL)  // Adjust as needed
-                .build(),
+            model =  item.imageSet.horizontalPoster?.w360 // Adjust as needed
+                ,
             imageLoader = imageLoader
         )
         Image(

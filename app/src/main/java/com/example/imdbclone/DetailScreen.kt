@@ -238,6 +238,9 @@ fun ServiceDialog(onDismiss: () -> Unit,data: ShowDetails) {
         Column(modifier = Modifier
             .background(Color.DarkGray)
             .padding(16.dp)) {
+
+            //TODO: Design the dialog box
+
             for (i in 0 until (data.streamingOptions?.`in`?.size ?: 0)) {
                 IconButton(onClick = {
                     try {
