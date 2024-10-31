@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -34,6 +35,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
@@ -51,6 +53,7 @@ import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.request.ImageRequest
 import coil.size.Size
+import com.example.imdbclone.DataClasses.ServiceMetaData
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.ui.theme.Gray
 
@@ -170,7 +173,7 @@ fun DetailScreen(data: ShowDetails) {
                     Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play")
                     ButtonText("WATCH")
                     if (showDialog) {
-                        ServiceDialog ({ showDialog = false },data)
+                        ServiceDialog({ showDialog = false }, data)
                     }
                 }
                 NormalText(data.overview)
@@ -229,37 +232,28 @@ fun DetailScreen(data: ShowDetails) {
 
 
 @Composable
-fun ServiceDialog(onDismiss: () -> Unit,data: ShowDetails) {
-    val context = LocalContext.current
-    val launcher =
-        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
+fun ServiceDialog(onDismiss: () -> Unit, data: ShowDetails) {
+
     Dialog(onDismissRequest = onDismiss) {
 
-        Column(modifier = Modifier
-            .background(Color.DarkGray)
-            .padding(16.dp)) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.DarkGray, shape = RoundedCornerShape(16.dp))
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
 
+        ) {
+
+            LargeText("Select Platform:")
             //TODO: Design the dialog box
-
             for (i in 0 until (data.streamingOptions?.`in`?.size ?: 0)) {
-                IconButton(onClick = {
-                    try {
-                        val intent = Intent(
-                            Intent.ACTION_VIEW,
-                            Uri.parse(data.streamingOptions?.`in`?.get(i)?.link)
+
+                    data.streamingOptions?.`in`?.get(i)?.let {
+                        DialogLogo(
+                            it
                         )
-                        launcher.launch(intent)
-                    } catch (e: Exception) {
-                        Toast.makeText(context, e.message, Toast.LENGTH_SHORT)
                     }
-                }) {
-                    NavLogo(
-                        data.streamingOptions?.`in`?.get(i)?.service?.imageSet?.darkThemeImage
-                            ?: ""
-                    )
-
-                }
-
 
             }
 
@@ -267,6 +261,46 @@ fun ServiceDialog(onDismiss: () -> Unit,data: ShowDetails) {
     }
 }
 
+@Composable
+fun DialogLogo(data: ServiceMetaData) {
+    // Redundant code make a fun
+    val context = LocalContext.current
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
+    // Configure Coil with an ImageLoader that includes the SvgDecoder
+    val imageLoader = ImageLoader.Builder(context).components {
+        add(SvgDecoder.Factory())  // Add SVG decoder explicitly
+    }.build()
+    val painter = rememberAsyncImagePainter(
+        model = ImageRequest.Builder(context).data(
+            data.service.imageSet?.darkThemeImage
+                ?: ""
+        ).size(Size.ORIGINAL)  // Adjust as needed
+            .build(), imageLoader = imageLoader
+    )
+    Image(
+        painter = painter,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp)
+            .size(width = 100.dp, height = 64.dp)
+            .clickable {
+                try {
+                    val intent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse(data.link)
+                    )
+                    launcher.launch(intent)
+                } catch (e: Exception) {
+                    Toast
+                        .makeText(context, e.message, Toast.LENGTH_SHORT)
+                        .show()
+                }
+            },
+        contentDescription = null,
+
+        )
+}
 
 
 @Composable
@@ -350,6 +384,10 @@ fun ButtonText(text: String) {
 @Composable
 fun NormalText(text: String) {
     Text(text = text, color = Color.Gray, fontSize = 16.sp, modifier = Modifier.padding(8.dp))
+}
+@Composable
+fun LargeText(text: String) {
+    Text(text = text, color = Color.White, fontSize = 24.sp, modifier = Modifier.padding(8.dp), fontWeight = FontWeight.Bold)
 }
 
 @Composable
