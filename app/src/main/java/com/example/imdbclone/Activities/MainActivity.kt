@@ -64,6 +64,7 @@ import com.example.imdbclone.Screen.ImportantText
 import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.Screen.AppleScreen
 import com.example.imdbclone.Screen.HotstarScreen
+import com.example.imdbclone.Screen.LargeText
 import com.example.imdbclone.Screen.NetflixScreen
 import com.example.imdbclone.Screen.PrimeScreen
 import com.example.imdbclone.Screen.SonyScreen
@@ -86,7 +87,7 @@ data class NavigationItem(
 val items = listOf(
     NavigationItem(
         name = "Home",
-        url = "https://img10.hotstar.com/image/upload/f_auto,q_90,w_3840/sources/r1/cms/prod/3782/1443782-h-afdfe6e7c6cb",
+        url = "",
         unSelectedItem = Icons.Outlined.Home,
         selectedIcon = Icons.Filled.Home,
         route = Screens.HomeScreen.route
@@ -265,8 +266,11 @@ fun NavDrawer() {
                                             NavLogo(selectedItem)
 //                        Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search", modifier = Modifier.padding(8.dp))
                                         }
+                                        if (selectedItemIndex==0){
+                                            LargeText("For Pratik")
+                                        }
                                         Spacer(Modifier.weight(1f))
-                                        IconButton(onClick = {
+                                        IconButton( onClick = {
                                             context.startActivity(Intent(context, SearchActivity::class.java))
 
                                         }) {
@@ -299,7 +303,7 @@ fun NavDrawer() {
                                     modifier = Modifier.wrapContentSize()
                                         .background(Color.DarkGray),
                                     colors = TopAppBarColors(
-                                        containerColor = Color.DarkGray,
+                                        containerColor = Color.Black,
                                         scrolledContainerColor = Color.DarkGray,
                                         navigationIconContentColor = Color.White,
                                         titleContentColor = Color.White,
