@@ -1,4 +1,4 @@
-package com.example.imdbclone
+package com.example.imdbclone.Screen
 
 
 import android.util.Log
@@ -29,7 +29,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -43,6 +42,7 @@ import coil.memory.MemoryCache
 import coil.request.ImageRequest
 import coil.size.Size
 import com.example.imdbclone.DataClasses.ShowDetails
+import com.example.imdbclone.ViewModels.MainViewModel
 
 @Composable
 fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> Unit) {
@@ -65,7 +65,7 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
             .background(Color.Black),
 
     ) {
-        item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
+//        item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
 //        item { StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail) }
 //        item { StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail) }
 //        item { StateScreen(title = "Top Apple Tv Movies", appleMovieState,navigateToDetail) }

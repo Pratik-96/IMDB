@@ -7,7 +7,6 @@ import kotlinx.parcelize.Parcelize
 data class Show(
     val shows:List<ShowDetails>
 ):Parcelable
-
 @Parcelize
 data class ShowDetails(
     val itemType: String,

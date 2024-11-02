@@ -1,4 +1,4 @@
-package com.example.imdbclone
+package com.example.imdbclone.Activities
 
 import android.content.Intent
 import android.os.Bundle
@@ -59,12 +59,17 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import coil.size.Size
 import com.example.imdbclone.DataClasses.ShowDetails
+import com.example.imdbclone.Screen.DetailScreen
+import com.example.imdbclone.Screen.ImportantText
+import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.Screen.AppleScreen
 import com.example.imdbclone.Screen.HotstarScreen
 import com.example.imdbclone.Screen.NetflixScreen
 import com.example.imdbclone.Screen.PrimeScreen
 import com.example.imdbclone.Screen.SonyScreen
 import com.example.imdbclone.Screen.ZeeScreen
+import com.example.imdbclone.Screen.Screens
+import com.example.imdbclone.Screen.TopShowScreen
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import kotlinx.coroutines.launch
 
@@ -262,7 +267,7 @@ fun NavDrawer() {
                                         }
                                         Spacer(Modifier.weight(1f))
                                         IconButton(onClick = {
-                                            context.startActivity(Intent(context,SearchActivity::class.java))
+                                            context.startActivity(Intent(context, SearchActivity::class.java))
 
                                         }) {
                                             Icon(

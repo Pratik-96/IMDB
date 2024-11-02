@@ -1,8 +1,7 @@
-package com.example.imdbclone
+package com.example.imdbclone.Screen
 
 import android.content.Intent
 import android.net.Uri
-import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -23,7 +22,6 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
@@ -31,7 +29,6 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.IconButtonColors
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -48,13 +45,11 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
@@ -64,6 +59,7 @@ import coil.request.ImageRequest
 import coil.size.Size
 import com.example.imdbclone.DataClasses.ServiceMetaData
 import com.example.imdbclone.DataClasses.ShowDetails
+import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.ui.theme.Gray
 
 @Composable
@@ -348,7 +344,7 @@ fun Logo(url: String) {
 @Composable
 fun BackgroundPoster(url: String,navHostController: NavHostController) {
     val context = LocalContext.current
-    val viewModel:MainViewModel = viewModel()
+    val viewModel: MainViewModel = viewModel()
     // Configure Coil with an ImageLoader that includes the SvgDecoder
     val imageLoader = ImageLoader.Builder(context)
         .components {
