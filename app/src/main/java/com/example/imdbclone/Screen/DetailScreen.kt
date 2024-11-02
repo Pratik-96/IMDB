@@ -107,11 +107,12 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                         imageVector = Icons.Filled.Star,
                         contentDescription = null,
                         tint = Color.Gray,
-                        modifier = Modifier.padding(top = 8.dp, start = 8.dp)
+                        modifier = Modifier.padding(top = 6.dp, start = 8.dp)
                     )
                     Text(
                         text = "${data.rating}%",
                         color = Gray,
+                        fontSize = 16.sp,
                         modifier = Modifier.padding(top = 8.dp)
                     )
 
@@ -226,6 +227,16 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                         )
                         SmallText(createrString)
                     }
+
+                }
+                if (!data.showType.equals("movie")) {
+                    Text(
+                        "No. of episodes: ${data.episodeCount}",
+                        color = Color.Gray,
+                        fontSize = 14.sp,
+                        modifier = Modifier.padding(start = 8.dp, top = 8.dp),
+                        fontWeight = FontWeight.Bold
+                    )
                 }
             }
         }
@@ -375,7 +386,7 @@ fun BackgroundPoster(url: String,navHostController: NavHostController) {
             onClick = {
                 navHostController.popBackStack()
             },
-            modifier = Modifier.padding(8.dp).shadow(elevation = 10.dp).align(Alignment.TopEnd),
+            modifier = Modifier.padding(8.dp).align(Alignment.TopEnd),
             colors = IconButtonDefaults.iconButtonColors(containerColor = Color.Black.copy(alpha = 0.6f))
         ) {
             Icon(
