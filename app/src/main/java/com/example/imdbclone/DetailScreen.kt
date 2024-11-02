@@ -358,7 +358,6 @@ fun BackgroundPoster(url: String,navHostController: NavHostController) {
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(context)
             .data(url)
-            // Adjust as needed
             .build(),
         imageLoader = imageLoader
     )
