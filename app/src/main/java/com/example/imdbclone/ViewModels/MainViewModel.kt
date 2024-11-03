@@ -213,7 +213,7 @@ private fun fetchPrimeMovies() {
     data class ShowState(
         val error: String? = null,
         val list: List<ShowDetails> = emptyList(),
-        val loading: Boolean = true
+        var loading: Boolean = true
     )
 }
 

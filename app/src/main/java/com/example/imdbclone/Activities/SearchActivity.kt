@@ -89,6 +89,7 @@ class SearchActivity : ComponentActivity() {
 
             val navController:NavHostController = rememberNavController()
             val showViewModel: MainViewModel = viewModel()
+            showViewModel.searchShows.value.loading = false
                 NavHost(navController = navController, startDestination = Screens.SearchScreen.route){
                     composable(route= Screens.SearchScreen.route) {
                         SearchScreen(showViewModel, navigateToDetail = {
@@ -170,6 +171,7 @@ fun SearchScreen(showViewModel:MainViewModel,navigateToDetail: (ShowDetails) -> 
                     keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences,autoCorrect = true, imeAction = ImeAction.Search),
                     keyboardActions = KeyboardActions(onSearch = {
                         showViewModel.searchShow(title.lowercase())
+                        showViewModel.searchShows.value.loading = true
                     }),
                     textStyle = TextStyle(fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Bold),
                     colors = TextFieldDefaults.textFieldColors(
@@ -211,7 +213,7 @@ fun SearchStateScreen(
     navigateToDetail: (ShowDetails) -> Unit
 ) {
 
-    Column(modifier = Modifier.wrapContentSize()) {
+    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
 
         when {
 
@@ -247,7 +249,7 @@ fun SearchShowsScreen(shows: List<ShowDetails>, navigateToDetail: (ShowDetails) 
         .build()
     Column(
         modifier = Modifier
-            .wrapContentSize(unbounded = false)
+            .wrapContentSize()
             .padding(8.dp)
     ) {
 

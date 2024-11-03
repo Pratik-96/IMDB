@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -82,7 +83,7 @@ fun StateScreen(
     navigateToDetail: (ShowDetails) -> Unit
 ) {
 
-    Column(modifier = Modifier.wrapContentSize()) {
+    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
 
         when {
 
@@ -152,7 +153,7 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String, navigateToDetail: (Show
                 .wrapContentSize(unbounded = false)
                 .height(80.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
-            rows = GridCells.Fixed(1),
+            rows = GridCells.Fixed(1)
         ) {
             items(shows) { item ->
 
@@ -171,7 +172,7 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String, navigateToDetail: (Show
 fun ShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
 
 
-    //TODO:Image loader fix
+
 
     val context = LocalContext.current
 
