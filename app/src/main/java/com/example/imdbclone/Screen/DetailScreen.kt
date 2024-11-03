@@ -107,7 +107,7 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                         imageVector = Icons.Filled.Star,
                         contentDescription = null,
                         tint = Color.Gray,
-                        modifier = Modifier.padding(top = 6.dp, start = 8.dp)
+                        modifier = Modifier.padding(top = 4.dp, start = 8.dp)
                     )
                     Text(
                         text = "${data.rating}%",
@@ -125,10 +125,15 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                     ImportantText("Streaming on: ")
 
                     for (i in 0 until (data.streamingOptions?.`in`?.size ?: 0)) {
+
+                        if (data.streamingOptions?.`in`?.size == 0){
+                            ImportantText("Unavailable")
+                        }
                         Logo(
                             data.streamingOptions?.`in`?.get(i)?.service?.imageSet?.darkThemeImage
                                 ?: ""
                         )
+
 
 
                     }

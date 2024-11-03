@@ -69,6 +69,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.disk.DiskCache
 import coil.memory.MemoryCache
+import coil.request.CachePolicy
 import coil.request.ImageRequest
 import coil.size.Size
 import com.example.imdbclone.DataClasses.ShowDetails
@@ -252,8 +253,7 @@ fun SearchShowsScreen(shows: List<ShowDetails>, navigateToDetail: (ShowDetails) 
 
         LazyVerticalGrid(
             modifier = Modifier
-                .fillMaxSize()
-                ,
+                .fillMaxSize(),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.SpaceBetween,
             columns = GridCells.Fixed(3),
@@ -282,26 +282,21 @@ fun SearchShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
     val imageLoader = ImageLoader.Builder(context)
         .components {
             add(SvgDecoder.Factory())  // Add SVG decoder explicitly
-        }.memoryCache {
-            MemoryCache.Builder(context)
-                .maxSizePercent(0.25)
-                .build()
-        }
-        .diskCache {
-            DiskCache.Builder().directory(context.cacheDir.resolve("image_cache"))
-                .maxSizeBytes(512*1024*1024).build()
-        }
+        }.memoryCachePolicy(CachePolicy.ENABLED)
+        .diskCachePolicy(CachePolicy.ENABLED)
         .build()
 
     Column(
-        modifier = Modifier.padding(8.dp).clickable {
-            try {
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable {
+                try {
 
-                navigateToDetail(item)
-            } catch (e: Exception) {
-                Log.d("nav", "ShowItem: " + e.message)
-            }
-        },
+                    navigateToDetail(item)
+                } catch (e: Exception) {
+                    Log.d("nav", "ShowItem: " + e.message)
+                }
+            },
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
@@ -313,7 +308,8 @@ fun SearchShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
         Image(
             painter = painter,
             modifier = Modifier
-                .size(width = 140.dp, height = 160.dp).clip(RoundedCornerShape(8.dp)),
+                .size(width = 140.dp, height = 160.dp)
+                .clip(RoundedCornerShape(8.dp)),
             contentDescription = item.title,
             contentScale = ContentScale.Crop
 

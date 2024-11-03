@@ -65,7 +65,7 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
             .background(Color.Black),
 
     ) {
-//        item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
+        item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
 //        item { StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail) }
 //        item { StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail) }
 //        item { StateScreen(title = "Top Apple Tv Movies", appleMovieState,navigateToDetail) }
@@ -171,24 +171,16 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String, navigateToDetail: (Show
 fun ShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
 
 
+    //TODO:Image loader fix
+
     val context = LocalContext.current
 
 
-    // Configure Coil with an ImageLoader that includes the SvgDecoder
     val imageLoader = ImageLoader.Builder(context)
         .components {
-            add(SvgDecoder.Factory())  // Add SVG decoder explicitly
-        }.memoryCache {
-            MemoryCache.Builder(context)
-                .maxSizePercent(0.25)
-                .build()
-        }
-        .diskCache {
-            DiskCache.Builder().directory(context.cacheDir.resolve("image_cache"))
-                .maxSizeBytes(512*1024*1024).build()
+            add(SvgDecoder.Factory())
         }
         .build()
-
     Column(
         modifier = Modifier.clickable {
             try {
