@@ -207,7 +207,7 @@ fun NavDrawer() {
         ) {
             Scaffold(modifier = Modifier
                 .fillMaxSize()
-                .background(Color.Black),
+                .background(Color.White),
                 topBar = {
 
                                 TopAppBar(title = {
@@ -258,7 +258,7 @@ fun NavDrawer() {
                                     modifier = Modifier.wrapContentSize()
                                         .background(Color.DarkGray),
                                     colors = TopAppBarColors(
-                                        containerColor = Color.Black,
+                                        containerColor = Color.Transparent,
                                         scrolledContainerColor = Color.DarkGray,
                                         navigationIconContentColor = Color.White,
                                         titleContentColor = Color.White,
