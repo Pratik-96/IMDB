@@ -75,51 +75,6 @@ import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import kotlinx.coroutines.launch
 
 
-data class NavigationItem(
-
-    val name: String,
-    val url: String,
-    val unSelectedItem: ImageVector? = null,
-    val selectedIcon: ImageVector? = null,
-    val route: String
-)
-
-val items = listOf(
-    NavigationItem(
-        name = "Home",
-        url = "",
-        unSelectedItem = Icons.Outlined.Home,
-        selectedIcon = Icons.Filled.Home,
-        route = Screens.HomeScreen.route
-
-    ), NavigationItem(
-        name = "Netflix",
-        url = "https://media.movieofthenight.com/services/netflix/logo-dark-theme.svg",
-        route = Screens.NetflixScreen.route
-    ), NavigationItem(
-        name = "Prime Video",
-        url = "https://media.movieofthenight.com/services/prime/logo-dark-theme.svg",
-        route = Screens.PrimeScreen.route
-
-    ), NavigationItem(
-        name = "Hotstar",
-        url = "https://media.movieofthenight.com/services/disneyhotstar/logo-dark-theme.svg",
-        route = Screens.HotstarScreen.route
-    ), NavigationItem(
-        name = "Apple Tv",
-        url = "https://media.movieofthenight.com/services/apple/logo-dark-theme.svg",
-        route = Screens.AppleScreen.route
-    ), NavigationItem(
-        name = "Sony Liv",
-        url = "https://media.movieofthenight.com/services/sonyliv/logo-dark-theme.png",
-        route = Screens.SonyScreen.route
-    ), NavigationItem(
-        name = "Zee5",
-        url = "https://media.movieofthenight.com/services/zee5/logo-dark-theme.svg",
-        route = Screens.ZeeScreen.route
-    )
-)
-
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -177,7 +132,7 @@ fun NavDrawer() {
                         fontSize = 24.sp
                     )
                     Spacer(Modifier.height(16.dp))
-                    items.forEachIndexed { index, navigationItem ->
+                    showViewModel.items.forEachIndexed { index, navigationItem ->
                         NavigationDrawerItem(
                             label = {
                                 if (index == 0) {

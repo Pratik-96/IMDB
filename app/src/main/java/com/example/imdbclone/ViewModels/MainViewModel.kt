@@ -1,10 +1,15 @@
 package com.example.imdbclone.ViewModels
 
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.imdbclone.DataClasses.ShowDetails
+import com.example.imdbclone.Screen.Screens
 import com.example.imdbclone.imdbService
 import kotlinx.coroutines.launch
 
@@ -38,14 +43,38 @@ class MainViewModel : ViewModel() {
     private val _searchShows = mutableStateOf(ShowState())
     val searchShows:State<ShowState> = _searchShows
 
+    private val _filteredShows = mutableStateOf(ShowState())
+    val filteredShows:State<ShowState> = _filteredShows
+
     init {
-        fetchNetflixShows()
-        fetchNetflixMovies()
-        fetchAppleShows()
-        fetchAppleMovies()
-        fetchPrimeShows()
-        fetchPrimeMovies()
-        fetchHotstarShows()
+//        fetchNetflixShows()
+//        fetchNetflixMovies()
+//        fetchAppleShows()
+//        fetchAppleMovies()
+//        fetchPrimeShows()
+//        fetchPrimeMovies()
+//        fetchHotstarShows()
+    }
+
+
+    fun fetchFilteredShows(country:String,service:String,catalogs:String,showType:String,ratingMin:Int){
+        viewModelScope.launch {
+            try {
+
+                val response = imdbService.getFilteredShows(country,service,catalogs,showType,ratingMin)
+                _filteredShows.value = _filteredShows.value.copy(
+                    error = null,
+                    list = response.shows,
+                    loading = false
+                )
+
+            }catch (e:Exception){
+                _filteredShows.value = _filteredShows.value.copy(
+                    error = e.message,
+                    loading = false
+                )
+            }
+        }
     }
 
      fun searchShow(title:String) {
@@ -208,6 +237,53 @@ private fun fetchPrimeMovies() {
             }
         }
     }
+
+
+    data class NavigationItem(
+
+        val name: String,
+        val url: String,
+        val unSelectedItem: ImageVector? = null,
+        val selectedIcon: ImageVector? = null,
+        val route: String
+    )
+
+    val items = listOf(
+        NavigationItem(
+            name = "Home",
+            url = "",
+            unSelectedItem = Icons.Outlined.Home,
+            selectedIcon = Icons.Filled.Home,
+            route = Screens.HomeScreen.route
+
+        ), NavigationItem(
+            name = "Netflix",
+            url = "https://media.movieofthenight.com/services/netflix/logo-dark-theme.svg",
+            route = Screens.NetflixScreen.route
+        ), NavigationItem(
+            name = "Prime Video",
+            url = "https://media.movieofthenight.com/services/prime/logo-dark-theme.svg",
+            route = Screens.PrimeScreen.route
+
+        ), NavigationItem(
+            name = "Hotstar",
+            url = "https://media.movieofthenight.com/services/disneyhotstar/logo-dark-theme.svg",
+            route = Screens.HotstarScreen.route
+        ), NavigationItem(
+            name = "Apple Tv",
+            url = "https://media.movieofthenight.com/services/apple/logo-dark-theme.svg",
+            route = Screens.AppleScreen.route
+        ), NavigationItem(
+            name = "Sony Liv",
+            url = "https://media.movieofthenight.com/services/sonyliv/logo-dark-theme.png",
+            route = Screens.SonyScreen.route
+        ), NavigationItem(
+            name = "Zee5",
+            url = "https://media.movieofthenight.com/services/zee5/logo-dark-theme.svg",
+            route = Screens.ZeeScreen.route
+        )
+    )
+
 
 
     data class ShowState(

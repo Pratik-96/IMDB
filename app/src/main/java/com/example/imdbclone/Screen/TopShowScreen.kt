@@ -66,7 +66,7 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
             .background(Color.Black),
 
     ) {
-        item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
+//        item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
 //        item { StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail) }
 //        item { StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail) }
 //        item { StateScreen(title = "Top Apple Tv Movies", appleMovieState,navigateToDetail) }

@@ -199,7 +199,7 @@ fun SearchScreen(showViewModel:MainViewModel,navigateToDetail: (ShowDetails) -> 
         val searchViewModel by showViewModel.searchShows
 
 
-    SearchStateScreen(searchViewModel,navigateToDetail)
+    SearchStateScreen(searchViewModel,navigateToDetail,true,"")
 
     }
 
@@ -210,7 +210,7 @@ fun SearchScreen(showViewModel:MainViewModel,navigateToDetail: (ShowDetails) -> 
 @Composable
 fun SearchStateScreen(
     showState: MainViewModel.ShowState,
-    navigateToDetail: (ShowDetails) -> Unit
+    navigateToDetail: (ShowDetails) -> Unit,vertical:Boolean,header:String
 ) {
 
     Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
@@ -227,7 +227,7 @@ fun SearchStateScreen(
 
             else -> {
                 Log.d("TAG", "SearchStateScreen: "+showState.list)
-                SearchShowsScreen(showState.list,navigateToDetail)
+                SearchShowsScreen(showState.list,navigateToDetail,vertical,header)
             }
         }
     }
@@ -237,7 +237,7 @@ fun SearchStateScreen(
 
 
 @Composable
-fun SearchShowsScreen(shows: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit) {
+fun SearchShowsScreen(shows: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit,vertical:Boolean,header:String) {
     val context = LocalContext.current
 
 
@@ -253,23 +253,55 @@ fun SearchShowsScreen(shows: List<ShowDetails>, navigateToDetail: (ShowDetails) 
             .padding(8.dp)
     ) {
 
-        LazyVerticalGrid(
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.SpaceBetween,
-            columns = GridCells.Fixed(3),
-        ) {
-            items(shows) { item ->
+        if (vertical) {
 
-                SearchShowItem(item, navigateToDetail)
+            LazyVerticalGrid(
+                modifier = Modifier
+                    .fillMaxSize(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.SpaceBetween,
+                columns = GridCells.Fixed(3),
+            ) {
+                items(shows) { item ->
+
+                    SearchShowItem(item, navigateToDetail)
+
+                }
+            }
+        } else {
+
+
+            Column {
+                Text(
+                    text = header,
+                    fontSize = 16.sp,
+                    color = Color.White,
+                    fontFamily = FontFamily.SansSerif,
+                    fontWeight = FontWeight.Bold
+                )
+                Spacer(Modifier.padding(4.dp))
+                LazyHorizontalGrid(
+                    modifier = Modifier
+                        .fillMaxWidth().height(200.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalArrangement = Arrangement.SpaceBetween,
+                    rows = GridCells.Fixed(1)
+                ) {
+                    items(shows) { item ->
+
+
+                        SearchShowItem(item, navigateToDetail)
+
+                    }
+                }
 
             }
         }
 
+
+
+
     }
-
-
 }
 
 
@@ -290,7 +322,7 @@ fun SearchShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
 
     Column(
         modifier = Modifier
-            .padding(8.dp)
+            .padding(4.dp)
             .clickable {
                 try {
 
@@ -310,8 +342,8 @@ fun SearchShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
         Image(
             painter = painter,
             modifier = Modifier
-                .size(width = 140.dp, height = 160.dp)
-                .clip(RoundedCornerShape(8.dp)),
+                .size(width = 130.dp, height = 200.dp)
+                .clip(RoundedCornerShape(6.dp)),
             contentDescription = item.title,
             contentScale = ContentScale.Crop
 

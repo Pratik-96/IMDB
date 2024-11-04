@@ -41,7 +41,9 @@ android {
 }
 
 dependencies {
+    implementation("androidx.compose.ui:ui-graphics:1.7.5")
     implementation("io.coil-kt:coil-svg:2.2.2")
+    implementation("androidx.palette:palette-ktx:1.0.0")
     implementation (libs.accompanist.pager)
     implementation (libs.accompanist.pager.indicators)
     implementation(libs.coil.svg)
