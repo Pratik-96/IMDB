@@ -65,6 +65,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
+import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.disk.DiskCache
@@ -290,7 +291,7 @@ fun SearchShowsScreen(shows: List<ShowDetails>, navigateToDetail: (ShowDetails) 
                     items(shows) { item ->
 
 
-                        SearchShowItem(item, navigateToDetail)
+                        NetflixShowItem(item, navigateToDetail)
 
                     }
                 }
@@ -302,6 +303,50 @@ fun SearchShowsScreen(shows: List<ShowDetails>, navigateToDetail: (ShowDetails) 
 
 
     }
+}
+
+@Composable
+fun NetflixShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
+    val context = LocalContext.current
+
+
+    // Configure Coil with an ImageLoader that includes the SvgDecoder
+    val imageLoader = ImageLoader.Builder(context)
+        .components {
+            add(SvgDecoder.Factory())  // Add SVG decoder explicitly
+        }.memoryCachePolicy(CachePolicy.ENABLED)
+        .diskCachePolicy(CachePolicy.ENABLED)
+        .build()
+
+    Column(
+        modifier = Modifier
+            .padding(4.dp)
+            .clickable {
+                try {
+
+                    navigateToDetail(item)
+                } catch (e: Exception) {
+                    Log.d("nav", "ShowItem: " + e.message)
+                }
+            },
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+
+        val painter = rememberAsyncImagePainter(
+            model =  item.imageSet.verticalPoster?.w360 // Adjust as needed
+            ,
+            imageLoader = imageLoader
+        )
+
+
+        AsyncImage(item.imageSet.verticalPoster?.w360,modifier = Modifier
+            .size(width = 130.dp, height = 200.dp)
+            .clip(RoundedCornerShape(6.dp)),
+            contentDescription = item.title,
+            contentScale = ContentScale.Crop,)
+    }
+
+
 }
 
 
@@ -342,34 +387,20 @@ fun SearchShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
         Image(
             painter = painter,
             modifier = Modifier
-                .size(width = 130.dp, height = 200.dp)
+                .size(width = 130.dp, height = 150.dp)
                 .clip(RoundedCornerShape(6.dp)),
             contentDescription = item.title,
             contentScale = ContentScale.Crop
 
         )
+
+
+//        AsyncImage(item.imageSet.verticalPoster?.w360,modifier = Modifier
+//            .size(width = 130.dp, height = 200.dp)
+//            .clip(RoundedCornerShape(6.dp)),
+//            contentDescription = item.title,
+//            contentScale = ContentScale.Crop,)
     }
 
 
 }
-
-@Preview(showBackground = true)
-@Composable
-private fun SearchPrev() {
-    IMDBCloneTheme {
-        Column(modifier = Modifier.fillMaxSize()) {
-            Box(modifier = Modifier
-                .height(150.dp)
-                .width(120.dp)
-                .background(Color.Black)) {
-                Image(painter = painterResource(R.drawable.img), contentDescription = null, modifier = Modifier
-                    .size(width = 120.dp, height = 150.dp)
-                    ,
-                    contentScale = ContentScale.Fit
-                )
-            }
-        }
-    }
-}
-
-
