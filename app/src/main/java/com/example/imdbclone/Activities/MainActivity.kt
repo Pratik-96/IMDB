@@ -105,7 +105,7 @@ fun NavDrawer() {
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
         var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
-        var selectedItem by remember{ mutableStateOf("") }
+        var selectedItem by rememberSaveable { mutableStateOf("") }
 
         // Navigation
         val showViewModel: MainViewModel = viewModel()
@@ -297,7 +297,12 @@ fun NavDrawer() {
                         }
                     }
                     composable(route = Screens.NetflixScreen.route) {
-                        NetflixScreen()
+
+
+                        NetflixScreen(navHostController,navigateToDetail = {
+                            navHostController.currentBackStackEntry?.savedStateHandle?.set("ShowData",it)
+                            navHostController.navigate(Screens.DetailScreen.route)
+                        })
                     }
 
 

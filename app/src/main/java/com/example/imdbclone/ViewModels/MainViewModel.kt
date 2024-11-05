@@ -43,8 +43,6 @@ class MainViewModel : ViewModel() {
     private val _searchShows = mutableStateOf(ShowState())
     val searchShows:State<ShowState> = _searchShows
 
-    private val _filteredShows = mutableStateOf(ShowState())
-    val filteredShows:State<ShowState> = _filteredShows
 
     init {
 //        fetchNetflixShows()
@@ -57,25 +55,7 @@ class MainViewModel : ViewModel() {
     }
 
 
-    fun fetchFilteredShows(country:String,service:String,catalogs:String,showType:String,ratingMin:Int){
-        viewModelScope.launch {
-            try {
 
-                val response = imdbService.getFilteredShows(country,service,catalogs,showType,ratingMin)
-                _filteredShows.value = _filteredShows.value.copy(
-                    error = null,
-                    list = response.shows,
-                    loading = false
-                )
-
-            }catch (e:Exception){
-                _filteredShows.value = _filteredShows.value.copy(
-                    error = e.message,
-                    loading = false
-                )
-            }
-        }
-    }
 
      fun searchShow(title:String) {
         viewModelScope.launch {
@@ -122,7 +102,7 @@ private fun fetchNetflixShows() {
         viewModelScope.launch {
             try {
 
-                val response = imdbService.getFilteredShows("in","hotstar","hotstar","series",75)
+                val response = imdbService.getFilteredShows("in","hotstar","hotstar","series",75,"")
                 _hotstarShowState.value = _hotstarShowState.value.copy(
                     error = null,
                     list = response.shows,

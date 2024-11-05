@@ -1,5 +1,6 @@
 package com.example.imdbclone
 
+import android.media.tv.TvContract.Programs.Genres
 import com.example.imdbclone.DataClasses.Show
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.DataClasses.ShowResponse
@@ -43,7 +44,7 @@ interface ApiService {
         @Query("catalogs") catalogs: String,
         @Query("show_type") showType: String,
         @Query("rating_min") rating_min: Int,
-
+        @Query("genres") genre: String
 
     ): Show
 
