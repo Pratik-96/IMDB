@@ -2,6 +2,7 @@ package com.example.imdbclone.Screen
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -153,7 +154,7 @@ fun NetflixScreen(navHostController: NavHostController, navigateToDetail: (ShowD
                                     onClick = {
 
                                         //TODO:Store to watchlist
-
+                                        Toast.makeText(context,"Coming soon", Toast.LENGTH_SHORT).show()
 
                                     }, modifier = Modifier
                                         .height(55.dp)

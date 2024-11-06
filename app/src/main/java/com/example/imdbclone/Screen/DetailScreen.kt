@@ -187,11 +187,12 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                             ServiceDialog({ showDialog = false }, data)
                         }
                     }
+                    val context = LocalContext.current
                     Button(
                         onClick = {
 
                             //TODO: Add to watchlist
-
+                            Toast.makeText(context,"Coming soon",Toast.LENGTH_SHORT).show()
 
                         }, modifier = Modifier
                             .wrapContentSize()
