@@ -1,5 +1,7 @@
 package com.example.imdbclone.ui
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -15,6 +17,7 @@ import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.imdbclone.DataClasses.ShowDetails
@@ -35,7 +38,7 @@ fun ImageSlider(data: List<ShowDetails>) {
     val pagerState = rememberPagerState(initialPage = 0)
     LaunchedEffect(Unit) {
         while (true) {
-            delay(3000)
+            delay(5000)
             pagerState.animateScrollToPage((pagerState.currentPage + 1) % data.size)
         }
     }
@@ -82,12 +85,17 @@ fun ImageSlider(data: List<ShowDetails>) {
             ){
 
 //               TODO:Add genre
+                val name = data[page].title
                 val genreDetailList = data[page].genres
+                val genreList:MutableList<String> = mutableListOf()
                 for (i in 0 until genreDetailList.size){
-                     genreList.add(genreDetailList.get(i)?.name)
+                    genreDetailList.get(i)?.name?.let { genreList.add(it) }
                 }
 
-                val genres = genresList.joinToString(" • ") { it }
+                val context = LocalContext.current
+                val genres = genreList.joinToString(" • ") { it }
+
+                Toast.makeText(context,"${name}: ${genres}",Toast.LENGTH_SHORT).show()
 
             }
         }
