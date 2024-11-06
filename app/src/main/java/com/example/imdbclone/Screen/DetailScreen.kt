@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
@@ -161,30 +162,58 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                 }
                 var showDialog by remember { mutableStateOf(false) }
 
-                Button(
-                    onClick = {
+                Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    Button(
+                        onClick = {
 
-                        showDialog = true
+                            showDialog = true
 
 
+                        }, modifier = Modifier
+                            .wrapContentSize()
+                            .padding(8.dp)
+                            .clip(
+                                RoundedCornerShape(4.dp)
+                            ),
+                        colors = ButtonDefaults.buttonColors(
+                            contentColor = Color.Black,
+                            containerColor = Color.White
+                        )
 
-                    }, modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(8.dp)
-                        .clip(
-                            RoundedCornerShape(4.dp)
-                        ),
-                    colors = ButtonDefaults.buttonColors(
-                        contentColor = Color.Black,
-                        containerColor = Color.White
-                    )
-
-                ) {
-                    Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play")
-                    ButtonText("WATCH")
-                    if (showDialog) {
-                        ServiceDialog({ showDialog = false }, data)
+                    ) {
+                        Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play")
+                        ButtonText("WATCH")
+                        if (showDialog) {
+                            ServiceDialog({ showDialog = false }, data)
+                        }
                     }
+                    Button(
+                        onClick = {
+
+                            //TODO: Add to watchlist
+
+
+                        }, modifier = Modifier
+                            .wrapContentSize()
+                            .padding(8.dp)
+                            .clip(
+                                RoundedCornerShape(4.dp)
+                            ),
+                        colors = ButtonDefaults.buttonColors(
+                            contentColor = Color.White,
+                            containerColor = Color.DarkGray
+                        )
+
+                    ) {
+                        Icon(imageVector = Icons.Filled.Add, contentDescription = "Add")
+                        Text(
+                            text = "MY LIST",
+                            color = Color.White,
+                            fontFamily = FontFamily.SansSerif,
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(start = 8.dp),
+                            fontWeight = FontWeight.Bold
+                        )                    }
                 }
                 NormalText(data.overview)
 
@@ -412,7 +441,7 @@ fun ButtonText(text: String) {
         color = Color.Black,
         fontFamily = FontFamily.SansSerif,
         fontSize = 16.sp,
-        modifier = Modifier.padding(8.dp),
+        modifier = Modifier.padding(start = 8.dp),
         fontWeight = FontWeight.Bold
     )
 

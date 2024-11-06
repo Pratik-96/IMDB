@@ -9,6 +9,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -17,27 +18,23 @@ import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.derivedStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -45,15 +42,11 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.imdbclone.Activities.SearchStateScreen
 import com.example.imdbclone.DataClasses.ShowDetails
-import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.ViewModels.NetflixViewModel
-import com.example.imdbclone.ViewModels.NetflixViewModel.*
-import com.example.imdbclone.ui.theme.IMDBCloneTheme
-import kotlinx.coroutines.flow.SharingStarted
 
 @Composable
-fun NetflixScreen(navHostController: NavHostController,navigateToDetail: (ShowDetails) -> Unit) {
-    val netflixViewModel:NetflixViewModel = viewModel()
+fun NetflixScreen(navHostController: NavHostController, navigateToDetail: (ShowDetails) -> Unit) {
+    val netflixViewModel: NetflixViewModel = viewModel()
 
     val context = LocalContext.current
     val launcher =
@@ -74,6 +67,7 @@ fun NetflixScreen(navHostController: NavHostController,navigateToDetail: (ShowDe
                 Box(
                     modifier = Modifier
                         .padding(16.dp)
+
                         .fillMaxWidth(), contentAlignment = Alignment.BottomCenter
                 ) {
                     Image(
@@ -83,69 +77,133 @@ fun NetflixScreen(navHostController: NavHostController,navigateToDetail: (ShowDe
                         modifier = Modifier
                             .height(450.dp)
                             .clip(shape = RoundedCornerShape(8.dp))
-
                     )
 
-                    val genresList: List<String> = listOf("Drama","Fantasy","Horror")
+
+                    val genresList: List<String> = listOf("Drama", "Fantasy", "Horror")
                     val genres = genresList.joinToString(" • ") { it }
-                   Column(modifier = Modifier.wrapContentSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally){
-                       Box(modifier = Modifier.wrapContentSize(), contentAlignment = Alignment.BottomCenter){
-                           Text(
-                               genres,
-                               color = Color.White,
-                               fontSize = 14.sp,
-                               fontFamily = FontFamily.SansSerif,
-                               modifier = Modifier
-                                   .padding(start = 8.dp, top = 8.dp)
-                                   .align(Alignment.BottomCenter),
+                    Column(
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .fillMaxWidth()
+                            .background(
+                                brush =
+                                Brush
+                                    .verticalGradient(
+                                        colors = listOf(
+                                            Color.Transparent,
+                                            Color.Black.copy(alpha = 0.4f),
+                                            Color.Black.copy(alpha = 0.6f)
+                                        ),
+                                        startY = 0f, // Start at the top
+                                        endY = 100f
+                                    )
+                            )
+                            .shadow(elevation = 0.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Box(
+                            modifier = Modifier.wrapContentSize(),
+                            contentAlignment = Alignment.BottomCenter
+                        ) {
+                            Text(
+                                genres,
+                                color = Color.White,
+                                fontSize = 14.sp,
+                                fontFamily = FontFamily.SansSerif,
+                                modifier = Modifier
+                                    .padding(start = 8.dp, top = 8.dp)
+                                    .align(Alignment.BottomCenter),
 
-                           )
-                       }
-                       Box(modifier = Modifier.wrapContentSize()){
-                           Button(
-                               onClick = {
+                                )
+                        }
+                        Box(modifier = Modifier.wrapContentSize()) {
+                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                                Button(
+                                    onClick = {
 
 
-                                   launcher.launch(Intent(Intent.ACTION_VIEW, Uri.parse("https://www.netflix.com/watch/80057281")))
+                                        launcher.launch(
+                                            Intent(
+                                                Intent.ACTION_VIEW,
+                                                Uri.parse("https://www.netflix.com/watch/80057281")
+                                            )
+                                        )
 
 
-                               }, modifier = Modifier
-                                   .wrapContentSize()
-                                   .padding(8.dp),
+                                    }, modifier = Modifier
+                                        .height(55.dp)
+                                        .padding(8.dp),
 //                            .shadow(shape = RoundedCornerShape(4.dp), elevation = 10.dp),
-                               colors = ButtonDefaults.buttonColors(
-                                   contentColor = Color.Black,
-                                   containerColor = Color.White
-                               )
-                               , shape = RoundedCornerShape(4.dp)
+                                    colors = ButtonDefaults.buttonColors(
+                                        contentColor = Color.Black,
+                                        containerColor = Color.White
+                                    ), shape = RoundedCornerShape(4.dp)
 
-                           ) {
-                               Icon(imageVector = Icons.Filled.PlayArrow, contentDescription = "Play")
-                               ButtonText("PLAY")
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.PlayArrow,
+                                        contentDescription = "Play"
+                                    )
+                                    ButtonText("PLAY")
 
-                           }
-                       }
-                   }
+                                }
+                                Button(
+                                    onClick = {
+
+                                        //TODO:Store to watchlist
+
+
+                                    }, modifier = Modifier
+                                        .height(55.dp)
+                                        .padding(8.dp),
+//                            .shadow(shape = RoundedCornerShape(4.dp), elevation = 10.dp),
+                                    colors = ButtonDefaults.buttonColors(
+                                        contentColor = Color.White,
+                                        containerColor = Color.Black.copy(0.7f)
+                                    ), shape = RoundedCornerShape(4.dp)
+
+                                ) {
+                                    Icon(
+                                        imageVector = Icons.Filled.Add,
+                                        contentDescription = "add"
+                                    )
+                                    Text(
+                                        text = "My List",
+                                        color = Color.White,
+                                        fontFamily = FontFamily.SansSerif,
+                                        fontSize = 16.sp,
+                                        modifier = Modifier.padding(start = 8.dp),
+                                        fontWeight = FontWeight.Bold
+                                    )
+                                }
+                            }
+
+                        }
+                    }
 
 
                 }
             }
 
-            netflixViewModel.fetchFilteredShows("in","netflix","netflix","series",85,"")
+            netflixViewModel.fetchFilteredShows("in", "netflix", "netflix", "series", 85, "")
             val topShowState = netflixViewModel.topShows.value
-            item { SearchStateScreen(
-                topShowState,navigateToDetail, false, "Critically Acclaimed TV Shows",
-            ) }
-
-
-            netflixViewModel.fetchDramaShows("in","netflix","netflix","series",75,"thriller")
-            val dramaState = netflixViewModel.topDramas.value
-            item { SearchStateScreen(
-                dramaState,navigateToDetail, false, "Thrillers",
-            ) }
-
-
-
+            item {
+                SearchStateScreen(
+                    topShowState, navigateToDetail, false, "Critically Acclaimed TV Shows",
+                )
+            }
+//
+//
+//            netflixViewModel.fetchDramaShows("in", "netflix", "netflix", "series", 75, "thriller")
+//            val dramaState = netflixViewModel.topDramas.value
+//            item {
+//                SearchStateScreen(
+//                    dramaState, navigateToDetail, false, "Thrillers",
+//                )
+//            }
+//
 
         }
 
