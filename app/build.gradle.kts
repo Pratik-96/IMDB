@@ -3,7 +3,9 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     id ("kotlin-parcelize")
+
 }
+
 
 android {
     namespace = "com.example.imdbclone"

@@ -44,7 +44,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -158,7 +160,14 @@ fun NavDrawer() {
                                         horizontalArrangement = Arrangement.spacedBy(8.dp)
                                     ) {
                                         NavLogo(navigationItem.url)
-                                        ImportantText(navigationItem.name)
+                                        Text(
+                                            text = navigationItem.name,
+                                            color = Color.White,
+                                            fontFamily = FontFamily.SansSerif,
+                                            fontSize = 16.sp,
+                                            modifier = Modifier.padding(16.dp),
+                                            fontWeight = FontWeight.Bold
+                                        )
                                     }
                                 }
                             },
@@ -349,8 +358,7 @@ fun NavLogo(url: String) {
     Image(
         painter = painter,
         modifier = Modifier
-            .padding(top = 8.dp)
-            .size(width = 50.dp, height = 32.dp),
+            .size(width = 70.dp, height = 52.dp),
         contentDescription = null,
 
         )
