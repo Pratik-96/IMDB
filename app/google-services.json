@@ -1,0 +1,106 @@
+{
+  "project_info": {
+    "project_number": "683311150981",
+    "firebase_url": "https://streammate-de977-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "streammate-de977",
+    "storage_bucket": "streammate-de977.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683311150981:android:10f5630bfb9fdf69a676ec",
+        "android_client_info": {
+          "package_name": "com.example.imdbclone"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "683311150981-64t8epngt9m3eumiu3majr9l1jqgfuk6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5b8NIBXRrwt3CiN3BBfLiVFu4ln2Numc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "683311150981-64t8epngt9m3eumiu3majr9l1jqgfuk6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683311150981:android:7d43ffdb0a0fa02ca676ec",
+        "android_client_info": {
+          "package_name": "com.example.panda"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "683311150981-64t8epngt9m3eumiu3majr9l1jqgfuk6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5b8NIBXRrwt3CiN3BBfLiVFu4ln2Numc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "683311150981-64t8epngt9m3eumiu3majr9l1jqgfuk6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:683311150981:android:d72d0a62ea1c2d37a676ec",
+        "android_client_info": {
+          "package_name": "com.streammate.watch"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "683311150981-rt73ejtodt417oenf03g4gvtede681jl.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.streammate.watch",
+            "certificate_hash": "e72fa18940c8b6b3a0bcb007d45ade3ccf22ae4d"
+          }
+        },
+        {
+          "client_id": "683311150981-64t8epngt9m3eumiu3majr9l1jqgfuk6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5b8NIBXRrwt3CiN3BBfLiVFu4ln2Numc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "683311150981-64t8epngt9m3eumiu3majr9l1jqgfuk6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

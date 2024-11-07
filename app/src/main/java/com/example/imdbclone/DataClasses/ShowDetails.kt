@@ -2,11 +2,16 @@ package com.example.imdbclone.DataClasses
 
 import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.Transient
 
+@Serializable
 @Parcelize
 data class Show(
     val shows:List<ShowDetails>
 ):Parcelable
+
+@Serializable
 @Parcelize
 data class ShowDetails(
     val itemType: String,
@@ -14,8 +19,8 @@ data class ShowDetails(
     val id: String,
     val title: String,
     val overview: String,
-    val firstAirYear:String?,
-    val releaseYear:String?,
+    val firstAirYear:Int?,
+    val releaseYear:Int?,
     val genres:List<GenreDetails?>,
     val creators:List<String?>,
     val directors:List<String?>,
@@ -28,13 +33,14 @@ data class ShowDetails(
     val streamingOptions: StreamingOptionsInIndia?
 ):Parcelable
 
+@Serializable
 @Parcelize
 data class GenreDetails(
     val id:String,
     val name: String
 ):Parcelable
 
-
+@Serializable
 @Parcelize
 data class VerticalPoster(
     val verticalPoster: VerticalPosterDetails?,
@@ -42,6 +48,8 @@ data class VerticalPoster(
     val horizontalBackdrop: HorizontalBackDropPosterDetails?
 ):Parcelable
 
+
+@Serializable
 @Parcelize
 data class HorizontalBackDropPosterDetails(
     val w360:String,
@@ -49,6 +57,7 @@ data class HorizontalBackDropPosterDetails(
     val w720:String,
 ):Parcelable
 
+@Serializable
 @Parcelize
 data class VerticalPosterDetails(
     val w240:String,
@@ -59,7 +68,7 @@ data class VerticalPosterDetails(
 
 ):Parcelable
 
-
+@Serializable
 @Parcelize
 data class HorizontalPosterDetails(
     val w360:String,
@@ -71,12 +80,13 @@ data class HorizontalPosterDetails(
 
 ):Parcelable
 
+@Serializable
 @Parcelize
 data class StreamingOptionsInIndia(
     val `in`:List<ServiceMetaData?>
 ):Parcelable
 
-
+@Serializable
 @Parcelize
 data class ServiceMetaData(
     val service:Service,
@@ -86,7 +96,7 @@ data class ServiceMetaData(
     val quality:String
 ):Parcelable
 
-
+@Serializable
 @Parcelize
 data class Service(
     val id:String,
@@ -95,6 +105,7 @@ data class Service(
     val imageSet:ServiceImageAsset?
 ):Parcelable
 
+@Serializable
 @Parcelize
 data class ServiceImageAsset(
     val lightThemeImage:String,

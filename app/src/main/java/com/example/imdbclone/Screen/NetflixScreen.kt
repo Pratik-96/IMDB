@@ -187,14 +187,14 @@ fun NetflixScreen(navHostController: NavHostController, navigateToDetail: (ShowD
 
                 }
             }
-
-            netflixViewModel.fetchFilteredShows("in", "netflix", "netflix", "series", 85, "")
-            val topShowState = netflixViewModel.topShows.value
-            item {
-                SearchStateScreen(
-                    topShowState, navigateToDetail, false, "Critically Acclaimed TV Shows",
-                )
-            }
+//
+//            netflixViewModel.fetchFilteredShows("in", "netflix", "netflix", "series", 85, "")
+//            val topShowState = netflixViewModel.topShows.value
+//            item {
+//                SearchStateScreen(
+//                    topShowState, navigateToDetail, false, "Critically Acclaimed TV Shows",
+//                )
+//            }
 //
 //
 //            netflixViewModel.fetchDramaShows("in", "netflix", "netflix", "series", 75, "thriller")
