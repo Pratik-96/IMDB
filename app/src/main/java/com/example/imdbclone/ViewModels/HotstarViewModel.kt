@@ -10,26 +10,105 @@ import com.example.imdbclone.imdbService
 import kotlinx.coroutines.launch
 
 class HotstarViewModel:ViewModel() {
-    private val _topShows =  mutableStateOf(MainViewModel.ShowState())
-    val topShows:State<MainViewModel.ShowState> = _topShows
+    private val _topShows = mutableStateOf(MainViewModel.ShowState())
+    val topShows: State<MainViewModel.ShowState> = _topShows
 
-    fun fetchTopShows(country:String,service:String,catalogs:String,ratingMin:Int){
+    private val _actionMovies = mutableStateOf(MainViewModel.ShowState())
+    val actionMovies: State<MainViewModel.ShowState> = _actionMovies
+
+
+    private val _scifiMovies = mutableStateOf(MainViewModel.ShowState())
+    val scifiMovies: State<MainViewModel.ShowState> = _scifiMovies
+
+
+
+
+
+    fun fetchScifiMovies(
+        country: String,
+        service: String,
+        catalogs: String,
+        showType: String,
+        ratingMin: Int,
+        genre: String
+    ) {
         viewModelScope.launch {
             try {
 
-                val response = imdbService.getTopShows(country,service,catalogs,ratingMin)
-                _topShows.value = _topShows.value.copy(
+                val response = imdbService.getFilteredShows(
+                    country,
+                    service,
+                    catalogs,
+                    showType,
+                    ratingMin,
+                    genre
+                )
+                _scifiMovies.value = _scifiMovies.value.copy(
                     error = null,
                     list = response.shows,
                     loading = false
                 )
 
-            }catch (e:Exception){
-                _topShows.value = _topShows.value.copy(
+            } catch (e: Exception) {
+                _scifiMovies.value = _scifiMovies.value.copy(
                     error = e.message,
                     loading = false
                 )
             }
         }
     }
-}
+
+    fun fetchActionMovies(
+        country: String,
+        service: String,
+        catalogs: String,
+        showType: String,
+        ratingMin: Int,
+        genre: String
+    ) {
+        viewModelScope.launch {
+            try {
+
+                val response = imdbService.getFilteredShows(
+                    country,
+                    service,
+                    catalogs,
+                    showType,
+                    ratingMin,
+                    genre
+                )
+                _actionMovies.value = _actionMovies.value.copy(
+                    error = null,
+                    list = response.shows,
+                    loading = false
+                )
+
+            } catch (e: Exception) {
+                _actionMovies.value = _actionMovies.value.copy(
+                    error = e.message,
+                    loading = false
+                )
+            }
+        }
+    }
+
+        fun fetchTopShows(country: String, service: String, catalogs: String, ratingMin: Int) {
+            viewModelScope.launch {
+                try {
+
+                    val response = imdbService.getTopShows(country, service, catalogs, ratingMin)
+                    _topShows.value = _topShows.value.copy(
+                        error = null,
+                        list = response.shows,
+                        loading = false
+                    )
+
+                } catch (e: Exception) {
+                    _topShows.value = _topShows.value.copy(
+                        error = e.message,
+                        loading = false
+                    )
+                }
+            }
+        }
+    }
