@@ -2,9 +2,11 @@ package com.example.imdbclone.ui
 
 import android.content.Intent
 import android.net.Uri
+import android.widget.ImageButton
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -28,21 +31,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.imdbclone.Activities.SearchStateScreen
 import com.example.imdbclone.DataClasses.ShowDetails
+import com.example.imdbclone.R
 import com.example.imdbclone.ViewModels.HotstarViewModel
 import com.example.imdbclone.ui.theme.DeepGray
+import com.example.imdbclone.ui.theme.HotstarBackground
+import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.delay
@@ -244,10 +253,40 @@ fun ImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit
                     scifiMovieState, navigateToDetail, false, "Science Fiction Movies",
                 )
             }
+            item {
+                Studios()
+            }
         }
     }
 }
 
+@Composable
+fun Studios() {
+    Column(modifier = Modifier.fillMaxSize()) {
+        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
+            Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
+                Image(painter = painterResource(R.drawable.disney), contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+            }
+            Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
+                Image(painter = painterResource(R.drawable.pixar), contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+            }
+            Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
+                Image(painter = painterResource(R.drawable.marvel), contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+            }
+        }
+        Row(modifier = Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+            Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
+                Image(painter = painterResource(R.drawable.star_wars), contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+            }
+            Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
+                Image(painter = painterResource(R.drawable.nat_geo), contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+            }
+            Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
+                Image(painter = painterResource(R.drawable.hotstar_special), contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+            }
+        }
 
+    }
+}
 
 
