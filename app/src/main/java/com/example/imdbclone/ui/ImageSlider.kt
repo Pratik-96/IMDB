@@ -238,51 +238,42 @@ fun ImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit
 
         }
 
-        LazyColumn(
-            modifier = Modifier
-                .wrapContentSize()
-                .background(Color.Black)
-        ) {
-            item {
-                SearchStateScreen(
-                    actionMoviesState, navigateToDetail, false, "Action Movies",
-                )
-            }
-            item {
-                SearchStateScreen(
-                    scifiMovieState, navigateToDetail, false, "Science Fiction Movies",
-                )
-            }
-            item {
-                Studios()
-            }
-        }
+
     }
 }
 
 @Composable
 fun Studios() {
+
+    val disneyLogo = "https://img10.hotstar.com/image/upload/f_auto,q_90,w_3840/sources/r1/cms/prod/3776/1443776-h-993a8447aed1"
+    val pixarLogo = "https://img10.hotstar.com/image/upload/f_auto,q_90,w_3840/sources/r1/cms/prod/3793/1443793-h-7aacf32a2124"
+    val marvelLogo = "https://img10.hotstar.com/image/upload/f_auto,q_90,w_3840/sources/r1/cms/prod/3782/1443782-h-afdfe6e7c6cb"
+    val starWarsLogo = "https://img10.hotstar.com/image/upload/f_auto,q_90,w_3840/sources/r1/cms/prod/3794/1443794-h-96534e1745fa"
+    val natGeoLogo = "https://img10.hotstar.com/image/upload/f_auto,q_90,w_3840/sources/r1/cms/prod/3790/1443790-h-f4c6cb8892d1"
+    val hotstarLogo = "https://img10.hotstar.com/image/upload/f_auto,q_90,w_3840/sources/r1/cms/prod/894/1726575090894-h"
+
     Column(modifier = Modifier.fillMaxSize()) {
         Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
             Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
-                Image(painter = painterResource(R.drawable.disney), contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+
+                AsyncImage(disneyLogo, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
             }
             Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
-                Image(painter = painterResource(R.drawable.pixar), contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+                AsyncImage(pixarLogo, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
             }
             Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
-                Image(painter = painterResource(R.drawable.marvel), contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+                AsyncImage(marvelLogo, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
             }
         }
         Row(modifier = Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
             Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
-                Image(painter = painterResource(R.drawable.star_wars), contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+                AsyncImage(starWarsLogo, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
             }
             Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
-                Image(painter = painterResource(R.drawable.nat_geo), contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+                AsyncImage(natGeoLogo, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
             }
             Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
-                Image(painter = painterResource(R.drawable.hotstar_special), contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+                AsyncImage(hotstarLogo, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
             }
         }
 

@@ -15,7 +15,7 @@ private val retrofit = Retrofit.Builder().baseUrl("https://streaming-availabilit
     .addConverterFactory(GsonConverterFactory.create())
     .client(
         OkHttpClient.Builder()
-            .addInterceptor(ApiKeyInterceptor("9d9cce55e5msh7f727307af75176p144f87jsne5449e289793"))
+            .addInterceptor(ApiKeyInterceptor("ecabac9414msh481e1f24b60f3f0p11a795jsn96640d7e789e"))
             .build()
     ).build()
 

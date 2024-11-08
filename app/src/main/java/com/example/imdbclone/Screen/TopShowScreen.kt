@@ -51,14 +51,10 @@ import com.example.imdbclone.DataClasses.Show
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.R
 import com.example.imdbclone.ViewModels.MainViewModel
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
+
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
-import kotlinx.serialization.json.Json
 import java.io.File
 
 @Composable

@@ -19,16 +19,22 @@ import com.example.imdbclone.Activities.SearchStateScreen
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.ViewModels.HotstarViewModel
 import com.example.imdbclone.ui.ImageSlider
+import com.example.imdbclone.ui.Studios
+import com.example.imdbclone.ui.theme.HotstarBackground
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 
 @Composable
-fun HotstarScreen(navigateToDetail:(ShowDetails)->Unit) {
+fun HotstarScreen(navigateToDetail: (ShowDetails) -> Unit) {
 
-    val viewModel:HotstarViewModel = viewModel()
-    viewModel.fetchTopShows("in","hotstar","hotstar",80)
+    val viewModel: HotstarViewModel = viewModel()
+    viewModel.fetchTopShows("in", "hotstar", "hotstar", 80)
+    viewModel.fetchActionMovies("in", "hotstar", "hotstar", "movie", 70, "action")
+    val actionMoviesState = viewModel.actionMovies.value
+    viewModel.fetchScifiMovies("in", "hotstar", "hotstar", "movie", 70, "scifi")
+    val scifiMovieState = viewModel.scifiMovies.value
 
     val showState = viewModel.topShows
-    Box(modifier = Modifier.fillMaxSize()){
+    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
 
         when {
 
@@ -42,11 +48,22 @@ fun HotstarScreen(navigateToDetail:(ShowDetails)->Unit) {
 
             else -> {
 
-                Column(modifier = Modifier.fillMaxSize()) {
-                    ImageSlider(showState.value.list,navigateToDetail)
+                LazyColumn(modifier = Modifier.background(HotstarBackground).fillMaxSize()) {
+                    item { ImageSlider(showState.value.list, navigateToDetail) }
 
+                    item {
+                        SearchStateScreen(
+                            actionMoviesState, navigateToDetail, false, "Action Movies",
+                        )
+                    }
 
+                    item {
+                        SearchStateScreen(
+                            scifiMovieState, navigateToDetail, false, "Science Fiction Movies",
+                        )
+                    }
 
+                    item { Studios() }
 
                 }
             }
