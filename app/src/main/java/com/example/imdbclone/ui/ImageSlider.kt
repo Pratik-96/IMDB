@@ -90,7 +90,9 @@ fun ImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit
 
             Column {
                 val img = data[page].imageSet.horizontalPoster?.w720
-                Box(modifier = Modifier.wrapContentSize().height(250.dp)) {
+                Box(modifier = Modifier
+                    .wrapContentSize()
+                    .height(250.dp)) {
 
                     AsyncImage(
                         img,
@@ -129,7 +131,8 @@ fun ImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit
 
                 }
                 Box(modifier = Modifier
-                    .wrapContentSize().fillMaxWidth()
+                    .wrapContentSize()
+                    .fillMaxWidth()
                     .background(HotstarBackground)
                     .align(Alignment.CenterHorizontally)) {
                     val genreDetailList = data[page].genres
@@ -248,6 +251,12 @@ fun ImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit
 }
 
 @Composable
+fun StudioLogos(logo:String) {
+    AsyncImage(logo, contentDescription = null, contentScale = ContentScale.Crop, modifier = Modifier.height(70.dp).width(110.dp).clip(RoundedCornerShape(4.dp)))
+
+}
+
+@Composable
 fun Studios() {
 
     val disneyLogo = "https://img10.hotstar.com/image/upload/f_auto,q_90,w_3840/sources/r1/cms/prod/3776/1443776-h-993a8447aed1"
@@ -258,27 +267,42 @@ fun Studios() {
     val hotstarLogo = "https://img10.hotstar.com/image/upload/f_auto,q_90,w_3840/sources/r1/cms/prod/894/1726575090894-h"
 
     Column(modifier = Modifier.fillMaxSize()) {
-        Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly) {
-            Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
-
-                AsyncImage(disneyLogo, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+            Box(modifier = Modifier
+                .wrapContentSize()
+                .padding(4.dp)){
+                StudioLogos(disneyLogo)
             }
-            Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
-                AsyncImage(pixarLogo, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+            Box(modifier = Modifier
+                .wrapContentSize()
+                .padding(4.dp)){
+                StudioLogos(pixarLogo)
             }
-            Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
-                AsyncImage(marvelLogo, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+            Box(modifier = Modifier
+                .wrapContentSize()
+                .padding(4.dp)){
+               StudioLogos(marvelLogo)
             }
         }
-        Row(modifier = Modifier.fillMaxWidth().padding(top = 4.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
-            Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
-                AsyncImage(starWarsLogo, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(8.dp), horizontalArrangement = Arrangement.SpaceEvenly) {
+            Box(modifier = Modifier
+                .wrapContentSize()
+                .padding(4.dp)){
+                StudioLogos(starWarsLogo)
             }
-            Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
-                AsyncImage(natGeoLogo, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+            Box(modifier = Modifier
+                .wrapContentSize()
+                .padding(4.dp)){
+               StudioLogos(natGeoLogo)
             }
-            Box(modifier = Modifier.wrapContentSize().clip(RoundedCornerShape(4.dp))){
-                AsyncImage(hotstarLogo, contentDescription = null, contentScale = ContentScale.FillBounds, modifier = Modifier.height(70.dp).width(120.dp))
+            Box(modifier = Modifier
+                .wrapContentSize()
+                .padding(4.dp)){
+               StudioLogos(hotstarLogo)
             }
         }
 
