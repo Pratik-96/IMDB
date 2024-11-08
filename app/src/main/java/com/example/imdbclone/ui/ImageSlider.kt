@@ -43,6 +43,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import com.example.imdbclone.Activities.SearchStateScreen
@@ -51,7 +52,6 @@ import com.example.imdbclone.R
 import com.example.imdbclone.ViewModels.HotstarViewModel
 import com.example.imdbclone.ui.theme.DeepGray
 import com.example.imdbclone.ui.theme.HotstarBackground
-import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.delay
@@ -90,7 +90,8 @@ fun ImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit
 
             Column {
                 val img = data[page].imageSet.horizontalPoster?.w720
-                Box(modifier = Modifier.wrapContentSize()) {
+                Box(modifier = Modifier.wrapContentSize().height(250.dp)) {
+
                     AsyncImage(
                         img,
                         contentDescription = null,
@@ -110,23 +111,26 @@ fun ImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit
                                     .verticalGradient(
                                         colors = listOf(
                                             Color.Transparent,
-                                            Color.Black.copy(alpha = 0.3f),
-                                            Color.Black
+//                                            HotstarBackground.copy(alpha = 0.5f),
+                                            HotstarBackground
                                         ),
                                         startY = 0f, // Start at the top
-                                        endY = 100f
+                                        endY = 50f
                                     )
                             )
                             .align(Alignment.BottomCenter)
+                            .zIndex(3f)
                     ) {
 
 
                     }
 
 
+
                 }
                 Box(modifier = Modifier
-                    .wrapContentSize()
+                    .wrapContentSize().fillMaxWidth()
+                    .background(HotstarBackground)
                     .align(Alignment.CenterHorizontally)) {
                     val genreDetailList = data[page].genres
                     val genreList: MutableList<String> = mutableListOf()
@@ -150,6 +154,7 @@ fun ImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit
                     rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
                 Box(modifier = Modifier
                     .wrapContentSize()
+                    .background(HotstarBackground)
                     .align(Alignment.CenterHorizontally)) {
 
                     var link = data[page].streamingOptions?.`in`?.get(0)?.link.toString()
