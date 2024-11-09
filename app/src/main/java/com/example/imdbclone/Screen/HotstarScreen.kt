@@ -33,10 +33,10 @@ import com.example.imdbclone.ui.theme.HotstarBackground
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 
 @Composable
-fun HotstarScreen(navigateToDetail: (ShowDetails) -> Unit) {
+fun HotstarScreen(navigateToDetail: (ShowDetails) -> Unit,navigateToMarvel:()->Unit) {
 
     val viewModel: HotstarViewModel = viewModel()
-    viewModel.fetchTopShows("in", "hotstar", "hotstar", 80)
+//    viewModel.fetchTopShows("in", "hotstar", "hotstar", 80)
 //    viewModel.fetchActionMovies("in", "hotstar", "hotstar", "movie", 70, "action")
     val actionMoviesState = viewModel.actionMovies.value
 //    viewModel.fetchScifiMovies("in", "hotstar", "hotstar", "movie", 70, "scifi")
@@ -47,44 +47,44 @@ fun HotstarScreen(navigateToDetail: (ShowDetails) -> Unit) {
         .fillMaxSize()
         .background(Color.Black)) {
 
-        when {
-
-            showState.value.loading -> {
-                CircularProgressIndicator(Modifier.align(Alignment.Center))
-            }
-
-            showState.value.error != null -> {
-                Text(showState.value.error.toString(), color = Color.White)
-            }
-
-            else -> {
+//        when {
+//
+//            showState.value.loading -> {
+//                CircularProgressIndicator(Modifier.align(Alignment.Center))
+//            }
+//
+//            showState.value.error != null -> {
+//                Text(showState.value.error.toString(), color = Color.White)
+//            }
+//
+//            else -> {
 
                 LazyColumn(modifier = Modifier
                     .background(HotstarBackground)
                     .fillMaxSize()) {
-                    item { ImageSlider(showState.value.list, navigateToDetail) }
+//                    item { ImageSlider(showState.value.list, navigateToDetail) }
+//
+//                    item {
+//                        SearchStateScreen(
+//                            actionMoviesState, navigateToDetail, false, "Action Movies",
+//                        )
+//                    }
+//
+//                    item {
+//                        SearchStateScreen(
+//                            scifiMovieState, navigateToDetail, false, "Science Fiction Movies",
+//                        )
+//                    }
 
-                    item {
-                        SearchStateScreen(
-                            actionMoviesState, navigateToDetail, false, "Action Movies",
-                        )
-                    }
-
-                    item {
-                        SearchStateScreen(
-                            scifiMovieState, navigateToDetail, false, "Science Fiction Movies",
-                        )
-                    }
-
-                    item { Studios() }
+                    item { Studios(navigateToMarvel) }
 
                 }
             }
 
         }
-    }
+//    }
 
-}
+//}
 
 @Preview(showBackground = true)
 @Composable

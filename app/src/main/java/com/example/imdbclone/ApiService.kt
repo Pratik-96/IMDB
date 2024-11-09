@@ -1,6 +1,7 @@
 package com.example.imdbclone
 
 import android.media.tv.TvContract.Programs.Genres
+import androidx.compose.ui.graphics.Path
 import com.example.imdbclone.DataClasses.Show
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.DataClasses.ShowResponse
@@ -15,7 +16,7 @@ private val retrofit = Retrofit.Builder().baseUrl("https://streaming-availabilit
     .addConverterFactory(GsonConverterFactory.create())
     .client(
         OkHttpClient.Builder()
-            .addInterceptor(ApiKeyInterceptor("ecabac9414msh481e1f24b60f3f0p11a795jsn96640d7e789e"))
+            .addInterceptor(ApiKeyInterceptor("a6bfc0423bmshcc4ea867578c29ap1ccb1cjsnaef214aaa989"))
             .build()
     ).build()
 
@@ -30,12 +31,8 @@ interface ApiService {
         @Query("show_type") showType: String
     ): List<ShowDetails>
 
-
-    @GET("shows/")
-    suspend fun searchShow(
-        @Query("id") id: String,
-
-    ): List<ShowDetails>
+    @GET("shows/{id}")
+    suspend fun searchShow(@retrofit2.http.Path("id") id: String): ShowDetails
 
     @GET("shows/search/filters")
     suspend fun getFilteredShows(

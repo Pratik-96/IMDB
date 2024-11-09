@@ -2,6 +2,7 @@ package com.example.imdbclone.Screen
 
 import android.content.Intent
 import android.net.Uri
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -28,6 +29,7 @@ import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
@@ -51,6 +53,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
@@ -58,10 +61,19 @@ import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.request.ImageRequest
 import coil.size.Size
+import com.example.imdbclone.Activities.SearchShowsScreen
 import com.example.imdbclone.DataClasses.ServiceMetaData
 import com.example.imdbclone.DataClasses.ShowDetails
+import com.example.imdbclone.ViewModels.HotstarViewModel
 import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.ui.theme.Gray
+
+
+@Composable
+fun StateScreenForMarvelData() {
+
+}
+
 
 @Composable
 fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
@@ -421,7 +433,9 @@ fun BackgroundPoster(url: String,navHostController: NavHostController) {
             onClick = {
                 navHostController.popBackStack()
             },
-            modifier = Modifier.padding(8.dp).align(Alignment.TopEnd),
+            modifier = Modifier
+                .padding(8.dp)
+                .align(Alignment.TopEnd),
             colors = IconButtonDefaults.iconButtonColors(containerColor = Color.Black.copy(alpha = 0.6f))
         ) {
             Icon(

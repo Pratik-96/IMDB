@@ -8,6 +8,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -257,7 +258,7 @@ fun StudioLogos(logo:String) {
 }
 
 @Composable
-fun Studios() {
+fun Studios(navigateToMarvel:()->Unit) {
 
     val disneyLogo = "https://img10.hotstar.com/image/upload/f_auto,q_90,w_3840/sources/r1/cms/prod/3776/1443776-h-993a8447aed1"
     val pixarLogo = "https://img10.hotstar.com/image/upload/f_auto,q_90,w_3840/sources/r1/cms/prod/3793/1443793-h-7aacf32a2124"
@@ -265,7 +266,7 @@ fun Studios() {
     val starWarsLogo = "https://img10.hotstar.com/image/upload/f_auto,q_90,w_3840/sources/r1/cms/prod/3794/1443794-h-96534e1745fa"
     val natGeoLogo = "https://img10.hotstar.com/image/upload/f_auto,q_90,w_3840/sources/r1/cms/prod/3790/1443790-h-f4c6cb8892d1"
     val hotstarLogo = "https://img10.hotstar.com/image/upload/f_auto,q_90,w_3840/sources/r1/cms/prod/894/1726575090894-h"
-
+    val context = LocalContext.current
     Column(modifier = Modifier.fillMaxSize()) {
         Row(modifier = Modifier
             .fillMaxWidth()
@@ -281,7 +282,10 @@ fun Studios() {
                 StudioLogos(pixarLogo)
             }
             Box(modifier = Modifier
-                .wrapContentSize()
+                .wrapContentSize().clickable {
+                    navigateToMarvel()
+
+                }
                 .padding(4.dp)){
                StudioLogos(marvelLogo)
             }

@@ -77,6 +77,7 @@ class MainViewModel : ViewModel() {
         }
     }
 
+
 private fun fetchNetflixShows() {
         viewModelScope.launch {
             try {
@@ -269,6 +270,11 @@ private fun fetchPrimeMovies() {
     data class ShowState(
         val error: String? = null,
         val list: List<ShowDetails> = emptyList(),
+        var loading: Boolean = true
+    )
+    data class SearchShowState(
+        val error: String? = null,
+        val item: ShowDetails? = null ,
         var loading: Boolean = true
     )
 }

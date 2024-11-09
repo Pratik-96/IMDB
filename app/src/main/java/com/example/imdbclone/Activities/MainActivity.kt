@@ -15,10 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -36,15 +34,12 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
@@ -61,18 +56,19 @@ import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import coil.size.Size
 import com.example.imdbclone.DataClasses.ShowDetails
-import com.example.imdbclone.Screen.DetailScreen
-import com.example.imdbclone.Screen.ImportantText
-import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.Screen.AppleScreen
+import com.example.imdbclone.Screen.DetailScreen
 import com.example.imdbclone.Screen.HotstarScreen
+import com.example.imdbclone.Screen.ImportantText
 import com.example.imdbclone.Screen.LargeText
 import com.example.imdbclone.Screen.NetflixScreen
 import com.example.imdbclone.Screen.PrimeScreen
-import com.example.imdbclone.Screen.SonyScreen
-import com.example.imdbclone.Screen.ZeeScreen
+import com.example.imdbclone.Screen.Screen
 import com.example.imdbclone.Screen.Screens
+import com.example.imdbclone.Screen.SonyScreen
 import com.example.imdbclone.Screen.TopShowScreen
+import com.example.imdbclone.Screen.ZeeScreen
+import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import kotlinx.coroutines.launch
 
@@ -219,63 +215,70 @@ fun NavDrawer() {
                 .background(Color.White),
                 topBar = {
 
-                                TopAppBar(title = {
+                    TopAppBar(
+                        title = {
 
 
-                                    Row(
-                                        modifier = Modifier.wrapContentSize(),
-                                        horizontalArrangement = Arrangement.SpaceBetween
-                                    ) {
-                                        if (selectedItem.isNotEmpty()) {
-                                            NavLogo(selectedItem)
+                            Row(
+                                modifier = Modifier.wrapContentSize(),
+                                horizontalArrangement = Arrangement.SpaceBetween
+                            ) {
+                                if (selectedItem.isNotEmpty()) {
+                                    NavLogo(selectedItem)
 //                        Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search", modifier = Modifier.padding(8.dp))
-                                        }
-                                        if (selectedItemIndex==0){
-                                            LargeText("For Pratik")
-                                        }
-                                        Spacer(Modifier.weight(1f))
-                                        IconButton( onClick = {
-                                            context.startActivity(Intent(context, SearchActivity::class.java))
-
-                                        }) {
-                                            Icon(
-                                                imageVector = Icons.Default.Search,
-                                                contentDescription = "Search"
-                                            )
-                                        }
-
-                                    }
-
-
-                                },
-                                    navigationIcon = {
-
-                                        IconButton(onClick = {
-
-                                            scope.launch {
-                                                drawerState.open()
-                                            }
-
-                                        }) {
-                                            Icon(
-                                                imageVector = Icons.Filled.Menu,
-                                                contentDescription = null
-                                            )
-
-                                        }
-                                    },
-                                    modifier = Modifier.wrapContentSize()
-                                        .background(Color.DarkGray),
-                                    colors = TopAppBarColors(
-                                        containerColor = Color.Transparent,
-                                        scrolledContainerColor = Color.DarkGray,
-                                        navigationIconContentColor = Color.White,
-                                        titleContentColor = Color.White,
-                                        actionIconContentColor = Color.White
+                                }
+                                if (selectedItemIndex == 0) {
+                                    LargeText("For Pratik")
+                                }
+                                Spacer(Modifier.weight(1f))
+                                IconButton(onClick = {
+                                    context.startActivity(
+                                        Intent(
+                                            context,
+                                            SearchActivity::class.java
+                                        )
                                     )
+
+                                }) {
+                                    Icon(
+                                        imageVector = Icons.Default.Search,
+                                        contentDescription = "Search"
+                                    )
+                                }
+
+                            }
+
+
+                        },
+                        navigationIcon = {
+
+                            IconButton(onClick = {
+
+                                scope.launch {
+                                    drawerState.open()
+                                }
+
+                            }) {
+                                Icon(
+                                    imageVector = Icons.Filled.Menu,
+                                    contentDescription = null
                                 )
 
-            }) { innerPadding ->
+                            }
+                        },
+                        modifier = Modifier
+                            .wrapContentSize()
+                            .background(Color.DarkGray),
+                        colors = TopAppBarColors(
+                            containerColor = Color.Transparent,
+                            scrolledContainerColor = Color.DarkGray,
+                            navigationIconContentColor = Color.White,
+                            titleContentColor = Color.White,
+                            actionIconContentColor = Color.White
+                        )
+                    )
+
+                }) { innerPadding ->
                 val showViewModel: MainViewModel = viewModel()
 
                 NavHost(
@@ -302,14 +305,17 @@ fun NavDrawer() {
                                 "ShowData"
                             )
                         if (showData != null) {
-                            DetailScreen(showData,navHostController)
+                            DetailScreen(showData, navHostController)
                         }
                     }
                     composable(route = Screens.NetflixScreen.route) {
 
 
-                        NetflixScreen(navHostController,navigateToDetail = {
-                            navHostController.currentBackStackEntry?.savedStateHandle?.set("ShowData",it)
+                        NetflixScreen(navHostController, navigateToDetail = {
+                            navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                                "ShowData",
+                                it
+                            )
                             navHostController.navigate(Screens.DetailScreen.route)
                         })
                     }
@@ -320,8 +326,24 @@ fun NavDrawer() {
                         PrimeScreen()
                     }
                     composable(route = Screens.HotstarScreen.route) {
-                        HotstarScreen (navigateToDetail = {
-                            navHostController.currentBackStackEntry?.savedStateHandle?.set("ShowData",it)
+                        HotstarScreen(navigateToDetail = {
+                            navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                                "ShowData",
+                                it
+                            )
+                            navHostController.navigate(Screens.DetailScreen.route)
+                        }, navigateToMarvel = {
+                            navHostController.navigate(Screens.MarvelScreen.route)
+
+                        }
+                        )
+                    }
+                    composable(route = Screens.MarvelScreen.route) {
+                        Screen({
+                            navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                                "ShowData",
+                                it
+                            )
                             navHostController.navigate(Screens.DetailScreen.route)
                         })
                     }

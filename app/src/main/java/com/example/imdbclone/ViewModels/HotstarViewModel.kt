@@ -21,6 +21,31 @@ class HotstarViewModel:ViewModel() {
     val scifiMovies: State<MainViewModel.ShowState> = _scifiMovies
 
 
+    private val _marvelShows = mutableStateOf(MainViewModel.SearchShowState())
+    val marvelShows: State<MainViewModel.SearchShowState> = _marvelShows
+
+
+
+    fun fetchShowId(id:String) {
+        viewModelScope.launch {
+            try {
+
+                val response = imdbService.searchShow(id)
+                _marvelShows.value = _marvelShows.value.copy(
+                    error = null,
+                    item = response,
+                    loading = false
+                )
+
+            }catch (e:Exception){
+                _marvelShows.value = _marvelShows.value.copy(
+                    error = e.message,
+                    loading = false
+                )
+            }
+        }
+    }
+
 
 
 
