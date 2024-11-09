@@ -2,6 +2,7 @@ package com.example.imdbclone.Screen
 
 sealed class Screens(val route:String) {
     object HomeScreen: Screens("HomeScreen")
+    object BufferScreen: Screens("BufferScreen")
     object SearchScreen: Screens("SearchScreen")
     object MarvelScreen: Screens("MarvelScreen")
     object DetailScreen: Screens("DetailScreen")

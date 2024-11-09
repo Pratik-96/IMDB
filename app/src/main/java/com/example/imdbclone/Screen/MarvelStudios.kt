@@ -1,5 +1,6 @@
 package com.example.imdbclone.Screen
 
+import android.content.Intent
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -41,6 +42,7 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.compose.AsyncImagePainter
+import com.example.imdbclone.Activities.BufferActivity
 import com.example.imdbclone.DataClasses.MarvelData
 import com.example.imdbclone.DataClasses.MarvelList
 import com.example.imdbclone.DataClasses.ShowDetails
@@ -107,11 +109,10 @@ fun MarvelShowsScreen(shows: List<MarvelData>, navigateToDetail: (ShowDetails) -
 fun LoadingScreen() {
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(HotstarBackground)) {
+        .background(HotstarBackground), verticalArrangement = Arrangement.Center) {
         CircularProgressIndicator(
             Modifier
-                .align(Alignment.CenterHorizontally)
-                .shadow(elevation = 10.dp))
+                .align(Alignment.CenterHorizontally), color = Color.White)
     }
 }
 
@@ -126,11 +127,23 @@ fun MarvelShowItem(item: MarvelData, navigateToDetail: (ShowDetails) -> Unit) {
     val context = LocalContext.current
 //
 
+    when{
+        !marvelState.loading->{
+            Log.d("TAG",marvelState.item.toString() )
+        }
+    }
     Column(
         modifier = Modifier
             .padding(2.dp)
+
             .clickable {
+
+
+                val intent = Intent(context,BufferActivity::class.java)
+                intent.putExtra("id",item.id)
+                context.startActivity(intent)
 //                viewModel.fetchShowId(item.id)
+
 //
 ////                        marvelState.item?.let { navigateToDetail(it) }
 //                marvelState.item?.let { list.add(it) }

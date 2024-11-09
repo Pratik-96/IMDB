@@ -26,6 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".Activities.SearchActivity" />
+        <activity android:name=".Activities.BufferActivity" />
     </application>
 
 </manifest>

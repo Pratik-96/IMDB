@@ -1,5 +1,6 @@
 package com.example.imdbclone.Screen
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
@@ -69,10 +70,6 @@ import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.ui.theme.Gray
 
 
-@Composable
-fun StateScreenForMarvelData() {
-
-}
 
 
 @Composable
@@ -429,9 +426,14 @@ fun BackgroundPoster(url: String,navHostController: NavHostController) {
             contentScale = ContentScale.Crop
 
         )
+        val activityContext = LocalContext.current as Activity
         IconButton(
             onClick = {
-                navHostController.popBackStack()
+                if(navHostController.currentBackStackEntry?.destination!=null) {
+                    navHostController.popBackStack()
+                }else{
+                    activityContext.finish()
+                }
             },
             modifier = Modifier
                 .padding(8.dp)
