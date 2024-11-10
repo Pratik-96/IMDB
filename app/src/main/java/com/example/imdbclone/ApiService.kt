@@ -31,6 +31,12 @@ interface ApiService {
         @Query("show_type") showType: String
     ): List<ShowDetails>
 
+    @GET("shows/top")
+    suspend fun getAllShows(
+        @Query("country") country: String,
+        @Query("service") service: String,
+    ): List<ShowDetails>
+
     @GET("shows/{id}")
     suspend fun searchShow(@retrofit2.http.Path("id") id: String): ShowDetails
 

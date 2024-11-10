@@ -323,7 +323,13 @@ fun NavDrawer() {
 
 
                     composable(route = Screens.PrimeScreen.route) {
-                        PrimeScreen()
+                        PrimeScreen(navigateToDetail = {
+                            navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                                "ShowData",
+                                it
+                            )
+                            navHostController.navigate(Screens.DetailScreen.route)
+                        })
                     }
                     composable(route = Screens.HotstarScreen.route) {
                         HotstarScreen(navigateToDetail = {

@@ -84,9 +84,13 @@ fun PrimeScreen(navigateToDetail:(ShowDetails)->Unit) {
         when {
 
             showState.value.loading -> {
-                LoadingLogo(
-                    mainViewModel.items[2].url, Color.Black
-                )
+                Column(modifier = Modifier.fillMaxSize()) {
+
+                    LoadingLogo(
+                        mainViewModel.items[2].url, Color.Black, Color.White
+                    )
+                    Loader(Color.White)
+                }
             }
 
             showState.value.error != null -> {
@@ -190,7 +194,7 @@ fun PrimeImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) ->
 
 
 @Composable
-fun LoadingLogo(url: String,background:Color) {
+fun LoadingLogo(url: String,background:Color,loaderColor:Color) {
     Column(
         modifier = Modifier.fillMaxSize().background(background),
         verticalArrangement = Arrangement.Center
@@ -224,9 +228,12 @@ fun LoadingLogo(url: String,background:Color) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .height(300.dp),
+                .height(200.dp),
             contentDescription = null
         )
+
+        CircularProgressIndicator(Modifier.align(Alignment.CenterHorizontally), color = loaderColor)
+
     }
 }
 

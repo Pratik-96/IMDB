@@ -27,72 +27,89 @@ import com.example.imdbclone.Activities.SearchStateScreen
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.R
 import com.example.imdbclone.ViewModels.HotstarViewModel
+import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.ui.ImageSlider
 import com.example.imdbclone.ui.Studios
 import com.example.imdbclone.ui.theme.HotstarBackground
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 
 @Composable
-fun HotstarScreen(navigateToDetail: (ShowDetails) -> Unit,navigateToMarvel:()->Unit) {
+fun HotstarScreen(navigateToDetail: (ShowDetails) -> Unit, navigateToMarvel: () -> Unit) {
 
     val viewModel: HotstarViewModel = viewModel()
-//    viewModel.fetchTopShows("in", "hotstar", "hotstar", 80)
-//    viewModel.fetchActionMovies("in", "hotstar", "hotstar", "movie", 70, "action")
+    val mainViewModel:MainViewModel= viewModel()
+    viewModel.fetchTopShows("in", "hotstar", "hotstar", 80)
+    viewModel.fetchActionMovies("in", "hotstar", "hotstar", "movie", 70, "action")
     val actionMoviesState = viewModel.actionMovies.value
-//    viewModel.fetchScifiMovies("in", "hotstar", "hotstar", "movie", 70, "scifi")
+    viewModel.fetchScifiMovies("in", "hotstar", "hotstar", "movie", 70, "scifi")
     val scifiMovieState = viewModel.scifiMovies.value
 
     val showState = viewModel.topShows
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .background(Color.Black)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.Black)
+    ) {
 
-//        when {
-//
-//            showState.value.loading -> {
-//                CircularProgressIndicator(Modifier.align(Alignment.Center))
-//            }
-//
-//            showState.value.error != null -> {
-//                Text(showState.value.error.toString(), color = Color.White)
-//            }
-//
-//            else -> {
+        when {
 
-                LazyColumn(modifier = Modifier
-                    .background(HotstarBackground)
-                    .fillMaxSize()) {
-//                    item { ImageSlider(showState.value.list, navigateToDetail) }
-//
-//                    item {
-//                        SearchStateScreen(
-//                            actionMoviesState, navigateToDetail, false, "Action Movies",
-//                        )
-//                    }
-//
-//                    item {
-//                        SearchStateScreen(
-//                            scifiMovieState, navigateToDetail, false, "Science Fiction Movies",
-//                        )
-//                    }
+            showState.value.loading -> {
+                Column {
+                    LoadingLogo(mainViewModel.items.get(3).url, HotstarBackground, Color.White)
+
+                }
+            }
+
+            showState.value.error != null -> {
+                Text(showState.value.error.toString(), color = Color.White)
+            }
+
+            else -> {
+
+                LazyColumn(
+                    modifier = Modifier
+                        .background(HotstarBackground)
+                        .fillMaxSize()
+                ) {
+                    item { ImageSlider(showState.value.list, navigateToDetail) }
 
                     item { Studios(navigateToMarvel) }
+
+                    item {
+                        SearchStateScreen(
+                            actionMoviesState, navigateToDetail, false, "Action Movies",
+                        )
+                    }
+
+                    item {
+                        SearchStateScreen(
+                            scifiMovieState, navigateToDetail, false, "Science Fiction Movies",
+                        )
+                    }
+
 
                 }
             }
 
         }
-//    }
+    }
 
-//}
+}
 
 @Preview(showBackground = true)
 @Composable
 private fun Bg() {
     IMDBCloneTheme {
         Column(modifier = Modifier.fillMaxSize()) {
-            Box(modifier = Modifier.fillMaxWidth()){
-                Image(painter = painterResource(R.drawable.img1),null, contentScale = ContentScale.FillBounds, modifier = Modifier.fillMaxWidth().height(200.dp))
+            Box(modifier = Modifier.fillMaxWidth()) {
+                Image(
+                    painter = painterResource(R.drawable.img1),
+                    null,
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()

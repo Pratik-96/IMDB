@@ -18,6 +18,29 @@ class NetflixViewModel:ViewModel() {
     private val _topDramas = mutableStateOf(ShowState())
     val topDramas: State<ShowState> = _topDramas
 
+    private val _fetchShow = mutableStateOf(MainViewModel.SearchShowState())
+    val fetchShow: State<MainViewModel.SearchShowState> = _fetchShow
+
+
+    fun fetchShowId(id:String) {
+        viewModelScope.launch {
+            try {
+
+                val response = imdbService.searchShow(id)
+                _fetchShow.value = _fetchShow.value.copy(
+                    error = null,
+                    item = response,
+                    loading = false
+                )
+
+            }catch (e:Exception){
+                _fetchShow.value = _fetchShow.value.copy(
+                    error = e.message,
+                    loading = false
+                )
+            }
+        }
+    }
 
     fun fetchFilteredShows(country:String,service:String,catalogs:String,showType:String,ratingMin:Int,genre:String){
         viewModelScope.launch {

@@ -23,6 +23,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,16 +44,19 @@ import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.imdbclone.Activities.SearchStateScreen
 import com.example.imdbclone.DataClasses.ShowDetails
+import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.ViewModels.NetflixViewModel
 
 @Composable
 fun NetflixScreen(navHostController: NavHostController, navigateToDetail: (ShowDetails) -> Unit) {
     val netflixViewModel: NetflixViewModel = viewModel()
-
+    val mainViewModel: MainViewModel = viewModel()
     val context = LocalContext.current
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
 
+    netflixViewModel.fetchShowId("6")
+    val state = netflixViewModel.fetchShow.value
 
 
     Column(
@@ -62,139 +66,179 @@ fun NetflixScreen(navHostController: NavHostController, navigateToDetail: (ShowD
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
 
-        LazyColumn(modifier = Modifier.fillMaxSize()) {
 
-            item {
-                Box(
-                    modifier = Modifier
-                        .padding(16.dp)
-
-                        .fillMaxWidth(), contentAlignment = Alignment.BottomCenter
+        when {
+            state.loading -> {
+                Column(
+                    modifier = Modifier.fillMaxSize(),
+                    verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Image(
-                        painter = rememberAsyncImagePainter("https://cdn.movieofthenight.com/show/6/poster/vertical/en/720.jpg?Expires=1749503848&Signature=bG~7EFZYfvih1oJwuAlmg09ohwlbOlaac2hs-dovb0YkhRavEvnyeAQPLrvlBmXRcNoLzYuYKuahyTCrhmBj-oz~ZyzEwB2chx8cbEZBus97BFdjEQBxjvJL4eo3u~-QcLEjVqGnbln4tAd8gCA1ZbHpy44HMmkNWebA~5IHR5PzPd~YGZClJyx2x~heuVSufPznErCY~gxwLU9HvcjYQaMNQHCHgoGUwcVdDfcIKKYRPUX-KyZKc9kibx1Cnpw7YmFYX3jpW0dmPhEDKsYe08nrpXMEQ7hy-A~fJFeD-zSk6LDJ0ZVJXeJsTA-7D6jWvGzPoQS0q-imLd6IquuJ3A__&Key-Pair-Id=KK4HN3OO4AT5R"),
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .height(450.dp)
-                            .clip(shape = RoundedCornerShape(8.dp))
-                    )
-
-
-                    val genresList: List<String> = listOf("Drama", "Fantasy", "Horror")
-                    val genres = genresList.joinToString(" • ") { it }
-                    Column(
-                        modifier = Modifier
-                            .wrapContentSize()
-                            .fillMaxWidth()
-                            .background(
-                                brush =
-                                Brush
-                                    .verticalGradient(
-                                        colors = listOf(
-                                            Color.Transparent,
-                                            Color.Black.copy(alpha = 0.4f),
-                                            Color.Black.copy(alpha = 0.6f)
-                                        ),
-                                        startY = 0f, // Start at the top
-                                        endY = 100f
-                                    )
-                            )
-                            .shadow(elevation = 0.dp),
-                        verticalArrangement = Arrangement.Center,
-                        horizontalAlignment = Alignment.CenterHorizontally
-                    ) {
-                        Box(
-                            modifier = Modifier.wrapContentSize(),
-                            contentAlignment = Alignment.BottomCenter
-                        ) {
-                            Text(
-                                genres,
-                                color = Color.White,
-                                fontSize = 14.sp,
-                                fontFamily = FontFamily.SansSerif,
-                                modifier = Modifier
-                                    .padding(start = 8.dp, top = 8.dp)
-                                    .align(Alignment.BottomCenter),
-
-                                )
-                        }
-                        Box(modifier = Modifier.wrapContentSize()) {
-                            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                                Button(
-                                    onClick = {
-
-
-                                        launcher.launch(
-                                            Intent(
-                                                Intent.ACTION_VIEW,
-                                                Uri.parse("https://www.netflix.com/watch/80057281")
-                                            )
-                                        )
-
-
-                                    }, modifier = Modifier
-                                        .height(55.dp)
-                                        .padding(8.dp),
-//                            .shadow(shape = RoundedCornerShape(4.dp), elevation = 10.dp),
-                                    colors = ButtonDefaults.buttonColors(
-                                        contentColor = Color.Black,
-                                        containerColor = Color.White
-                                    ), shape = RoundedCornerShape(4.dp)
-
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.PlayArrow,
-                                        contentDescription = "Play"
-                                    )
-                                    ButtonText("PLAY")
-
-                                }
-                                Button(
-                                    onClick = {
-
-                                        //TODO:Store to watchlist
-                                        Toast.makeText(context,"Coming soon", Toast.LENGTH_SHORT).show()
-
-                                    }, modifier = Modifier
-                                        .height(55.dp)
-                                        .padding(8.dp),
-//                            .shadow(shape = RoundedCornerShape(4.dp), elevation = 10.dp),
-                                    colors = ButtonDefaults.buttonColors(
-                                        contentColor = Color.White,
-                                        containerColor = Color.Black.copy(0.7f)
-                                    ), shape = RoundedCornerShape(4.dp)
-
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Filled.Add,
-                                        contentDescription = "add"
-                                    )
-                                    Text(
-                                        text = "My List",
-                                        color = Color.White,
-                                        fontFamily = FontFamily.SansSerif,
-                                        fontSize = 16.sp,
-                                        modifier = Modifier.padding(start = 8.dp),
-                                        fontWeight = FontWeight.Bold
-                                    )
-                                }
-                            }
-
-                        }
-                    }
-
-
+                    LoadingLogo(mainViewModel.items.get(1).url, Color.Black,Color.Red)
                 }
+
             }
-//
-            netflixViewModel.fetchFilteredShows("in", "netflix", "netflix", "series", 85, "")
-            val topShowState = netflixViewModel.topShows.value
-            item {
-                SearchStateScreen(
-                    topShowState, navigateToDetail, false, "Critically Acclaimed TV Shows",
+
+            state.error != null -> {
+
+            }
+
+            else -> {
+
+                NetflixContent(navigateToDetail,state)
+
+            }
+        }
+
+    }
+}
+
+@Composable
+fun NetflixContent(navigateToDetail: (ShowDetails) -> Unit, state: MainViewModel.SearchShowState) {
+    val netflixViewModel: NetflixViewModel = viewModel()
+    val mainViewModel: MainViewModel = viewModel()
+    val context = LocalContext.current
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
+
+    LazyColumn(modifier = Modifier.fillMaxSize()) {
+
+        item {
+            Box(
+                modifier = Modifier
+                    .padding(16.dp)
+
+                    .fillMaxWidth(), contentAlignment = Alignment.BottomCenter
+            ) {
+                Image(
+                    painter = rememberAsyncImagePainter(state.item?.imageSet?.verticalPoster?.w720),
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .height(450.dp)
+                        .clip(shape = RoundedCornerShape(8.dp))
                 )
+
+
+                val genresList: List<String> = listOf("Drama", "Fantasy", "Horror")
+                val genres = genresList.joinToString(" • ") { it }
+                Column(
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .fillMaxWidth()
+                        .background(
+                            brush =
+                            Brush
+                                .verticalGradient(
+                                    colors = listOf(
+                                        Color.Transparent,
+                                        Color.Black.copy(alpha = 0.4f),
+                                        Color.Black.copy(alpha = 0.6f)
+                                    ),
+                                    startY = 0f, // Start at the top
+                                    endY = 100f
+                                )
+                        )
+                        .shadow(elevation = 0.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Box(
+                        modifier = Modifier.wrapContentSize(),
+                        contentAlignment = Alignment.BottomCenter
+                    ) {
+                        Text(
+                            genres,
+                            color = Color.White,
+                            fontSize = 14.sp,
+                            fontFamily = FontFamily.SansSerif,
+                            modifier = Modifier
+                                .padding(start = 8.dp, top = 8.dp)
+                                .align(Alignment.BottomCenter),
+
+                            )
+                    }
+                    Box(modifier = Modifier.wrapContentSize()) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Button(
+                                onClick = {
+
+
+                                    launcher.launch(
+                                        Intent(
+                                            Intent.ACTION_VIEW,
+                                            Uri.parse("https://www.netflix.com/watch/80057281")
+                                        )
+                                    )
+
+
+                                }, modifier = Modifier
+                                    .height(55.dp)
+                                    .padding(8.dp),
+//                            .shadow(shape = RoundedCornerShape(4.dp), elevation = 10.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    contentColor = Color.Black,
+                                    containerColor = Color.White
+                                ), shape = RoundedCornerShape(4.dp)
+
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.PlayArrow,
+                                    contentDescription = "Play"
+                                )
+                                ButtonText("PLAY")
+
+                            }
+                            Button(
+                                onClick = {
+
+                                    //TODO:Store to watchlist
+                                    Toast.makeText(context, "Coming soon", Toast.LENGTH_SHORT)
+                                        .show()
+
+                                }, modifier = Modifier
+                                    .height(55.dp)
+                                    .padding(8.dp),
+//                            .shadow(shape = RoundedCornerShape(4.dp), elevation = 10.dp),
+                                colors = ButtonDefaults.buttonColors(
+                                    contentColor = Color.White,
+                                    containerColor = Color.Black.copy(0.7f)
+                                ), shape = RoundedCornerShape(4.dp)
+
+                            ) {
+                                Icon(
+                                    imageVector = Icons.Filled.Add,
+                                    contentDescription = "add"
+                                )
+                                Text(
+                                    text = "My List",
+                                    color = Color.White,
+                                    fontFamily = FontFamily.SansSerif,
+                                    fontSize = 16.sp,
+                                    modifier = Modifier.padding(start = 8.dp),
+                                    fontWeight = FontWeight.Bold
+                                )
+                            }
+                        }
+
+                    }
+                }
+
+
             }
+
+        }
+
+//
+        netflixViewModel.fetchFilteredShows("in", "netflix", "netflix", "series", 85, "")
+        val topShowState = netflixViewModel.topShows.value
+        item {
+            SearchStateScreen(
+                topShowState, navigateToDetail, false, "Critically Acclaimed TV Shows",
+            )
+        }
 //
 //
 //            netflixViewModel.fetchDramaShows("in", "netflix", "netflix", "series", 75, "thriller")
@@ -206,9 +250,15 @@ fun NetflixScreen(navHostController: NavHostController, navigateToDetail: (ShowD
 //            }
 //
 
-        }
-
-
     }
+
 }
 
+@Composable
+fun Loader(color: Color) {
+
+    Box(modifier = Modifier.wrapContentSize()) {
+
+    }
+
+}
