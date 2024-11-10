@@ -8,6 +8,7 @@ import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.DataClasses.ShowResponse
 import com.example.imdbclone.imdbService
 import kotlinx.coroutines.launch
+import org.intellij.lang.annotations.Language
 
 class HotstarViewModel:ViewModel() {
     private val _topShows = mutableStateOf(MainViewModel.ShowState())
@@ -55,7 +56,8 @@ class HotstarViewModel:ViewModel() {
         catalogs: String,
         showType: String,
         ratingMin: Int,
-        genre: String
+        genre: String,
+        language: String
     ) {
         viewModelScope.launch {
             try {
@@ -66,7 +68,8 @@ class HotstarViewModel:ViewModel() {
                     catalogs,
                     showType,
                     ratingMin,
-                    genre
+                    genre,
+                    language
                 )
                 _scifiMovies.value = _scifiMovies.value.copy(
                     error = null,
@@ -89,7 +92,8 @@ class HotstarViewModel:ViewModel() {
         catalogs: String,
         showType: String,
         ratingMin: Int,
-        genre: String
+        genre: String,
+        language: String
     ) {
         viewModelScope.launch {
             try {
@@ -100,7 +104,8 @@ class HotstarViewModel:ViewModel() {
                     catalogs,
                     showType,
                     ratingMin,
-                    genre
+                    genre,
+                    language
                 )
                 _actionMovies.value = _actionMovies.value.copy(
                     error = null,

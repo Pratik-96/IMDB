@@ -47,9 +47,12 @@ interface ApiService {
         @Query("catalogs") catalogs: String,
         @Query("show_type") showType: String,
         @Query("rating_min") rating_min: Int,
-        @Query("genres") genre: String
+        @Query("genres") genre: String,
+        @Query("show_original_language") language: String
+
 
     ): Show
+
 
   @GET("shows/search/filters")
     suspend fun getTopShows(

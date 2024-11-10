@@ -103,7 +103,7 @@ private fun fetchNetflixShows() {
         viewModelScope.launch {
             try {
 
-                val response = imdbService.getFilteredShows("in","hotstar","hotstar","series",75,"")
+                val response = imdbService.getFilteredShows("in","hotstar","hotstar","series",75,"","")
                 _hotstarShowState.value = _hotstarShowState.value.copy(
                     error = null,
                     list = response.shows,

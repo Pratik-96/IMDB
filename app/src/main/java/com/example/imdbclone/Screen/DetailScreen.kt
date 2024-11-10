@@ -139,10 +139,12 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                         if (data.streamingOptions?.`in`?.size == 0){
                             ImportantText("Unavailable")
                         }
-                        Logo(
-                            data.streamingOptions?.`in`?.get(i)?.service?.imageSet?.darkThemeImage
-                                ?: ""
-                        )
+                        if (data.streamingOptions?.`in`?.get(i)?.type.equals("subscription")) {
+                            Logo(
+                                data.streamingOptions?.`in`?.get(i)?.service?.imageSet?.darkThemeImage
+                                    ?: ""
+                            )
+                        }
 
 
 
@@ -154,7 +156,7 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                             .padding(8.dp)
                             .border(1.dp, color = Gray, RoundedCornerShape(4.dp))
                     ) {
-                        if (data.streamingOptions?.`in`?.get(0)?.quality.toString().toUpperCase()
+                        if (!data.streamingOptions?.`in`?.get(0)?.quality.toString()
                                 .isNullOrEmpty()
                         ) {
                             Text(

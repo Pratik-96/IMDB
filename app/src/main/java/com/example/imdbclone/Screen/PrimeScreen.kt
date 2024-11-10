@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.PlayArrow
@@ -64,6 +65,7 @@ import com.example.imdbclone.ui.theme.DeepGray
 import com.example.imdbclone.ui.theme.HotstarBackground
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.rememberPagerState
 import kotlinx.coroutines.delay
 
@@ -74,6 +76,10 @@ fun PrimeScreen(navigateToDetail:(ShowDetails)->Unit) {
     val viewModel: PrimeViewModel = viewModel()
     viewModel.fetchTopShows("in","prime","prime",87)
     val showState = viewModel.topPrimeShows
+    viewModel.fetchHindiMovies("in","prime","prime","movie",70,"","hindi")
+    val movieState = viewModel.hindiMovies
+    viewModel.fetchHindiSeries("in","prime","prime","series",70,"","hindi")
+    val seriesState = viewModel.hindiShows
 
     Box(
         modifier = Modifier
@@ -105,7 +111,13 @@ fun PrimeScreen(navigateToDetail:(ShowDetails)->Unit) {
                         .fillMaxSize()
                 ) {
                     item { PrimeImageSlider (showState.value.list, navigateToDetail) }
-
+                    item { SearchStateScreen(
+                        movieState.value,
+                        navigateToDetail = navigateToDetail,
+                        vertical = false,
+                        header = "Movies in Hindi",
+                    ) }
+                    item { StateScreen("Series in Hindi",seriesState.value,navigateToDetail)}
 
                 }
             }
@@ -142,7 +154,7 @@ fun PrimeImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) ->
 
 
 
-        com.google.accompanist.pager.HorizontalPager(
+        HorizontalPager(
             count = data.size,
             state = pagerState,
             itemSpacing = 0.dp,
@@ -181,8 +193,16 @@ fun PrimeImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) ->
                                 )
                                 launcher.launch(intent)
                             }
+
+
+
                     )
 
+                    Box(modifier = Modifier.wrapContentSize().align(Alignment.BottomEnd).background(
+                        Color.Black.copy(0.3f))){
+
+                        Text("Watch on Prime", color = Color.White, modifier = Modifier.padding(8.dp))
+                    }
 
                 }
             }

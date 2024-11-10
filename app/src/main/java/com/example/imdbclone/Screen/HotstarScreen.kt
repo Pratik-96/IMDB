@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.icons.Icons
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -39,9 +40,9 @@ fun HotstarScreen(navigateToDetail: (ShowDetails) -> Unit, navigateToMarvel: () 
     val viewModel: HotstarViewModel = viewModel()
     val mainViewModel:MainViewModel= viewModel()
     viewModel.fetchTopShows("in", "hotstar", "hotstar", 80)
-    viewModel.fetchActionMovies("in", "hotstar", "hotstar", "movie", 70, "action")
+    viewModel.fetchActionMovies("in", "hotstar", "hotstar", "movie", 70, "action","")
     val actionMoviesState = viewModel.actionMovies.value
-    viewModel.fetchScifiMovies("in", "hotstar", "hotstar", "movie", 70, "scifi")
+    viewModel.fetchScifiMovies("in", "hotstar", "hotstar", "movie", 70, "scifi","")
     val scifiMovieState = viewModel.scifiMovies.value
 
     val showState = viewModel.topShows
@@ -59,6 +60,7 @@ fun HotstarScreen(navigateToDetail: (ShowDetails) -> Unit, navigateToMarvel: () 
 
                 }
             }
+
 
             showState.value.error != null -> {
                 Text(showState.value.error.toString(), color = Color.White)

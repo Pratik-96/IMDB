@@ -42,11 +42,11 @@ class NetflixViewModel:ViewModel() {
         }
     }
 
-    fun fetchFilteredShows(country:String,service:String,catalogs:String,showType:String,ratingMin:Int,genre:String){
+    fun fetchFilteredShows(country:String,service:String,catalogs:String,showType:String,ratingMin:Int,genre:String,language:String){
         viewModelScope.launch {
             try {
 
-                val response = imdbService.getFilteredShows(country,service,catalogs,showType,ratingMin,genre)
+                val response = imdbService.getFilteredShows(country,service,catalogs,showType,ratingMin,genre,language)
                 _topShows.value = _topShows.value.copy(
                     error = null,
                     list = response.shows,
@@ -62,11 +62,11 @@ class NetflixViewModel:ViewModel() {
         }
     }
 
-    fun fetchDramaShows(country:String,service:String,catalogs:String,showType:String,ratingMin:Int,genre:String){
+    fun fetchDramaShows(country:String,service:String,catalogs:String,showType:String,ratingMin:Int,genre:String,language: String){
         viewModelScope.launch {
             try {
 
-                val response = imdbService.getFilteredShows(country,service,catalogs,showType,ratingMin,genre)
+                val response = imdbService.getFilteredShows(country,service,catalogs,showType,ratingMin,genre,language)
                 _topDramas.value = _topDramas.value.copy(
                     error = null,
                     list = response.shows,

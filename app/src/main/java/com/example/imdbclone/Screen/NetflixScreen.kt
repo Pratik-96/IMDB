@@ -232,7 +232,7 @@ fun NetflixContent(navigateToDetail: (ShowDetails) -> Unit, state: MainViewModel
         }
 
 //
-        netflixViewModel.fetchFilteredShows("in", "netflix", "netflix", "series", 85, "")
+        netflixViewModel.fetchFilteredShows("in", "netflix", "netflix", "series", 85, "","")
         val topShowState = netflixViewModel.topShows.value
         item {
             SearchStateScreen(
