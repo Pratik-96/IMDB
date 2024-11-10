@@ -63,10 +63,6 @@ import kotlinx.coroutines.delay
 fun ImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit) {
 
     val viewModel: HotstarViewModel = viewModel()
-//    viewModel.fetchActionMovies("in", "hotstar", "hotstar", "movie", 70, "action")
-    val actionMoviesState = viewModel.actionMovies.value
-//    viewModel.fetchScifiMovies("in", "hotstar", "hotstar", "movie", 70, "scifi")
-    val scifiMovieState = viewModel.scifiMovies.value
     Column(modifier = Modifier
         .fillMaxSize()
         .background(Color.Black)) {
@@ -103,6 +99,7 @@ fun ImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit
                             .fillMaxWidth()
                             .height(250.dp)
                     )
+
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
