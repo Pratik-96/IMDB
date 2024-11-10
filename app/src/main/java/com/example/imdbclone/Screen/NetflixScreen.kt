@@ -79,7 +79,7 @@ fun NetflixScreen(navHostController: NavHostController, navigateToDetail: (ShowD
             }
 
             state.error != null -> {
-
+                    ImportantText("Error: ${state.error}")
             }
 
             else -> {

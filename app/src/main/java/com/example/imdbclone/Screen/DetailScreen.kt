@@ -117,7 +117,7 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                         imageVector = Icons.Filled.Star,
                         contentDescription = null,
                         tint = Color.Gray,
-                        modifier = Modifier.padding(top = 4.dp, start = 8.dp)
+                        modifier = Modifier.padding(top = 8.dp, start = 8.dp)
                     )
                     Text(
                         text = "${data.rating}%",
@@ -125,6 +125,41 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                         fontSize = 16.sp,
                         modifier = Modifier.padding(top = 8.dp)
                     )
+                    if (!data.streamingOptions?.`in`?.get(0)?.quality.toString()
+                            .isNullOrEmpty()
+                    ) {
+                    Box(
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .border(1.dp, color = Gray, RoundedCornerShape(4.dp))
+                    ) {
+
+                            Text(
+                                data.streamingOptions?.`in`?.get(0)?.quality.toString()
+                                    .toUpperCase(),
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(2.dp),
+                                color = Gray,
+                                fontSize = 12.sp
+                            )
+                        }
+
+                    }else{
+
+                        Box(
+                            modifier = Modifier
+                                .padding(8.dp)
+                                .border(1.dp, color = Gray, RoundedCornerShape(4.dp))
+                        ) {
+
+                            Text("UHD",
+                                fontWeight = FontWeight.Bold,
+                                modifier = Modifier.padding(4.dp),
+                                color = Gray,
+                                fontSize = 12.sp
+                            )
+                        }
+                    }
 
                 }
 
@@ -150,25 +185,27 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
 
                     }
 
+                }
+                var isAvailable = remember { mutableStateOf(true) }
+                Row(
+                    modifier = Modifier.wrapContentSize(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ){
+                    ImportantText("Rent on: ")
+                    for (i in 0 until (data.streamingOptions?.`in`?.size ?: 0)) {
 
-                    Box(
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .border(1.dp, color = Gray, RoundedCornerShape(4.dp))
-                    ) {
-                        if (!data.streamingOptions?.`in`?.get(0)?.quality.toString()
-                                .isNullOrEmpty()
-                        ) {
-                            Text(
-                                data.streamingOptions?.`in`?.get(0)?.quality.toString()
-                                    .toUpperCase(),
-                                fontWeight = FontWeight.Bold,
-                                modifier = Modifier.padding(1.dp),
-                                color = Gray,
-                                fontSize = 12.sp
+                        if (data.streamingOptions?.`in`?.get(i)?.type.equals("rent")  ){
+                            Logo(
+                                data.streamingOptions?.`in`?.get(i)?.service?.imageSet?.darkThemeImage
+                                    ?: ""
                             )
+                        }else if (!data.streamingOptions?.`in`?.get(i)?.type.equals("buy") && !data.streamingOptions?.`in`?.get(i)?.type.equals("addon") &&!data.streamingOptions?.`in`?.get(i)?.type.equals("subscription")){
+                            isAvailable.value = false
                         }
 
+                    }
+                    if (!isAvailable.value){
+                        ImportantText("Unavailable")
                     }
                 }
                 var showDialog by remember { mutableStateOf(false) }
@@ -306,16 +343,27 @@ fun ServiceDialog(onDismiss: () -> Unit, data: ShowDetails) {
 
         ) {
 
-            LargeText("Select Platform:")
+            ImportantText("Stream on:")
             for (i in 0 until (data.streamingOptions?.`in`?.size ?: 0)) {
-
-                    data.streamingOptions?.`in`?.get(i)?.let {
+               data.streamingOptions?.`in`?.get(i)?.let {
                         DialogLogo(
                             it
                         )
-                    }
+
+                }
 
             }
+//            ImportantText("Rent on:")
+//            for (i in 0 until (data.streamingOptions?.`in`?.size ?: 0)) {
+//                if (data.streamingOptions?.`in`?.get(i)?.type.equals("rent")) {
+//                    data.streamingOptions?.`in`?.get(i)?.let {
+//                        DialogLogo(
+//                            it
+//                        )
+//                    }
+//                }
+//
+//            }
 
         }
     }
@@ -338,28 +386,39 @@ fun DialogLogo(data: ServiceMetaData) {
         ).size(Size.ORIGINAL)  // Adjust as needed
             .build(), imageLoader = imageLoader
     )
-    Image(
-        painter = painter,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp)
-            .size(width = 100.dp, height = 64.dp)
-            .clickable {
-                try {
-                    val intent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse(data.link)
-                    )
-                    launcher.launch(intent)
-                } catch (e: Exception) {
-                    Toast
-                        .makeText(context, e.message, Toast.LENGTH_SHORT)
-                        .show()
-                }
-            },
-        contentDescription = null,
+    Box(modifier = Modifier.wrapContentSize().padding(8.dp).clickable {
+        try {
+            val intent = Intent(
+                Intent.ACTION_VIEW,
+                Uri.parse(data.link)
+            )
+            launcher.launch(intent)
+        } catch (e: Exception) {
+            Toast
+                .makeText(context, e.message, Toast.LENGTH_SHORT)
+                .show()
+        }
+    }){
+        Row(
+            modifier = Modifier.wrapContentSize(),
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Image(
+                painter = painter,
+                modifier = Modifier
+                    .wrapContentSize()
+                    .padding(8.dp)
+                    .size(width = 100.dp, height = 64.dp)
+                    ,
+                contentDescription = null,
 
-        )
+                )
+
+            ImportantText("(${data.type})")
+        }
+    }
+
 }
 
 
