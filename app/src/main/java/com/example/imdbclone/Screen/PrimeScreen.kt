@@ -248,7 +248,7 @@ fun LoadingLogo(url: String,background:Color,loaderColor:Color) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .height(200.dp),
+                .height(100.dp),
             contentDescription = null
         )
 
