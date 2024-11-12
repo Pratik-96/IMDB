@@ -176,17 +176,17 @@ fun TopShow(state: MainViewModel.SearchShowState) {
             }
             Text("Salt-of-the-earth Cole falls head over heels for enigmatic Sadie—but then makes the shocking discovery that she’s a secret agent. Before they can decide on a second date, Cole and Sadie are swept away on an international adventure to save the world.", fontFamily = FontFamily.SansSerif,maxLines = 3,overflow = TextOverflow.Ellipsis, color = Color.White, fontSize = 12.sp, modifier = Modifier.padding(16.dp))
 
-            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start) {
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
 
                 Text("4k",
-                    fontWeight = FontWeight.ExtraBold,
+                    fontWeight = FontWeight.Bold,
                     modifier = Modifier.padding(start = 16.dp),
                     color = Gray,
                     fontSize = 12.sp
                 )
 
-                Image(painterResource(R.drawable.dolby_vision),null, modifier = Modifier.height(30.dp).padding(8.dp))
-                Image(painterResource(R.drawable.dolby_atmos),null, modifier = Modifier.height(30.dp).padding(8.dp))
+                Image(painterResource(R.drawable.dolby_vision),null, modifier = Modifier.height(20.dp).padding(start = 4.dp))
+                Image(painterResource(R.drawable.dolby_atmos),null, modifier = Modifier.height(20.dp).padding(start = 4.dp))
             }
 
 

@@ -44,6 +44,7 @@ data class GenreDetails(
 @Parcelize
 data class VerticalPoster(
     val verticalPoster: VerticalPosterDetails?,
+    val verticalBackdropPosterDetails: VerticalBackdropPosterDetails?,
     val horizontalPoster : HorizontalPosterDetails?,
     val horizontalBackdrop: HorizontalBackDropPosterDetails?
 ):Parcelable
@@ -60,6 +61,17 @@ data class HorizontalBackDropPosterDetails(
 @Serializable
 @Parcelize
 data class VerticalPosterDetails(
+    val w240:String,
+    val w360:String,
+    val w480:String,
+    val w600:String,
+    val w720:String
+
+):Parcelable
+
+@Serializable
+@Parcelize
+data class VerticalBackdropPosterDetails(
     val w240:String,
     val w360:String,
     val w480:String,
