@@ -354,7 +354,7 @@ fun NavDrawer() {
                         })
                     }
                     composable(route = Screens.AppleScreen.route) {
-                        AppleScreen()
+                        AppleScreen({})
                     }
                     composable(route = Screens.SonyScreen.route) {
                         SonyScreen()
