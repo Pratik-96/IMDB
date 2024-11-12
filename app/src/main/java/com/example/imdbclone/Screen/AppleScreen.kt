@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.PlayArrow
@@ -66,7 +67,10 @@ fun AppleScreen(navigateToDetail: (ShowDetails) -> Unit) {
             Text(state.error)
         }
         else->{
-            TopShow(state)
+            LazyColumn(modifier = Modifier.fillMaxSize().background(Gray)) {
+
+                item{TopShow(state)}
+            }
         }
     }
 
@@ -76,15 +80,13 @@ fun AppleScreen(navigateToDetail: (ShowDetails) -> Unit) {
 @Composable
 fun TopShow(state: MainViewModel.SearchShowState) {
 
-    val appleViewModel: AppleViewModel = viewModel()
-//    appleViewModel.fetchShowId("2093350")
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) { }
     val context = LocalContext.current
 
     Box(
         modifier = Modifier
-            .padding(bottom = 200.dp)
+            .padding(bottom = 50.dp)
             .fillMaxWidth(), contentAlignment = Alignment.BottomCenter
     ) {
 

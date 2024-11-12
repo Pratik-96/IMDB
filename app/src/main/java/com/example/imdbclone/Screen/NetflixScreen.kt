@@ -253,12 +253,3 @@ fun NetflixContent(navigateToDetail: (ShowDetails) -> Unit, state: MainViewModel
     }
 
 }
-
-@Composable
-fun Loader(color: Color) {
-
-    Box(modifier = Modifier.wrapContentSize()) {
-
-    }
-
-}

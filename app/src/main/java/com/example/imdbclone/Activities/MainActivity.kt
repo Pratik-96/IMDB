@@ -221,7 +221,8 @@ fun NavDrawer() {
 
                             Row(
                                 modifier = Modifier.wrapContentSize(),
-                                horizontalArrangement = Arrangement.SpaceBetween
+                                horizontalArrangement = Arrangement.SpaceBetween,
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
                                 if (selectedItem.isNotEmpty()) {
                                     NavLogo(selectedItem)
@@ -354,7 +355,13 @@ fun NavDrawer() {
                         })
                     }
                     composable(route = Screens.AppleScreen.route) {
-                        AppleScreen({})
+                        AppleScreen({
+                            navHostController.currentBackStackEntry?.savedStateHandle?.set(
+                                "ShowData",
+                                it
+                            )
+                            navHostController.navigate(Screens.DetailScreen.route)
+                        })
                     }
                     composable(route = Screens.SonyScreen.route) {
                         SonyScreen()
