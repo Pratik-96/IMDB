@@ -39,6 +39,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.R
 import com.example.imdbclone.ViewModels.AppleViewModel
@@ -58,7 +60,7 @@ fun AppleScreen(navigateToDetail: (ShowDetails) -> Unit) {
     val state = appleViewModel.fetchShow.value
     when{
         state.loading->{
-            LoadingLogo(mainViewModel.items.get(4).url, Color.Black,Color.Red)
+            LoadingLogo(mainViewModel.items.get(4).url, Color.Black,Color.White)
         }
         state.error!=null->{
             Text(state.error)
@@ -87,9 +89,9 @@ fun TopShow(state: MainViewModel.SearchShowState) {
     ) {
 
         val showLink = state.item?.streamingOptions?.`in`?.get(0)?.link
-        Image(
-            painter = painterResource(R.drawable.ghosted_img),
-//            painter = rememberAsyncImagePainter(state.item?.imageSet?.verticalPoster?.w720),
+        AsyncImage(
+//            painter = painterResource(R.drawable.ghosted_img),
+            (state.item?.imageSet?.verticalBackdrop?.w720),
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
@@ -149,7 +151,7 @@ fun TopShow(state: MainViewModel.SearchShowState) {
                         launcher.launch(
                             Intent(
                                 Intent.ACTION_VIEW,
-                                Uri.parse("https://www.netflix.com/watch/80057281")
+                                Uri.parse(showLink)
                             )
                         )
 
@@ -174,7 +176,7 @@ fun TopShow(state: MainViewModel.SearchShowState) {
 
 
             }
-            Text("Salt-of-the-earth Cole falls head over heels for enigmatic Sadie—but then makes the shocking discovery that she’s a secret agent. Before they can decide on a second date, Cole and Sadie are swept away on an international adventure to save the world.", fontFamily = FontFamily.SansSerif,maxLines = 3,overflow = TextOverflow.Ellipsis, color = Color.White, fontSize = 12.sp, modifier = Modifier.padding(16.dp))
+            state.item?.let { Text(it.overview, fontFamily = FontFamily.SansSerif,maxLines = 3,overflow = TextOverflow.Ellipsis, color = Color.White, fontSize = 12.sp, modifier = Modifier.padding(16.dp)) }
 
             Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Start, verticalAlignment = Alignment.CenterVertically) {
 
