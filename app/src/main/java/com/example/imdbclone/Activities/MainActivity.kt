@@ -185,8 +185,6 @@ fun NavDrawer() {
                                         2 -> navHostController.navigate(Screens.PrimeScreen.route)
                                         3 -> navHostController.navigate(Screens.HotstarScreen.route)
                                         4 -> navHostController.navigate(Screens.AppleScreen.route)
-                                        5 -> navHostController.navigate(Screens.SonyScreen.route)
-                                        6 -> navHostController.navigate(Screens.ZeeScreen.route)
                                     }
                                     drawerState.close()
 
@@ -363,12 +361,6 @@ fun NavDrawer() {
                             navHostController.navigate(Screens.DetailScreen.route)
                         })
                     }
-                    composable(route = Screens.SonyScreen.route) {
-                        SonyScreen()
-                    }
-                    composable(route = Screens.ZeeScreen.route) {
-                        ZeeScreen()
-                    }
 
                 }
 
@@ -400,13 +392,4 @@ fun NavLogo(url: String) {
         contentDescription = null,
 
         )
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    IMDBCloneTheme {
-        NavDrawer()
-    }
 }

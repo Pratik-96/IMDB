@@ -254,14 +254,6 @@ private fun fetchPrimeMovies() {
             name = "Apple TV",
             url = "https://media.movieofthenight.com/services/apple/logo-dark-theme.svg",
             route = Screens.AppleScreen.route
-        ), NavigationItem(
-            name = "Sony Liv",
-            url = "https://media.movieofthenight.com/services/sonyliv/logo-dark-theme.png",
-            route = Screens.SonyScreen.route
-        ), NavigationItem(
-            name = "Zee5",
-            url = "https://media.movieofthenight.com/services/zee5/logo-dark-theme.svg",
-            route = Screens.ZeeScreen.route
         )
     )
 
