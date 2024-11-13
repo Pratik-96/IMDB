@@ -297,8 +297,7 @@ fun ShowMetadata(data: ShowDetails) {
             fontSize = 16.sp,
             modifier = Modifier.padding(top = 8.dp)
         )
-        if (!data.streamingOptions?.`in`?.get(0)?.quality.toString()
-                .isNullOrEmpty()
+        if (!data.streamingOptions?.`in`?.get(0)?.quality.isNullOrEmpty()
         ) {
             Box(
                 modifier = Modifier
