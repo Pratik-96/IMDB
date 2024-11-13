@@ -232,11 +232,4 @@ fun ShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
 
 }
 
-@Preview(showBackground = true)
-@Composable
-fun ItemPreview() {
-
-
-}
-
 

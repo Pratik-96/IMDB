@@ -128,6 +128,14 @@ fun PrimeScreen(navigateToDetail:(ShowDetails)->Unit) {
     }
 }
 
+@Composable
+fun Loader(color: Color) {
+    Box(modifier = Modifier.wrapContentSize()){
+
+        CircularProgressIndicator(color = color, modifier = Modifier.align(Alignment.Center))
+    }
+}
+
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun PrimeImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit) {

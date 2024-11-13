@@ -144,7 +144,7 @@ fun NavDrawer() {
                                             Icon(
                                                 imageVector = it,
                                                 contentDescription = null,
-                                                modifier = Modifier.padding(8.dp)
+                                                modifier = Modifier.padding(top = 8.dp, start = 24.dp, end = 24.dp)
                                             )
                                             ImportantText(navigationItem.name)
                                         }

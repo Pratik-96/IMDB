@@ -251,7 +251,7 @@ private fun fetchPrimeMovies() {
             url = "https://media.movieofthenight.com/services/disneyhotstar/logo-dark-theme.svg",
             route = Screens.HotstarScreen.route
         ), NavigationItem(
-            name = "Apple Tv",
+            name = "Apple TV",
             url = "https://media.movieofthenight.com/services/apple/logo-dark-theme.svg",
             route = Screens.AppleScreen.route
         ), NavigationItem(
