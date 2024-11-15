@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.provider.FontsContractCompat.Columns
+import com.example.imdbclone.Screen.ImportantText
 import com.example.imdbclone.Screen.LargeText
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 
@@ -27,8 +28,8 @@ class Authentication:ComponentActivity(){
 
 @Composable
 fun SignUp() {
-    Column(modifier = Modifier.fillMaxSize().background(color = Color.Gray)){
-        LargeText("SignUp")
+    Column(modifier = Modifier.fillMaxSize().background(color = Color.DarkGray)){
+        
     }
 }
 
