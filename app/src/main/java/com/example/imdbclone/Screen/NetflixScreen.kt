@@ -241,14 +241,17 @@ fun NetflixContent(navigateToDetail: (ShowDetails) -> Unit, state: MainViewModel
         }
 //
 //
-//            netflixViewModel.fetchDramaShows("in", "netflix", "netflix", "series", 75, "thriller")
-//            val dramaState = netflixViewModel.topDramas.value
-//            item {
-//                SearchStateScreen(
-//                    dramaState, navigateToDetail, false, "Thrillers",
-//                )
-//            }
-//
+            netflixViewModel.fetchDramaShows(
+                "in", "netflix", "netflix", "series", 75, "thriller",
+                language = ""
+            )
+            val dramaState = netflixViewModel.topDramas.value
+            item {
+                SearchStateScreen(
+                    dramaState, navigateToDetail, false, "Thrillers",
+                )
+            }
+
 
     }
 

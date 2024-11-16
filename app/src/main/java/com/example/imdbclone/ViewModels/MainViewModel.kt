@@ -45,13 +45,13 @@ class MainViewModel : ViewModel() {
 
 
     init {
-//        fetchNetflixShows()
-//        fetchNetflixMovies()
-//        fetchAppleShows()
-//        fetchAppleMovies()
-//        fetchPrimeShows()
-//        fetchPrimeMovies()
-//        fetchHotstarShows()
+        fetchNetflixShows()
+        fetchNetflixMovies()
+        fetchAppleShows()
+        fetchAppleMovies()
+        fetchPrimeShows()
+        fetchPrimeMovies()
+        fetchHotstarShows()
     }
 
 

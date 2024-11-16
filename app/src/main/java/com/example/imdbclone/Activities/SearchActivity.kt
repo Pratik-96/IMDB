@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,6 +37,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
@@ -81,34 +83,53 @@ import com.example.imdbclone.Screen.ShowItem
 import com.example.imdbclone.Screen.ShowsScreen
 import com.example.imdbclone.Screen.TopShowScreen
 import com.example.imdbclone.ViewModels.MainViewModel
+import com.example.imdbclone.ui.theme.DeepGray
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 
 class SearchActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
         setContent {
 
-            val navController:NavHostController = rememberNavController()
-            val showViewModel: MainViewModel = viewModel()
-            showViewModel.searchShows.value.loading = false
-                NavHost(navController = navController, startDestination = Screens.SearchScreen.route){
-                    composable(route= Screens.SearchScreen.route) {
-                        SearchScreen(showViewModel, navigateToDetail = {
-                            navController.currentBackStackEntry?.savedStateHandle?.set("ShowData",it)
-                            navController.navigate(Screens.DetailScreen.route)
-                        })
+            Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(color = DeepGray)
+                        .padding(innerPadding)
+                ) {
+                    val navController: NavHostController = rememberNavController()
+                    val showViewModel: MainViewModel = viewModel()
+                    showViewModel.searchShows.value.loading = false
+                    NavHost(
+                        navController = navController,
+                        startDestination = Screens.SearchScreen.route
+                    ) {
+                        composable(route = Screens.SearchScreen.route) {
+                            SearchScreen(showViewModel, navigateToDetail = {
+                                navController.currentBackStackEntry?.savedStateHandle?.set(
+                                    "ShowData",
+                                    it
+                                )
+                                navController.navigate(Screens.DetailScreen.route)
+                            })
 
-                    }
-                    composable(route = Screens.DetailScreen.route) {
-                        val showData = navController.previousBackStackEntry?.
-                        savedStateHandle?.get<ShowDetails>("ShowData")
-                        if (showData != null) {
-                            DetailScreen(showData,navController)
+                        }
+                        composable(route = Screens.DetailScreen.route) {
+                            val showData =
+                                navController.previousBackStackEntry?.savedStateHandle?.get<ShowDetails>(
+                                    "ShowData"
+                                )
+                            if (showData != null) {
+                                DetailScreen(showData, navController)
+                            }
                         }
                     }
                 }
 
 
+            }
         }
     }
 }
@@ -380,7 +401,7 @@ fun SearchShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
     ) {
 
         val painter = rememberAsyncImagePainter(
-            model =  item.imageSet.verticalPoster?.w360 // Adjust as needed
+            model = item.imageSet.verticalPoster?.w360 // Adjust as needed
             ,
             imageLoader = imageLoader
         )
