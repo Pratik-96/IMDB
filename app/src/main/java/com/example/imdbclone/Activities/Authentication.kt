@@ -1,21 +1,19 @@
 package com.example.imdbclone.Activities
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.scrollable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -24,7 +22,6 @@ import androidx.compose.material.IconButton
 import androidx.compose.material.Text
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Clear
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Person
@@ -41,10 +38,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -57,8 +53,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.imdbclone.R
 import com.example.imdbclone.Screen.ButtonText
+import com.example.imdbclone.Screen.Loader
 import com.example.imdbclone.ui.theme.DeepGray
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.UserProfileChangeRequest
+
+private lateinit var auth:FirebaseAuth
+
+
+
 
 class Authentication : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,6 +91,19 @@ val sarabunFont = FontFamily(
     Font(R.font.sarabun_font, FontWeight.Normal)
 )
 
+fun isValidPassword(password: String): Boolean {
+    if (password.length < 6) {
+        return false // Password is too short
+    }
+    if (!password.any { it.isUpperCase() }) {
+        return false // Password does not contain an uppercase letter
+    }
+    if (!password.any { !it.isLetterOrDigit() }) {
+        return false // Password does not contain a special character
+    }
+    return true // Password meets all criteria
+}
+
 @Composable
 fun SignUp() {
     Column(
@@ -101,6 +118,9 @@ fun SignUp() {
         var email by remember { mutableStateOf("") }
         var password by remember { mutableStateOf("") }
         var passwordVisible by remember { mutableStateOf(false) }
+        var isEmailValid by remember { mutableStateOf(true) }
+        var isPasswordValid by remember { mutableStateOf(true) }
+        var isLoading by remember { mutableStateOf(false) }
 
         Spacer(modifier = Modifier.padding(top = 24.dp))
         Text("Get Started !!", color = Color.White, fontFamily = sarabunFont, fontSize = 24.sp)
@@ -154,10 +174,12 @@ fun SignUp() {
         OutlinedTextField(value = email,
             onValueChange = {
                 email = it
+                isEmailValid = isValidEmail(email)
             },
             leadingIcon = {
                 Icon(imageVector = Icons.Filled.Email, null)
             },
+            isError = !isEmailValid,
             trailingIcon = {
                 IconButton(onClick = {
                     email = ""
@@ -185,14 +207,22 @@ fun SignUp() {
 
         )
 
+        if (!isEmailValid){
+            Spacer(Modifier.padding(8.dp))
+
+            Text("Invalid Email", color = Color.Red, modifier = Modifier.align(Alignment.Start))
+        }
+
         Spacer(modifier = Modifier.padding(8.dp))
         OutlinedTextField(value = password,
             onValueChange = {
                 password = it
+                isPasswordValid = isValidPassword(password)
             },
             leadingIcon = {
                 Icon(imageVector = Icons.Filled.Lock, null)
             },
+            isError = !isPasswordValid,
             trailingIcon = {
 
                 val image = if(passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
@@ -221,20 +251,88 @@ fun SignUp() {
             , visualTransformation = if(passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
+
+            if (!isPasswordValid){
+            Spacer(Modifier.padding(8.dp))
+
+            Text("Password must contain: \n At least 6 characters \n At least 1 uppercase letter \n At least 1 special character.", color = Color.Red, modifier = Modifier.align(Alignment.Start))
+        }
+
         val activityContext = LocalContext.current as Activity
         Spacer(Modifier.padding(8.dp))
-        Button(onClick = {
-            context.startActivity(Intent(context,MainActivity::class.java))
-            activityContext.finish()
-        }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(4.dp), colors = ButtonDefaults.textButtonColors(contentColor = Color.Black, containerColor = Color.White)) {
+
+        if (isLoading){
+            Loader(Color.White)
+        }else{
+            Button(onClick = {
+                isLoading = true
+                if(isEmailValid && isPasswordValid && name.isNotEmpty() && password.isNotEmpty() && email.isNotEmpty()){
+
+                    if (signUpWithEmailAndPassword(name,email,password,context,activityContext)){
+                        isLoading = false
+                    }else{
+                        isLoading = false
+                    }
+
+
+                }else{
+                    isLoading  = false
+                }
+
+            }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(4.dp), colors = ButtonDefaults.textButtonColors(contentColor = Color.Black, containerColor = Color.White)) {
 //            Text("Create Account", modifier = Modifier.padding(4.dp), fontFamily = sarabunFont, fontSize = 18.sp)
+
                 ButtonText("Create Account")
+
+            }
         }
+
 
 
         
 
     }
+}
+
+
+fun signUpWithEmailAndPassword(
+    name: String,
+    email: String,
+    password: String,
+    context: Context,
+    activityContext: Activity
+): Boolean {
+    auth =FirebaseAuth.getInstance()
+    var isSuccessful = false
+    auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener{
+        task->
+        if (task.isSuccessful){
+            val user = auth.currentUser
+            val profileUpdates = UserProfileChangeRequest.Builder()
+                .setDisplayName(name)
+                .build()
+
+            user?.updateProfile(profileUpdates)?.addOnCompleteListener{
+                profileTask->
+                if (profileTask.isSuccessful){
+                    isSuccessful = true
+                    Toast.makeText(context,"SignUp Successful!!",Toast.LENGTH_SHORT).show()
+                    context.startActivity(Intent(context,MainActivity::class.java))
+                    activityContext.finish()
+                }
+            }
+        }else{
+            Toast.makeText(context,"SignUp Failed: ${task.exception}",Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    return isSuccessful
+
+}
+
+fun isValidEmail(email: String): Boolean {
+    val emailPattern = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$".toRegex()
+    return email.matches(emailPattern)
 }
 
 @Preview(showBackground = true)
