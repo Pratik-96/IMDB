@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
-import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.Image
@@ -37,6 +36,7 @@ import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -46,7 +46,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -58,6 +57,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import coil.size.Size
+import com.example.imdbclone.DataClasses.SavedShowDetails
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.Screen.AppleScreen
 import com.example.imdbclone.Screen.DetailScreen
@@ -69,12 +69,14 @@ import com.example.imdbclone.Screen.NetflixScreen
 import com.example.imdbclone.Screen.PrimeScreen
 import com.example.imdbclone.Screen.Screen
 import com.example.imdbclone.Screen.Screens
-import com.example.imdbclone.Screen.SonyScreen
 import com.example.imdbclone.Screen.TopShowScreen
-import com.example.imdbclone.Screen.ZeeScreen
 import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.launch
 
 
@@ -108,6 +110,40 @@ fun NavDrawer() {
     ) {
 
 
+        auth = FirebaseAuth.getInstance()
+        val uid = auth.currentUser?.uid?:"null"
+        val database = FirebaseDatabase.getInstance().reference
+        var dataFetched by remember { mutableStateOf(false) }
+
+        var showList = mutableListOf<SavedShowDetails>()
+
+
+        database.child(uid).addValueEventListener(object: ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val list = mutableListOf<SavedShowDetails>()
+                for(child in snapshot.children){
+                    val showData = child.getValue(SavedShowDetails::class.java)
+                    showData?.let { list.add(it) }
+                }
+                showList = list
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+
+        })
+
+
+
+
+
+
+
+
+
+
         val drawerState = rememberDrawerState(initialValue = DrawerValue.Closed)
         val scope = rememberCoroutineScope()
         var selectedItemIndex by rememberSaveable { mutableStateOf(0) }
@@ -134,7 +170,7 @@ fun NavDrawer() {
                         color = Color.White,
                         modifier = Modifier
                             .align(Alignment.Start)
-                            .padding(8.dp),
+                            .padding(start = 24.dp, top = 16.dp),
                         fontWeight = FontWeight.Bold,
                         fontSize = 24.sp
                     )
@@ -338,8 +374,7 @@ fun NavDrawer() {
                     }
 
                     composable(route = Screens.MyListScreen.route) {
-                        ListScreen(navHostController)
-                        navHostController.navigate(Screens.MyListScreen.route)
+                        ListScreen()
                     }
 
 

@@ -10,14 +10,25 @@ import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.imdbclone.DataClasses.SavedShowDetails
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.Screen.Screens
 import com.example.imdbclone.imdbService
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.launch
+
+private lateinit var auth: FirebaseAuth
 
 class MainViewModel : ViewModel() {
 
@@ -49,6 +60,9 @@ class MainViewModel : ViewModel() {
     private val _searchShows = mutableStateOf(ShowState())
     val searchShows:State<ShowState> = _searchShows
 
+    private val _fetchList = mutableStateOf(ListState())
+    val fetchList:State<ListState> = _fetchList
+
 
     init {
 //        fetchNetflixShows()
@@ -58,8 +72,40 @@ class MainViewModel : ViewModel() {
 //        fetchPrimeShows()
 //        fetchPrimeMovies()
 //        fetchHotstarShows()
+        fetchDataFromFirebase()
+
     }
 
+
+    fun fetchDataFromFirebase(){
+
+        viewModelScope.launch {
+            auth = FirebaseAuth.getInstance()
+            val uid = auth.currentUser?.uid?:"null"
+            val database = FirebaseDatabase.getInstance().reference
+
+            database.child(uid).addValueEventListener(object: ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val list = mutableListOf<SavedShowDetails>()
+                    for(child in snapshot.children){
+                        val showData = child.getValue(SavedShowDetails::class.java)
+                        showData?.let { list.add(it) }
+                    }
+                    _fetchList.value = _fetchList.value.copy(
+                        list = list,
+                        loading = false
+                    )
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+
+            })
+        }
+    }
 
 
 
@@ -281,6 +327,10 @@ private fun fetchPrimeMovies() {
     data class ShowState(
         val error: String? = null,
         val list: List<ShowDetails> = emptyList(),
+        var loading: Boolean = true
+    )
+    data class ListState(
+        var list: List<SavedShowDetails> = emptyList(),
         var loading: Boolean = true
     )
     data class SearchShowState(
