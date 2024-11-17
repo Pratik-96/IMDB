@@ -9,6 +9,7 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,6 +35,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,18 +44,27 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.imdbclone.R
 import com.example.imdbclone.Screen.ButtonText
 import com.example.imdbclone.Screen.Loader
+import com.example.imdbclone.Screen.Screens
 import com.example.imdbclone.ui.theme.DeepGray
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import com.google.firebase.auth.FirebaseAuth
@@ -64,7 +75,25 @@ private lateinit var auth:FirebaseAuth
 
 
 
+
 class Authentication : ComponentActivity() {
+
+    override fun onStart() {
+
+        super.onStart()
+        auth = FirebaseAuth.getInstance()
+      setContent {
+          val context = LocalContext.current as Activity
+          if (auth.currentUser!=null){
+              context.startActivity(Intent(context,MainActivity::class.java))
+              context.finish()
+          }
+
+      }
+    }
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
@@ -77,7 +106,18 @@ class Authentication : ComponentActivity() {
                             .background(color = DeepGray)
                             .padding(innerPadding)
                     ) {
-                        SignUp()
+                        val navHostController = rememberNavController()
+                        NavHost(navController = navHostController, startDestination = Screens.SignUp.route){
+                            composable(route = Screens.SignUp.route) {
+
+                                SignUp {
+                                    navHostController.navigate(Screens.Login.route)
+                                }
+                            }
+                            composable(Screens.Login.route) {
+                                Login(navHostController)
+                            }
+                        }
                     }
 
 
@@ -105,10 +145,11 @@ fun isValidPassword(password: String): Boolean {
 }
 
 @Composable
-fun SignUp() {
+fun SignUp(navigateToLogin: () -> Unit) {
     Column(
         modifier = Modifier
-            .fillMaxSize().verticalScroll(rememberScrollState())
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
             .background(color = DeepGray)
             .padding(start = 24.dp, end = 24.dp)
     ) {
@@ -287,6 +328,19 @@ fun SignUp() {
             }
         }
 
+        val annotatedText = buildAnnotatedString {
+            withStyle(style = SpanStyle(color = Color.White)) {
+                append("Already have an Account ? ")
+            }
+            withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                append("Login")
+            }
+        }
+        Spacer(Modifier.padding(8.dp))
+        Text(text = annotatedText, modifier = Modifier
+            .align(Alignment.CenterHorizontally)
+            .clickable { navigateToLogin() }, color = Color.White, fontSize = 16.sp, fontFamily = sarabunFont)
+
 
 
         
@@ -335,11 +389,176 @@ fun isValidEmail(email: String): Boolean {
     return email.matches(emailPattern)
 }
 
-@Preview(showBackground = true)
 @Composable
-private fun SignUpPrev() {
-    IMDBCloneTheme {
-        SignUp()
+fun Login(navHostController: NavHostController) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+            .background(color = DeepGray)
+            .padding(start = 24.dp, end = 24.dp)
+    ) {
+
+        val context = LocalContext.current
+        var name by remember { mutableStateOf("") }
+        var email by remember { mutableStateOf("") }
+        var password by remember { mutableStateOf("") }
+        var passwordVisible by remember { mutableStateOf(false) }
+        var isEmailValid by remember { mutableStateOf(true) }
+        var isPasswordValid by remember { mutableStateOf(true) }
+        var isLoading by remember { mutableStateOf(false) }
+
+        Spacer(modifier = Modifier.padding(top = 24.dp))
+        Text("Welcome Back !!", color = Color.White, fontFamily = sarabunFont, fontSize = 24.sp)
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text("Login", color = Color.White, fontFamily = sarabunFont, fontSize = 40.sp)
+        Spacer(modifier = Modifier.padding(8.dp))
+        Text(
+            "Please fill the details below to login.",
+            color = Color.White,
+            fontFamily = sarabunFont,
+            fontSize = 16.sp
+        )
+        Spacer(modifier = Modifier.padding(8.dp))
+        OutlinedTextField(value = email,
+            onValueChange = {
+                email = it
+                isEmailValid = isValidEmail(email)
+            },
+            leadingIcon = {
+                Icon(imageVector = Icons.Filled.Email, null)
+            },
+            isError = !isEmailValid,
+            trailingIcon = {
+                IconButton(onClick = {
+                    email = ""
+                }) {
+                    if (email.isNotEmpty()){
+                        Icon(imageVector = Icons.Filled.Clear, null)
+
+                    }
+                }
+            },
+            modifier = Modifier.fillMaxWidth(),
+            label = {
+                Text("Email", fontFamily = sarabunFont, color = Color.White)
+            },
+            colors = OutlinedTextFieldDefaults.colors().copy(
+                focusedTextColor = Color.White,
+                cursorColor = Color.White,
+                focusedTrailingIconColor = Color.White,
+                focusedLabelColor = Color.White,
+                unfocusedLabelColor = Color.White,
+                focusedLeadingIconColor = Color.White,
+                focusedIndicatorColor = Color.White
+            )
+            , singleLine = true
+
+        )
+
+        if (!isEmailValid){
+            Spacer(Modifier.padding(8.dp))
+
+            Text("Invalid Email", color = Color.Red, modifier = Modifier.align(Alignment.Start))
+        }
+
+        Spacer(modifier = Modifier.padding(8.dp))
+        OutlinedTextField(value = password,
+            onValueChange = {
+                password = it
+                isPasswordValid = isValidPassword(password)
+            },
+            leadingIcon = {
+                Icon(imageVector = Icons.Filled.Lock, null)
+            },
+            isError = !isPasswordValid,
+            trailingIcon = {
+
+                val image = if(passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+
+
+                IconButton(onClick = {
+                    passwordVisible =! passwordVisible
+                }) {
+                    Icon(imageVector = image, null)
+                }
+            },
+            modifier = Modifier.fillMaxWidth(),
+            label = {
+                Text("Password", fontFamily = sarabunFont, color = Color.White)
+            },
+            colors = OutlinedTextFieldDefaults.colors().copy(
+                focusedTextColor = Color.White,
+                cursorColor = Color.White,
+                focusedTrailingIconColor = Color.White,
+                focusedLabelColor = Color.White,
+                unfocusedLabelColor = Color.White,
+                focusedLeadingIconColor = Color.White,
+                focusedIndicatorColor = Color.White
+            )
+            , singleLine = true
+            , visualTransformation = if(passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
+        )
+
+        if (!isPasswordValid){
+            Spacer(Modifier.padding(8.dp))
+
+            Text("Password must contain: \n At least 6 characters \n At least 1 uppercase letter \n At least 1 special character.", color = Color.Red, modifier = Modifier.align(Alignment.Start))
+        }
+
+        val activityContext = LocalContext.current as Activity
+        Spacer(Modifier.padding(8.dp))
+
+            Button(onClick = {
+                if(isEmailValid && isPasswordValid && password.isNotEmpty() && email.isNotEmpty()){
+
+                    loginWithEmailAndPassword(email,password,context,activityContext)
+
+
+                }
+
+            }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(4.dp), colors = ButtonDefaults.textButtonColors(contentColor = Color.Black, containerColor = Color.White)) {
+//            Text("Create Account", modifier = Modifier.padding(4.dp), fontFamily = sarabunFont, fontSize = 18.sp)
+
+                ButtonText("Login")
+
+            }
+
+
+        val annotatedText = buildAnnotatedString {
+            withStyle(style = SpanStyle(color = Color.White)) {
+                append("Don't have an Account ? ")
+            }
+            withStyle(style = SpanStyle(textDecoration = TextDecoration.Underline)) {
+                append("Create a Account.")
+            }
+        }
+        Spacer(Modifier.padding(8.dp))
+        Text(text = annotatedText, modifier = Modifier
+            .align(Alignment.CenterHorizontally)
+            .clickable { navHostController.popBackStack() }, color = Color.White, fontSize = 16.sp, fontFamily = sarabunFont)
+
+
+
+
+
     }
 }
+
+fun loginWithEmailAndPassword(email: String, password: String, context: Context, activityContext: Activity) {
+    auth = FirebaseAuth.getInstance()
+    auth.signInWithEmailAndPassword(email,password).addOnCompleteListener{task->
+        if (task.isSuccessful){
+            val user = FirebaseAuth.getInstance().currentUser
+            val name = user?.displayName?:" "
+            Toast.makeText(context,"Welcome ${name} !!",Toast.LENGTH_SHORT).show()
+            context.startActivity(Intent(context,MainActivity::class.java))
+            activityContext.finish()
+        }else{
+            Toast.makeText(context,task.exception.toString(),Toast.LENGTH_SHORT).show()
+        }
+    }
+}
+
 

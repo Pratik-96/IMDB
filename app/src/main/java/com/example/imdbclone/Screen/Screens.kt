@@ -9,5 +9,7 @@ sealed class Screens(val route:String) {
     object PrimeScreen: Screens("PrimeScreen")
     object AppleScreen: Screens("AppleScreen")
     object HotstarScreen: Screens("HotstarScreen")
+    object SignUp: Screens("SignUp")
+    object Login: Screens("Login")
 
 }
