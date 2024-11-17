@@ -11,5 +11,6 @@ sealed class Screens(val route:String) {
     object HotstarScreen: Screens("HotstarScreen")
     object SignUp: Screens("SignUp")
     object Login: Screens("Login")
+    object MyListScreen: Screens("MyListScreen")
 
 }

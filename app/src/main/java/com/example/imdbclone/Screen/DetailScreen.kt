@@ -62,6 +62,7 @@ import coil.memory.MemoryCache
 import coil.request.ImageRequest
 import coil.size.Size
 import com.example.imdbclone.Activities.sarabunFont
+import com.example.imdbclone.DataClasses.SavedShowDetails
 import com.example.imdbclone.DataClasses.ServiceMetaData
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.ViewModels.MainViewModel
@@ -72,6 +73,16 @@ import com.example.imdbclone.ui.theme.Gray
 
 @Composable
 fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
+
+    val showId = data.id
+    val title = data.title
+    val showType = data.showType
+    val verticalImage = data.imageSet.verticalPoster?.w480
+    val horizontalImage = data.imageSet.horizontalPoster?.w480
+    val serviceMetadata = data.streamingOptions?.`in`
+
+    val showData = SavedShowDetails(showId,title,showType,verticalImage,horizontalImage,serviceMetadata)
+
 
     LazyColumn(
         modifier = Modifier
@@ -181,10 +192,11 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                             ServiceDialog({ showDialog = false }, data)
                         }
                     }
-                    val context = LocalContext.current
+                    val context = LocalContext.current as Activity
                     Button(
                         onClick = {
 
+                            uploadShowList(showData,context)
                             //TODO: Add to watchlist
                             Toast.makeText(context,"Coming soon",Toast.LENGTH_SHORT).show()
 

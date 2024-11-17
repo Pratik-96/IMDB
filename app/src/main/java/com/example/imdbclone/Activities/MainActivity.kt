@@ -64,6 +64,7 @@ import com.example.imdbclone.Screen.DetailScreen
 import com.example.imdbclone.Screen.HotstarScreen
 import com.example.imdbclone.Screen.ImportantText
 import com.example.imdbclone.Screen.LargeText
+import com.example.imdbclone.Screen.ListScreen
 import com.example.imdbclone.Screen.NetflixScreen
 import com.example.imdbclone.Screen.PrimeScreen
 import com.example.imdbclone.Screen.Screen
@@ -132,7 +133,7 @@ fun NavDrawer() {
                         "Hey ${userName}..!!",
                         color = Color.White,
                         modifier = Modifier
-                            .align(Alignment.CenterHorizontally)
+                            .align(Alignment.Start)
                             .padding(8.dp),
                         fontWeight = FontWeight.Bold,
                         fontSize = 24.sp
@@ -141,7 +142,7 @@ fun NavDrawer() {
                     showViewModel.items.forEachIndexed { index, navigationItem ->
                         NavigationDrawerItem(
                             label = {
-                                if (index == 0 || index==5)  {
+                                if (index == 0 || index==1 || index==6)  {
                                     (if (index == selectedItemIndex) {
                                         navigationItem.selectedIcon
                                     } else navigationItem.unSelectedItem)?.let {
@@ -189,11 +190,12 @@ fun NavDrawer() {
 
                                     when (index) {
                                         0 -> navHostController.navigate(Screens.HomeScreen.route)
-                                        1 -> navHostController.navigate(Screens.NetflixScreen.route)
-                                        2 -> navHostController.navigate(Screens.PrimeScreen.route)
-                                        3 -> navHostController.navigate(Screens.HotstarScreen.route)
-                                        4 -> navHostController.navigate(Screens.AppleScreen.route)
-                                        5 ->{
+                                        1 -> navHostController.navigate(Screens.MyListScreen.route)
+                                        2 -> navHostController.navigate(Screens.NetflixScreen.route)
+                                        3 -> navHostController.navigate(Screens.PrimeScreen.route)
+                                        4 -> navHostController.navigate(Screens.HotstarScreen.route)
+                                        5 -> navHostController.navigate(Screens.AppleScreen.route)
+                                        6 ->{
                                             auth.signOut()
                                             context.startActivity(Intent(context,Authentication::class.java))
                                             context.finish()
@@ -241,6 +243,9 @@ fun NavDrawer() {
                                 }
                                 if (selectedItemIndex == 0) {
                                     LargeText("For $userName")
+                                }
+                                if (selectedItemIndex == 1){
+                                    ImportantText("My List")
                                 }
                                 Spacer(Modifier.weight(1f))
                                 IconButton(onClick = {
@@ -332,6 +337,10 @@ fun NavDrawer() {
                         })
                     }
 
+                    composable(route = Screens.MyListScreen.route) {
+                        ListScreen(navHostController)
+                        navHostController.navigate(Screens.MyListScreen.route)
+                    }
 
 
                     composable(route = Screens.PrimeScreen.route) {

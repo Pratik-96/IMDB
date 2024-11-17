@@ -1,9 +1,13 @@
 package com.example.imdbclone.ViewModels
 
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.List
 import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -238,6 +242,13 @@ private fun fetchPrimeMovies() {
             unSelectedItem = Icons.Outlined.Home,
             selectedIcon = Icons.Filled.Home,
             route = Screens.HomeScreen.route
+
+        ),NavigationItem(
+            name = "My List",
+            url = "",
+            unSelectedItem = Icons.Outlined.List,
+            selectedIcon = Icons.Filled.List,
+            route = Screens.MyListScreen.route
 
         ), NavigationItem(
             name = "Netflix",
