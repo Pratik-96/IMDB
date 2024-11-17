@@ -61,6 +61,7 @@ import coil.disk.DiskCache
 import coil.memory.MemoryCache
 import coil.request.ImageRequest
 import coil.size.Size
+import com.example.imdbclone.Activities.sarabunFont
 import com.example.imdbclone.DataClasses.ServiceMetaData
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.ViewModels.MainViewModel
@@ -533,16 +534,16 @@ fun ButtonText(text: String) {
 
 @Composable
 fun NormalText(text: String) {
-    Text(text = text, color = Color.Gray, fontSize = 16.sp, modifier = Modifier.padding(8.dp))
+    Text(text = text, color = Color.Gray,fontFamily = sarabunFont, fontSize = 16.sp, modifier = Modifier.padding(8.dp))
 }
 @Composable
 fun LargeText(text: String) {
-    Text(text = text, color = Color.White, fontSize = 24.sp, modifier = Modifier.padding(8.dp), fontWeight = FontWeight.Bold)
+    Text(text = text, color = Color.White, fontSize = 24.sp, modifier = Modifier.padding(8.dp),fontFamily = sarabunFont, fontWeight = FontWeight.Bold)
 }
 
 @Composable
 fun SmallText(text: String) {
-    Text(text = text, color = Color.Gray, fontSize = 14.sp, modifier = Modifier.padding(8.dp))
+    Text(text = text, color = Color.Gray,fontFamily = sarabunFont, fontSize = 14.sp, modifier = Modifier.padding(8.dp))
 }
 
 @Composable
@@ -550,7 +551,7 @@ fun ImportantText(text: String) {
     Text(
         text = text,
         color = Color.White,
-        fontFamily = FontFamily.SansSerif,
+        fontFamily = sarabunFont,
         fontSize = 16.sp,
         modifier = Modifier.padding(8.dp),
         fontWeight = FontWeight.Bold

@@ -1,5 +1,6 @@
 package com.example.imdbclone.Screen
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.widget.Toast
@@ -23,7 +24,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -43,15 +43,19 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import coil.compose.rememberAsyncImagePainter
 import com.example.imdbclone.Activities.SearchStateScreen
+import com.example.imdbclone.DataClasses.SavedShowDetails
 import com.example.imdbclone.DataClasses.ShowDetails
+import com.example.imdbclone.DataClasses.UserData
 import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.ViewModels.NetflixViewModel
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
 
 @Composable
 fun NetflixScreen(navHostController: NavHostController, navigateToDetail: (ShowDetails) -> Unit) {
     val netflixViewModel: NetflixViewModel = viewModel()
     val mainViewModel: MainViewModel = viewModel()
-    val context = LocalContext.current
+    val context = LocalContext.current as Activity
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
 
@@ -92,13 +96,40 @@ fun NetflixScreen(navHostController: NavHostController, navigateToDetail: (ShowD
     }
 }
 
+private lateinit var auth:FirebaseAuth
+
+fun uploadShowList(showData:SavedShowDetails,context:Activity){
+    auth = FirebaseAuth.getInstance()
+
+    val id = auth.currentUser?.uid?:"null"
+    val databaseRef = FirebaseDatabase.getInstance().reference
+    val childRef = databaseRef.child(id).push()
+    childRef.setValue(showData).addOnSuccessListener {task->
+
+            Toast.makeText(context,"Show Added to My List.",Toast.LENGTH_SHORT).show()
+
+    }.addOnFailureListener {task->
+        Toast.makeText(context,task.message,Toast.LENGTH_SHORT).show()
+
+    }
+}
+
 @Composable
 fun NetflixContent(navigateToDetail: (ShowDetails) -> Unit, state: MainViewModel.SearchShowState) {
     val netflixViewModel: NetflixViewModel = viewModel()
     val mainViewModel: MainViewModel = viewModel()
-    val context = LocalContext.current
+    val context = LocalContext.current as Activity
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
+
+    val showId = state.item?.id
+    val title = state.item?.title
+    val showType = state.item?.showType
+    val verticalImage = state.item?.imageSet?.verticalPoster?.w480
+    val horizontalImage = state.item?.imageSet?.horizontalPoster?.w480
+    val serviceMetadata = state.item?.streamingOptions?.`in`
+
+    val showData = SavedShowDetails(showId,title,showType,verticalImage,horizontalImage,serviceMetadata)
 
     LazyColumn(modifier = Modifier.fillMaxSize()) {
 
@@ -195,6 +226,7 @@ fun NetflixContent(navigateToDetail: (ShowDetails) -> Unit, state: MainViewModel
                                 onClick = {
 
                                     //TODO:Store to watchlist
+                                    uploadShowList(showData,context)
                                     Toast.makeText(context, "Coming soon", Toast.LENGTH_SHORT)
                                         .show()
 
