@@ -2,7 +2,9 @@ package com.example.imdbclone.ViewModels
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.outlined.Home
+import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -253,6 +255,12 @@ private fun fetchPrimeMovies() {
         ), NavigationItem(
             name = "Apple TV",
             url = "https://media.movieofthenight.com/services/apple/logo-dark-theme.svg",
+            route = Screens.AppleScreen.route
+        ),NavigationItem(
+            name = "Logout",
+            url = "",
+            unSelectedItem = Icons.Outlined.Logout,
+            selectedIcon = Icons.Filled.Logout,
             route = Screens.AppleScreen.route
         )
     )

@@ -1,5 +1,6 @@
 package com.example.imdbclone.Activities
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -72,8 +73,11 @@ import com.example.imdbclone.Screen.TopShowScreen
 import com.example.imdbclone.Screen.ZeeScreen
 import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
+import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
+
+private lateinit var auth:FirebaseAuth
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,8 +116,9 @@ fun NavDrawer() {
         val showViewModel: MainViewModel = viewModel()
         val navHostController = rememberNavController()
 
-        val context = LocalContext.current
-
+        val context = LocalContext.current as Activity
+        auth = FirebaseAuth.getInstance()
+        val userName = auth.currentUser?.displayName?:"User"
 
 
         ModalNavigationDrawer(
@@ -124,7 +129,7 @@ fun NavDrawer() {
                     drawerContentColor = Color.Gray,
                 ) {
                     Text(
-                        "Hey Pratik..!!",
+                        "Hey ${userName}..!!",
                         color = Color.White,
                         modifier = Modifier
                             .align(Alignment.CenterHorizontally)
@@ -136,7 +141,7 @@ fun NavDrawer() {
                     showViewModel.items.forEachIndexed { index, navigationItem ->
                         NavigationDrawerItem(
                             label = {
-                                if (index == 0) {
+                                if (index == 0 || index==5)  {
                                     (if (index == selectedItemIndex) {
                                         navigationItem.selectedIcon
                                     } else navigationItem.unSelectedItem)?.let {
@@ -188,6 +193,11 @@ fun NavDrawer() {
                                         2 -> navHostController.navigate(Screens.PrimeScreen.route)
                                         3 -> navHostController.navigate(Screens.HotstarScreen.route)
                                         4 -> navHostController.navigate(Screens.AppleScreen.route)
+                                        5 ->{
+                                            auth.signOut()
+                                            context.startActivity(Intent(context,Authentication::class.java))
+                                            context.finish()
+                                        }
                                     }
                                     drawerState.close()
 
@@ -230,7 +240,7 @@ fun NavDrawer() {
 //                        Icon(imageVector = Icons.Outlined.Search, contentDescription = "Search", modifier = Modifier.padding(8.dp))
                                 }
                                 if (selectedItemIndex == 0) {
-                                    LargeText("For Pratik")
+                                    LargeText("For $userName")
                                 }
                                 Spacer(Modifier.weight(1f))
                                 IconButton(onClick = {

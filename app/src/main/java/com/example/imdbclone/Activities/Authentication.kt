@@ -82,9 +82,9 @@ class Authentication : ComponentActivity() {
 
         super.onStart()
         auth = FirebaseAuth.getInstance()
-      setContent {
+        if (auth.currentUser!=null){
+            setContent {
           val context = LocalContext.current as Activity
-          if (auth.currentUser!=null){
               context.startActivity(Intent(context,MainActivity::class.java))
               context.finish()
           }
