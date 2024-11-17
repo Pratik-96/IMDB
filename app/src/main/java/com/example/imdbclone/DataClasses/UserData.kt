@@ -14,7 +14,7 @@ data class SavedShowDetails(
     val showType: String?=null,
     val verticalImage:String?=null,
     val horizontalImage:String?=null,
-    val serviceMetaData: List<MetaData?>?=null
+    val serviceMetaData: List<ServiceMetaData?>?=null
     ){
     constructor():this(null,null,null,null,null,null)
 }

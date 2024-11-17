@@ -101,28 +101,34 @@ data class StreamingOptionsInIndia(
 @Serializable
 @Parcelize
 data class ServiceMetaData(
-    val service:Service,
-    val type:String,
-    val link:String,
-    val videoLink:String,
-    val quality:String
-):Parcelable
+    val service:Service?=null,
+    val type:String?=null,
+    val link:String?=null,
+    val videoLink:String?=null,
+    val quality:String?=null
+):Parcelable{
+    constructor():this(null,null,null,null,null)
+}
 
 @Serializable
 @Parcelize
 data class Service(
-    val id:String,
-    val name:String,
-    val homePage:String,
-    val imageSet:ServiceImageAsset?
-):Parcelable
+    val id:String?=null,
+    val name:String?=null,
+    val homePage:String?=null,
+    val imageSet:ServiceImageAsset?=null
+):Parcelable{
+    constructor():this(null,null,null,null)
+}
 
 @Serializable
 @Parcelize
 data class ServiceImageAsset(
-    val lightThemeImage:String,
-    val darkThemeImage:String
-):Parcelable
+    val lightThemeImage:String?=null,
+    val darkThemeImage:String?=null
+):Parcelable{
+    constructor():this(null,null)
+}
 
 
 data class ShowResponse(val shows:List<ShowDetails>)

@@ -388,7 +388,7 @@ fun DialogLogo(data: ServiceMetaData) {
     }.build()
     val painter = rememberAsyncImagePainter(
         model = ImageRequest.Builder(context).data(
-            data.service.imageSet?.darkThemeImage
+            data.service?.imageSet?.darkThemeImage
                 ?: ""
         ).size(Size.ORIGINAL)  // Adjust as needed
             .build(), imageLoader = imageLoader
