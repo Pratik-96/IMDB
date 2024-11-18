@@ -1,5 +1,7 @@
 package com.example.imdbclone.Screen
 
+import android.app.Activity
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -31,13 +33,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
+import com.example.imdbclone.Activities.BufferActivity
 import com.example.imdbclone.Activities.sarabunFont
 import com.example.imdbclone.DataClasses.SavedShowDetails
+import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.ViewModels.MainViewModel
 import com.google.firebase.auth.FirebaseAuth
 
@@ -74,11 +80,16 @@ fun ListScreen() {
 @Composable
 fun ListItem(showDetails: SavedShowDetails) {
     var showDialog by remember { mutableStateOf(false) }
-
+    val context = LocalContext.current as Activity
 
     Column(
         modifier = Modifier
             .fillMaxWidth()
+            .clickable {
+                val intent = Intent(context,BufferActivity::class.java)
+                intent.putExtra("id",showDetails.id)
+                context.startActivity(intent)
+            }
             .background(Color.Black)
     ) {
 
@@ -113,9 +124,9 @@ fun ListItem(showDetails: SavedShowDetails) {
 
                 }
             ) {
-//                if (showDialog) {
-//                    ServiceDialog({ showDialog = false }, showDetails.serviceMetaData)
-//                }
+                if (showDialog) {
+                    Dialog({ showDialog = false }, showDetails)
+                }
                 Icon(
                     imageVector = Icons.Filled.PlayArrow,
                     tint = Color.White,
@@ -125,3 +136,45 @@ fun ListItem(showDetails: SavedShowDetails) {
         }
     }
 }
+
+
+@Composable
+fun Dialog(onDismiss: () -> Unit, data: SavedShowDetails) {
+
+    Dialog(onDismissRequest = onDismiss) {
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(Color.DarkGray, shape = RoundedCornerShape(16.dp))
+                .padding(16.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+
+        ) {
+
+            ImportantText("Stream ${data.title} on:")
+            for (i in 0 until (data.serviceMetaData?.size?:0)) {
+                data.serviceMetaData?.get(i)?.let {
+                    DialogLogo(
+                        it
+                    )
+
+                }
+
+            }
+//            ImportantText("Rent on:")
+//            for (i in 0 until (data.streamingOptions?.`in`?.size ?: 0)) {
+//                if (data.streamingOptions?.`in`?.get(i)?.type.equals("rent")) {
+//                    data.streamingOptions?.`in`?.get(i)?.let {
+//                        DialogLogo(
+//                            it
+//                        )
+//                    }
+//                }
+//
+//            }
+
+        }
+    }
+}
+

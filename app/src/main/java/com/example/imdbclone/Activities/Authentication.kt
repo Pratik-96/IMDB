@@ -79,7 +79,6 @@ private lateinit var auth:FirebaseAuth
 class Authentication : ComponentActivity() {
 
     override fun onStart() {
-
         super.onStart()
         auth = FirebaseAuth.getInstance()
         if (auth.currentUser!=null){
