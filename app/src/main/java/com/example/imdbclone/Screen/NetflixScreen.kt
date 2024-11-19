@@ -77,7 +77,7 @@ fun NetflixScreen(navHostController: NavHostController, navigateToDetail: (ShowD
                     modifier = Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    LoadingLogo(mainViewModel.items.get(1).url, Color.Black,Color.Red)
+                    LoadingLogo(mainViewModel.items.get(2).url, Color.Black,Color.Red)
                 }
 
             }

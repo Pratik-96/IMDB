@@ -73,7 +73,7 @@ fun AppleScreen(navigateToDetail: (ShowDetails) -> Unit) {
     val state = appleViewModel.fetchShow.value
     when{
         state.loading->{
-            LoadingLogo(mainViewModel.items.get(4).url, Color.Black,Color.White)
+            LoadingLogo(mainViewModel.items.get(5).url, Color.Black,Color.White)
         }
         state.error!=null->{
             Text(state.error)

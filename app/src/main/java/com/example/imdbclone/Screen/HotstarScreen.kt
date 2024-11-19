@@ -56,7 +56,7 @@ fun HotstarScreen(navigateToDetail: (ShowDetails) -> Unit, navigateToMarvel: () 
 
             showState.value.loading -> {
                 Column {
-                    LoadingLogo(mainViewModel.items.get(3).url, HotstarBackground, Color.White)
+                    LoadingLogo(mainViewModel.items.get(4).url, HotstarBackground, Color.White)
 
                 }
             }

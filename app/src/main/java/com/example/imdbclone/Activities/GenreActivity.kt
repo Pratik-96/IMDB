@@ -4,6 +4,9 @@ import android.content.res.Resources.Theme
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -12,6 +15,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.tooling.preview.Preview
+import com.example.imdbclone.R
+import com.example.imdbclone.ui.theme.DeepGray
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import com.google.firebase.auth.FirebaseAuth
 
@@ -101,6 +109,17 @@ class GenreActivity :ComponentActivity(){
 @Composable
 fun GenreItem() {
 
+    Column(modifier = Modifier.fillMaxSize().background(DeepGray)) {
+        Image(painterResource(R.drawable.img),null,)
+    }
+
+}
 
 
+@Preview
+@Composable
+private fun GenrePrev() {
+    IMDBCloneTheme {
+        GenreItem()
+    }
 }

@@ -93,7 +93,7 @@ fun PrimeScreen(navigateToDetail:(ShowDetails)->Unit) {
                 Column(modifier = Modifier.fillMaxSize()) {
 
                     LoadingLogo(
-                        mainViewModel.items[2].url, Color.Black, Color.White
+                        mainViewModel.items[3].url, Color.Black, Color.White
                     )
                     Loader(Color.White)
                 }
@@ -202,6 +202,7 @@ fun PrimeImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) ->
                                 launcher.launch(intent)
                             }
 
+                    
 
 
                     )
@@ -211,6 +212,7 @@ fun PrimeImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) ->
 
                         Text("Watch on Prime", color = Color.White, modifier = Modifier.padding(8.dp))
                     }
+
 
                 }
             }
