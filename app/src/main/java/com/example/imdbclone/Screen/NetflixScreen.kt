@@ -227,8 +227,6 @@ fun NetflixContent(navigateToDetail: (ShowDetails) -> Unit, state: MainViewModel
 
                                     //TODO:Store to watchlist
                                     uploadShowList(showData,context)
-                                    Toast.makeText(context, "Coming soon", Toast.LENGTH_SHORT)
-                                        .show()
 
                                 }, modifier = Modifier
                                     .height(55.dp)
