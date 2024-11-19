@@ -197,8 +197,6 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                         onClick = {
 
                             uploadShowList(showData,context)
-                            //TODO: Add to watchlist
-                            Toast.makeText(context,"Coming soon",Toast.LENGTH_SHORT).show()
 
                         }, modifier = Modifier
                             .wrapContentSize()
@@ -501,7 +499,7 @@ fun BackgroundPoster(url: String,navHostController: NavHostController) {
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(8.dp)
-                .clip(shape = RoundedCornerShape(24.dp))
+                .clip(shape = RoundedCornerShape(8.dp))
                 .aspectRatio(16f / 9f),
             contentScale = ContentScale.Crop
 
@@ -518,7 +516,7 @@ fun BackgroundPoster(url: String,navHostController: NavHostController) {
             modifier = Modifier
                 .padding(8.dp)
                 .align(Alignment.TopEnd),
-            colors = IconButtonDefaults.iconButtonColors(containerColor = Color.Black.copy(alpha = 0.6f))
+            colors = IconButtonDefaults.iconButtonColors(containerColor = Color.Black.copy(alpha = 0.1f))
         ) {
             Icon(
                 imageVector = Icons.Filled.Close,
