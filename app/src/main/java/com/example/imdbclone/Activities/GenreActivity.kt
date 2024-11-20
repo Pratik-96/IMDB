@@ -1,6 +1,8 @@
 package com.example.imdbclone.Activities
 
+import android.app.Activity
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -10,8 +12,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
@@ -20,6 +24,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -30,16 +35,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import com.example.imdbclone.Screen.ButtonText
-import com.example.imdbclone.Screen.HotstarScreen
 import com.example.imdbclone.Screen.ImportantText
-import com.example.imdbclone.Screen.NormalText
 import com.example.imdbclone.ui.theme.DeepGray
-import com.example.imdbclone.ui.theme.HotstarBackground
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import com.google.firebase.auth.FirebaseAuth
 
@@ -114,39 +118,111 @@ class GenreActivity : ComponentActivity() {
                 genres
             }
             IMDBCloneTheme {
-                Scaffold { innerPadding->
+                Scaffold { innerPadding ->
+
+                    var selectedGenres = mutableListOf("")
+                    var count by remember { mutableStateOf(0) }
+                    val context = LocalContext.current as Activity
 
 
-                    Column(modifier = Modifier.fillMaxSize().padding(innerPadding).background(DeepGray), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .padding(innerPadding)
+                            .background(DeepGray),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
 
                         ImportantText("Build Your Home Page")
-                        Text("Choose your favourite genres", color = Color.White, fontFamily = sarabunFont)
+                        Text(
+                            "Choose your favourite genres",
+                            color = Color.White,
+                            fontFamily = sarabunFont
+                        )
+
+
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.BottomCenter){
 
 
 
+                            Spacer(Modifier.padding(50.dp))
+
+                            LazyVerticalGrid(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .background(DeepGray),
+                                columns = GridCells.Fixed(2)
+                            ) {
 
 
-                        LazyVerticalGrid(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(DeepGray),
-                            columns = GridCells.Fixed(2)
-                        ) {
+                                items(checkBoxes, key = { it.text }) { item ->
+                                    GenreItem(item)
+                                }
 
-
-                            items(checkBoxes, key = { it.text }) { item ->
-                                GenreItem(item)
-
+                                item {
+                                    Box(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .height(100.dp)
+                                    )
+                                }
                             }
+
+                            Box(
+                                modifier = Modifier.fillMaxWidth(),
+                                contentAlignment = Alignment.BottomCenter
+                            ) {
+                                Button(
+                                    onClick = {
+                                        count = 0
+                                        selectedGenres.clear()
+                                        for (item in checkBoxes) {
+                                            if (item.isChecked) {
+                                                count++
+                                                selectedGenres.add(item.text)
+                                            }
+                                        }
+                                        if (count >= 3) {
+                                            Toast.makeText(
+                                                context,
+                                                selectedGenres.toString(),
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+                                        } else {
+                                            Toast.makeText(
+                                                context,
+                                                "Select at least 3 genres",
+                                                Toast.LENGTH_SHORT
+                                            ).show()
+
+                                        }
+                                    }, modifier = Modifier
+                                        .fillMaxWidth()
+                                        .padding(8.dp).align(Alignment.BottomCenter)
+                                        .clip(
+                                            RoundedCornerShape(4.dp)
+                                        ),
+                                    colors = ButtonDefaults.buttonColors(
+                                        contentColor = Color.Black,
+                                        containerColor = Color.White
+                                    )
+                                ) {
+                                    ButtonText("Continue")
+                                }
+                            }
+
+
                         }
-                    }
+                        }
+
 
                 }
-
-                }
+            }
         }
     }
 }
+
 
 @Composable
 fun GenreItem(item: checkBoxInfo) {
@@ -160,7 +236,7 @@ fun GenreItem(item: checkBoxInfo) {
         modifier = Modifier
             .wrapContentSize()
             .padding(8.dp)
-            .background(Color.DarkGray , shape = RoundedCornerShape(16.dp))
+            .background(Color.DarkGray, shape = RoundedCornerShape(16.dp))
             .clickable {
                 item.isChecked = !item.isChecked
                 checked.value = item.isChecked
@@ -182,7 +258,12 @@ fun GenreItem(item: checkBoxInfo) {
             contentDescription = null
         )
 
-        Text(item.text, color = Color.White, fontFamily = sarabunFont, modifier = Modifier.padding(4.dp))
+        Text(
+            item.text,
+            color = Color.White,
+            fontFamily = sarabunFont,
+            modifier = Modifier.padding(4.dp)
+        )
 
     }
 }
