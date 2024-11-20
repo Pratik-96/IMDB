@@ -370,7 +370,7 @@ fun signUpWithEmailAndPassword(
                 if (profileTask.isSuccessful){
                     isSuccessful = true
                     Toast.makeText(context,"SignUp Successful!!",Toast.LENGTH_SHORT).show()
-                    context.startActivity(Intent(context,MainActivity::class.java))
+                    context.startActivity(Intent(context,GenreActivity::class.java))
                     activityContext.finish()
                 }
             }

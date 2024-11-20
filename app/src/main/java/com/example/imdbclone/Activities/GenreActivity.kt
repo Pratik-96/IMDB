@@ -152,7 +152,9 @@ class GenreActivity : ComponentActivity() {
                                 modifier = Modifier
                                     .fillMaxSize()
                                     .background(DeepGray),
-                                columns = GridCells.Fixed(2)
+                                columns = GridCells.Fixed(3),
+                                verticalArrangement = Arrangement.SpaceEvenly,
+                                horizontalArrangement = Arrangement.SpaceEvenly
                             ) {
 
 
@@ -189,6 +191,7 @@ class GenreActivity : ComponentActivity() {
                                                 selectedGenres.toString(),
                                                 Toast.LENGTH_SHORT
                                             ).show()
+
                                         } else {
                                             Toast.makeText(
                                                 context,
