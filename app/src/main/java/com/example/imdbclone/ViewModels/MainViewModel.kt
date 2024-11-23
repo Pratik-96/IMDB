@@ -1,19 +1,15 @@
 package com.example.imdbclone.ViewModels
 
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
 import androidx.compose.material.icons.filled.Logout
-import androidx.compose.material.icons.outlined.Add
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.material.icons.outlined.Logout
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -34,8 +30,11 @@ class MainViewModel : ViewModel() {
 
 
 
+
     private val _netflixShowState = mutableStateOf(ShowState())
     val netflixShowState: State<ShowState> = _netflixShowState
+
+
 
     private val _netflixMovieState = mutableStateOf(ShowState())
     val netflixMovieState: State<ShowState> = _netflixMovieState
@@ -64,6 +63,31 @@ class MainViewModel : ViewModel() {
     val fetchList:State<ListState> = _fetchList
 
 
+    private val _actionShows = mutableStateOf(ShowState())
+    val actionShows:State<ShowState> = _actionShows
+
+
+
+    private val _showStates: MutableList<MutableState<ShowState>> = mutableListOf(
+        _netflixShowState,
+        _netflixMovieState,
+        _appleShowState,
+        _appleMovieState,
+        _primeShowState,
+        _primeMovieState
+        )
+
+     val showStates: MutableList<State<ShowState>> = mutableListOf(
+        netflixShowState,
+        netflixMovieState,
+        appleShowState,
+        appleMovieState,
+        primeShowDetails,
+        primeMovieDetails
+        )
+
+
+
     init {
 //        fetchNetflixShows()
 //        fetchNetflixMovies()
@@ -73,7 +97,53 @@ class MainViewModel : ViewModel() {
 //        fetchPrimeMovies()
 //        fetchHotstarShows()
         fetchDataFromFirebase()
+        dynamicDataFetching()
 
+    }
+
+
+    private fun dynamicDataFetching(){
+        fetchData(_showStates[0],"netflix","in","series")
+        fetchData(_showStates[1],"netflix","in","movie")
+    }
+
+    private fun fetchData(state: MutableState<ShowState>,service:String,country:String,showType:String){
+        viewModelScope.launch {
+            try {
+
+                val response = imdbService.getShows(country,service,showType)
+                state.value = state.value.copy(
+                    error = null,
+                    list = response,
+                    loading = false
+                )
+
+            }catch (e:Exception){
+                _netflixShowState.value = _netflixShowState.value.copy(
+                    error = e.message,
+                    loading = false
+                )
+            }
+        }
+    }
+    private fun fetchActionShows() {
+        viewModelScope.launch {
+            try {
+
+                val response = imdbService.getFilteredShows("in","hotstar","hotstar","series",75,"","")
+                _hotstarShowState.value = _hotstarShowState.value.copy(
+                    error = null,
+                    list = response.shows,
+                    loading = false
+                )
+
+            }catch (e:Exception){
+                _hotstarShowState.value = _hotstarShowState.value.copy(
+                    error = e.message,
+                    loading = false
+                )
+            }
+        }
     }
 
 

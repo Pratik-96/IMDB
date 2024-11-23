@@ -59,8 +59,8 @@ private lateinit var auth: FirebaseAuth
 @Composable
 fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> Unit) {
 
-    val netflixState by viewModel.netflixShowState
-    val netflixMovieState by viewModel.netflixMovieState
+    val netflixState by viewModel.showStates[0]
+    val netflixMovieState by viewModel.showStates[1]
     val appleState by viewModel.appleShowState
     val appleMovieState by viewModel.appleMovieState
     val primeState by viewModel.primeShowDetails
@@ -102,8 +102,8 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
             .background(Color.Black),
 
         ) {
-//        item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
-//        item { StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail) }
+        item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
+        item { StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail) }
 //        item { StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail) }
 //        item { StateScreen(title = "Top Apple Tv Movies", appleMovieState,navigateToDetail) }
 //        item { StateScreen(title = "Top Shows on Prime", primeState,navigateToDetail) }
