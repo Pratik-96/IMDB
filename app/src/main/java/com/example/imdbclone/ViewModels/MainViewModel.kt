@@ -28,6 +28,20 @@ private lateinit var auth: FirebaseAuth
 
 class MainViewModel : ViewModel() {
 
+    val actionIndex = 0
+    val siFiIndex = 1
+    val adventureIndex = 2
+    val animationIndex = 3
+    val comedyIndex = 4
+    val crimeIndex = 5
+    val documentaryIndex = 6
+    val dramaIndex = 7
+    val fantasyIndex = 8
+    val horrorIndex = 9
+    val romanceIndex = 10
+    val thrillerIndex = 11
+
+
 
 
 
