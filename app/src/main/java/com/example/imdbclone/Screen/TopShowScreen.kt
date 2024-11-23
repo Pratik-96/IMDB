@@ -61,10 +61,10 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
     val netflixState by viewModel.showStates[0]
     val netflixMovieState by viewModel.showStates[1]
-    val appleState by viewModel.appleShowState
-    val appleMovieState by viewModel.appleMovieState
-    val primeState by viewModel.primeShowDetails
-    val primeMovieState by viewModel.primeMovieDetails
+    val appleState by viewModel.showStates[2]
+    val appleMovieState by viewModel.showStates[3]
+    val primeState by viewModel.showStates[4]
+    val primeMovieState by viewModel.showStates[5]
     val hostarState by viewModel.hotstarShowDetails
 
     var fetched by remember { mutableStateOf(false) }
@@ -104,10 +104,10 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
         ) {
         item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
         item { StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail) }
-//        item { StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail) }
-//        item { StateScreen(title = "Top Apple Tv Movies", appleMovieState,navigateToDetail) }
-//        item { StateScreen(title = "Top Shows on Prime", primeState,navigateToDetail) }
-//        item { StateScreen(title = "Top Movies on Prime", primeMovieState,navigateToDetail) }
+        item { StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail) }
+        item { StateScreen(title = "Top Apple Tv Movies", appleMovieState,navigateToDetail) }
+        item { StateScreen(title = "Top Shows on Prime", primeState,navigateToDetail) }
+        item { StateScreen(title = "Top Movies on Prime", primeMovieState,navigateToDetail) }
 //        item { StateScreen(title = "Top Shows on Hotstar", hostarState,navigateToDetail) }
         item {
 

@@ -9,6 +9,7 @@ import androidx.compose.material.icons.outlined.List
 import androidx.compose.material.icons.outlined.Logout
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
@@ -48,8 +49,6 @@ class MainViewModel : ViewModel() {
     private val _netflixShowState = mutableStateOf(ShowState())
     val netflixShowState: State<ShowState> = _netflixShowState
 
-
-
     private val _netflixMovieState = mutableStateOf(ShowState())
     val netflixMovieState: State<ShowState> = _netflixMovieState
 
@@ -80,7 +79,69 @@ class MainViewModel : ViewModel() {
     private val _actionShows = mutableStateOf(ShowState())
     val actionShows:State<ShowState> = _actionShows
 
+    private val _siFiShows = mutableStateOf(ShowState())
+    val siFiShows:State<ShowState> = _siFiShows
 
+  private val _adventureShows = mutableStateOf(ShowState())
+    val adventureShows:State<ShowState> = _adventureShows
+
+    private val _animationShows = mutableStateOf(ShowState())
+    val animationShows:State<ShowState> = _animationShows
+
+    private val _comedyShows = mutableStateOf(ShowState())
+    val comedyShows:State<ShowState> = _comedyShows
+
+    private val _crimeShows = mutableStateOf(ShowState())
+    val crimeShows:State<ShowState> = _crimeShows
+
+    private val _documentaryShows = mutableStateOf(ShowState())
+    val documentaryShows:State<ShowState> = _documentaryShows
+
+
+    private val _dramaShows = mutableStateOf(ShowState())
+    val dramaShows:State<ShowState> = _dramaShows
+
+    private val _fantasyShows = mutableStateOf(ShowState())
+    val fantasyShows:State<ShowState> = _fantasyShows
+
+    private val _horrorShows = mutableStateOf(ShowState())
+    val horrorShows:State<ShowState> = _horrorShows
+
+    private val _romanceShows = mutableStateOf(ShowState())
+    val romanceShows:State<ShowState> = _romanceShows
+
+    private val _thrillerShows = mutableStateOf(ShowState())
+    val thrillerShows:State<ShowState> = _thrillerShows
+
+    private val genreShowState:MutableList<State<ShowState>> = mutableListOf(
+        actionShows,
+        siFiShows,
+        adventureShows,
+        animationShows,
+        comedyShows,
+        crimeShows,
+        documentaryShows,
+        dramaShows,
+        fantasyShows,
+        horrorShows,
+        romanceShows,
+        thrillerShows
+    )
+
+    private val _genreShowState:MutableList<MutableState<ShowState>> = mutableListOf(
+        _actionShows,
+        _siFiShows,
+        _adventureShows,
+        _animationShows,
+        _comedyShows,
+        _crimeShows,
+        _documentaryShows,
+        _dramaShows,
+        _fantasyShows,
+        _horrorShows,
+        _romanceShows,
+        _thrillerShows
+    )
 
     private val _showStates: MutableList<MutableState<ShowState>> = mutableListOf(
         _netflixShowState,
@@ -103,15 +164,8 @@ class MainViewModel : ViewModel() {
 
 
     init {
-//        fetchNetflixShows()
-//        fetchNetflixMovies()
-//        fetchAppleShows()
-//        fetchAppleMovies()
-//        fetchPrimeShows()
-//        fetchPrimeMovies()
-//        fetchHotstarShows()
         fetchDataFromFirebase()
-        dynamicDataFetching()
+//        dynamicDataFetching()
 
     }
 
@@ -119,6 +173,10 @@ class MainViewModel : ViewModel() {
     private fun dynamicDataFetching(){
         fetchData(_showStates[0],"netflix","in","series")
         fetchData(_showStates[1],"netflix","in","movie")
+        fetchData(_showStates[2],"apple","in","series")
+        fetchData(_showStates[3],"apple","in","movie")
+        fetchData(_showStates[3],"prime","in","series")
+        fetchData(_showStates[3],"prime","in","movie")
     }
 
     private fun fetchData(state: MutableState<ShowState>,service:String,country:String,showType:String){
@@ -213,28 +271,6 @@ class MainViewModel : ViewModel() {
         }
     }
 
-
-private fun fetchNetflixShows() {
-        viewModelScope.launch {
-            try {
-
-                val response = imdbService.getShows("in","netflix","series")
-                _netflixShowState.value = _netflixShowState.value.copy(
-                    error = null,
-                    list = response,
-                    loading = false
-                )
-
-            }catch (e:Exception){
-                _netflixShowState.value = _netflixShowState.value.copy(
-                    error = e.message,
-                    loading = false
-                )
-            }
-        }
-    }
-
-
     private fun fetchHotstarShows() {
         viewModelScope.launch {
             try {
@@ -254,108 +290,6 @@ private fun fetchNetflixShows() {
             }
         }
     }
-
-private fun fetchNetflixMovies() {
-        viewModelScope.launch {
-            try {
-
-                val response = imdbService.getShows("in","netflix","movie")
-                _netflixMovieState.value = _netflixMovieState.value.copy(
-                    error = null,
-                    list = response,
-                    loading = false
-                )
-
-            }catch (e:Exception){
-                _netflixMovieState.value = _netflixMovieState.value.copy(
-                    error = e.message,
-                    loading = false
-                )
-            }
-        }
-    }
-
-    private fun fetchAppleShows() {
-        viewModelScope.launch {
-            try {
-
-                val response = imdbService.getShows("in","apple","series")
-                _appleShowState.value = _appleShowState.value.copy(
-                    error = null,
-                    list = response,
-                    loading = false
-                )
-
-            }catch (e:Exception){
-                _appleShowState.value = _appleShowState.value.copy(
-                    error = e.message,
-                    loading = false
-                )
-            }
-        }
-    }
-
-private fun fetchAppleMovies() {
-        viewModelScope.launch {
-            try {
-
-                val response = imdbService.getShows("in","apple","movie")
-                _appleMovieState.value = _appleMovieState.value.copy(
-                    error = null,
-                    list = response,
-                    loading = false
-                )
-
-            }catch (e:Exception){
-                _appleMovieState.value = _appleMovieState.value.copy(
-                    error = e.message,
-                    loading = false
-                )
-            }
-        }
-    }
-
-private fun fetchPrimeShows() {
-        viewModelScope.launch {
-            try {
-
-                val response = imdbService.getShows("in","prime","series")
-                _primeShowState.value = _primeShowState.value.copy(
-                    error = null,
-                    list = response,
-                    loading = false
-                )
-
-            }catch (e:Exception){
-                _primeShowState.value = _primeShowState.value.copy(
-                    error = e.message,
-                    loading = false
-                )
-            }
-        }
-    }
-
-private fun fetchPrimeMovies() {
-        viewModelScope.launch {
-            try {
-
-                val response = imdbService.getShows("in","prime","movie")
-                _primeMovieState.value = _primeMovieState.value.copy(
-                    error = null,
-                    list = response,
-                    loading = false
-                )
-
-            }catch (e:Exception){
-                _primeMovieState.value = _primeMovieState.value.copy(
-                    error = e.message,
-                    loading = false
-                )
-            }
-        }
-    }
-
-
     data class NavigationItem(
 
         val name: String,

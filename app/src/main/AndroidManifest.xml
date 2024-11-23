@@ -29,18 +29,18 @@
             android:name=".Activities.Authentication"
             android:exported="true"
             android:theme="@style/Theme.IMDBClone">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
 
         </activity>
         <activity
             android:name=".Activities.GenreActivity"
             android:exported="true"
             android:theme="@style/Theme.IMDBClone">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
 
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <activity
             android:name=".Activities.BufferActivity"
