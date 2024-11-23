@@ -45,7 +45,6 @@ import coil.compose.rememberAsyncImagePainter
 import com.example.imdbclone.Activities.SearchStateScreen
 import com.example.imdbclone.DataClasses.SavedShowDetails
 import com.example.imdbclone.DataClasses.ShowDetails
-import com.example.imdbclone.DataClasses.UserData
 import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.ViewModels.NetflixViewModel
 import com.google.firebase.auth.FirebaseAuth

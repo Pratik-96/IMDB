@@ -4,8 +4,19 @@ import android.os.Parcelable
 import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
-data class UserData(
-    val savedShow:SavedShowDetails
+data class GenreData(
+    val genre1:String?,
+    val genre2:String?,
+    val genre3:String?,
+    val genre4:String?,
+    val genre5:String?,
+    val genre6:String?,
+    val genre7:String?,
+    val genre8:String?,
+    val genre9:String?,
+    val genre10:String?,
+    val genre11:String?,
+    val genre12:String?,
 )
 
 data class SavedShowDetails(

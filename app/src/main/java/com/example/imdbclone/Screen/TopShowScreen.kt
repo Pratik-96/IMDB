@@ -32,38 +32,29 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.input.key.type
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
-import coil.disk.DiskCache
-import coil.memory.MemoryCache
 import coil.request.ImageRequest
 import coil.size.Size
-import com.example.imdbclone.DataClasses.SavedShowDetails
-import com.example.imdbclone.DataClasses.Show
+import com.example.imdbclone.DataClasses.GenreData
 import com.example.imdbclone.DataClasses.ShowDetails
-import com.example.imdbclone.R
 import com.example.imdbclone.ViewModels.MainViewModel
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
+import java.util.ArrayList
 
-import com.google.gson.Gson
-import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
-import java.io.File
-
-private lateinit var auth:FirebaseAuth
+private lateinit var auth: FirebaseAuth
 
 @Composable
 fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> Unit) {
@@ -76,22 +67,21 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
     val primeMovieState by viewModel.primeMovieDetails
     val hostarState by viewModel.hotstarShowDetails
 
+    var fetched by remember { mutableStateOf(false) }
+
 
     auth = FirebaseAuth.getInstance()
-    val uid = auth.currentUser?.uid?:"null"
+    val uid = auth.currentUser?.uid ?: "null"
     val database = FirebaseDatabase.getInstance().reference
-
-    var showList by remember { mutableStateOf<List<SavedShowDetails>>(emptyList()) }
+    var selectedGenres:List<String>? = null
 
     LaunchedEffect(Unit) {
-        database.child(uid).addValueEventListener(object: ValueEventListener{
+        database.child("user_data").child(uid).child("selectedGenres").addValueEventListener(object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
-                val list = mutableListOf<SavedShowDetails>()
-                for(child in snapshot.children){
-                    val showData = child.getValue(SavedShowDetails::class.java)
-                    showData?.let { list.add(it) }
-                }
-                showList = list
+
+                selectedGenres = snapshot.getValue(object :GenericTypeIndicator<List<String>>(){})
+                Log.d("data", "onDataChange: $selectedGenres")
+                fetched = true
             }
 
             override fun onCancelled(error: DatabaseError) {
@@ -111,7 +101,7 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
             .fillMaxSize()
             .background(Color.Black),
 
-    ) {
+        ) {
 //        item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
 //        item { StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail) }
 //        item { StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail) }
@@ -120,7 +110,13 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 //        item { StateScreen(title = "Top Movies on Prime", primeMovieState,navigateToDetail) }
 //        item { StateScreen(title = "Top Shows on Hotstar", hostarState,navigateToDetail) }
         item {
-            Text("${showList}")
+
+
+
+
+            if (fetched) {
+                Text("${selectedGenres}")
+            }
         }
     }
 }
@@ -132,7 +128,11 @@ fun StateScreen(
     navigateToDetail: (ShowDetails) -> Unit
 ) {
 
-    Column(modifier = Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
 
         when {
 
@@ -193,7 +193,13 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String, navigateToDetail: (Show
             )
 
             Spacer(Modifier.padding(4.dp))
-            Text(text = title, fontSize = 16.sp, color = Color.White, fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Bold)
+            Text(
+                text = title,
+                fontSize = 16.sp,
+                color = Color.White,
+                fontFamily = FontFamily.SansSerif,
+                fontWeight = FontWeight.Bold
+            )
         }
 
 
@@ -221,8 +227,6 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String, navigateToDetail: (Show
 fun ShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
 
 
-
-
     val context = LocalContext.current
 
 
@@ -244,8 +248,8 @@ fun ShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
     ) {
 
         val painter = rememberAsyncImagePainter(
-            model =  item.imageSet.horizontalPoster?.w360 // Adjust as needed
-                ,
+            model = item.imageSet.horizontalPoster?.w360 // Adjust as needed
+            ,
             imageLoader = imageLoader
         )
         Image(
