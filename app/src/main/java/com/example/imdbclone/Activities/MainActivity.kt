@@ -3,6 +3,7 @@ package com.example.imdbclone.Activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -35,6 +36,7 @@ import androidx.compose.material3.TopAppBarColors
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -78,6 +80,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.launch
+import java.util.ArrayList
 
 
 private lateinit var auth:FirebaseAuth
@@ -88,6 +91,7 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             IMDBCloneTheme {
+
 
 
                 NavDrawer()
@@ -113,6 +117,10 @@ fun NavDrawer() {
         auth = FirebaseAuth.getInstance()
         val uid = auth.currentUser?.uid?:"null"
         val database = FirebaseDatabase.getInstance().reference
+        val context = LocalContext.current as Activity
+
+
+
         var dataFetched by remember { mutableStateOf(false) }
 
         var showList = mutableListOf<SavedShowDetails>()
@@ -153,9 +161,10 @@ fun NavDrawer() {
         val showViewModel: MainViewModel = viewModel()
         val navHostController = rememberNavController()
 
-        val context = LocalContext.current as Activity
         auth = FirebaseAuth.getInstance()
         val userName = auth.currentUser?.displayName?:"User"
+
+
 
 
         ModalNavigationDrawer(

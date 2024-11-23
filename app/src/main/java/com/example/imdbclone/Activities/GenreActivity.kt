@@ -1,6 +1,7 @@
 package com.example.imdbclone.Activities
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -40,12 +41,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.AsyncImage
 import com.example.imdbclone.Screen.ButtonText
 import com.example.imdbclone.Screen.ImportantText
 import com.example.imdbclone.ui.theme.DeepGray
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.FirebaseDatabase
+import java.util.ArrayList
 
 private lateinit var auth: FirebaseAuth
 
@@ -62,7 +66,7 @@ val genres = mutableListOf(
         img = "https://m.media-amazon.com/images/I/71qjLOFJ1JL.jpg"
     ), checkBoxInfo(
         isChecked = false,
-        text = "Science Fiction",
+        text = "Sci-Fi",
         img = "https://m.media-amazon.com/images/I/61wrhEawgQL._AC_UF1000,1000_QL80_.jpg"
     ), checkBoxInfo(
         isChecked = false,
@@ -186,12 +190,28 @@ class GenreActivity : ComponentActivity() {
                                             }
                                         }
                                         if (count >= 3) {
-                                            Toast.makeText(
-                                                context,
-                                                selectedGenres.toString(),
-                                                Toast.LENGTH_SHORT
-                                            ).show()
+                                            auth = FirebaseAuth.getInstance()
+                                            val uid = auth.currentUser?.uid?:"null"
+                                            val database = FirebaseDatabase.getInstance().reference
+                                            database.child("user_data").child(uid).child("selectedGenres").setValue(selectedGenres).addOnCompleteListener{task->
 
+                                                if(task.isSuccessful){
+                                                    val intent = Intent(context,MainActivity::class.java)
+                                                    context.startActivity(intent)
+                                                    context.finish()
+                                                    Toast.makeText(context,"Genres Uploaded",Toast.LENGTH_SHORT).show()
+                                                }else{
+                                                    Toast.makeText(context,task.exception?.message,Toast.LENGTH_SHORT).show()
+
+                                                }
+
+                                            }
+
+//                                            Toast.makeText(
+//                                                context,
+//                                                selectedGenres.toString(),
+//                                                Toast.LENGTH_SHORT
+//                                            ).show()
                                         } else {
                                             Toast.makeText(
                                                 context,
@@ -238,7 +258,7 @@ fun GenreItem(item: checkBoxInfo) {
 
         modifier = Modifier
             .wrapContentSize()
-            .padding(8.dp)
+            .padding(4.dp)
             .background(Color.DarkGray, shape = RoundedCornerShape(16.dp))
             .clickable {
                 item.isChecked = !item.isChecked
@@ -264,6 +284,7 @@ fun GenreItem(item: checkBoxInfo) {
         Text(
             item.text,
             color = Color.White,
+            fontSize = 16.sp,
             fontFamily = sarabunFont,
             modifier = Modifier.padding(4.dp)
         )
