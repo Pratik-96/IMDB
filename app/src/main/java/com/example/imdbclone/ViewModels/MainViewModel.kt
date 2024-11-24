@@ -182,7 +182,6 @@ class MainViewModel : ViewModel() {
     private fun fetchData(state: MutableState<ShowState>,service:String,country:String,showType:String){
         viewModelScope.launch {
             try {
-
                 val response = imdbService.getShows(country,service,showType)
                 state.value = state.value.copy(
                     error = null,
