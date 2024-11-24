@@ -128,6 +128,8 @@ class MainViewModel : ViewModel() {
         hotstarShowDetails
     )
 
+    //TODO: fetch genre data from firebase.
+
      val _genreShowState: MutableList<MutableState<ShowState>> = mutableListOf(
         _actionShows,
         _siFiShows,
