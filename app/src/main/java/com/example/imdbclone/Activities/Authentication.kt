@@ -70,26 +70,22 @@ import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.UserProfileChangeRequest
 
-private lateinit var auth:FirebaseAuth
-
-
-
+private lateinit var auth: FirebaseAuth
 
 
 class Authentication : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         auth = FirebaseAuth.getInstance()
-        if (auth.currentUser!=null){
+        if (auth.currentUser != null) {
             setContent {
-          val context = LocalContext.current as Activity
-              context.startActivity(Intent(context,MainActivity::class.java))
-              context.finish()
-          }
+                val context = LocalContext.current as Activity
+                context.startActivity(Intent(context, MainActivity::class.java))
+                context.finish()
+            }
 
-      }
+        }
     }
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -105,7 +101,10 @@ class Authentication : ComponentActivity() {
                             .padding(innerPadding)
                     ) {
                         val navHostController = rememberNavController()
-                        NavHost(navController = navHostController, startDestination = Screens.SignUp.route){
+                        NavHost(
+                            navController = navHostController,
+                            startDestination = Screens.SignUp.route
+                        ) {
                             composable(route = Screens.SignUp.route) {
 
                                 SignUp {
@@ -173,7 +172,8 @@ fun SignUp(navigateToLogin: () -> Unit) {
             fontSize = 16.sp
         )
         Spacer(modifier = Modifier.padding(8.dp))
-        OutlinedTextField(value = name,
+        OutlinedTextField(
+            value = name,
             onValueChange = {
                 name = it
             },
@@ -184,7 +184,7 @@ fun SignUp(navigateToLogin: () -> Unit) {
                 IconButton(onClick = {
                     name = ""
                 }) {
-                    if (name.isNotEmpty()){
+                    if (name.isNotEmpty()) {
                         Icon(imageVector = Icons.Filled.Clear, null)
 
                     }
@@ -203,14 +203,14 @@ fun SignUp(navigateToLogin: () -> Unit) {
                 unfocusedLabelColor = Color.White,
                 focusedLeadingIconColor = Color.White,
                 focusedIndicatorColor = Color.White
-            )
-            , singleLine = true
+            ), singleLine = true
 
 
         )
 
         Spacer(modifier = Modifier.padding(8.dp))
-        OutlinedTextField(value = email,
+        OutlinedTextField(
+            value = email,
             onValueChange = {
                 email = it
                 isEmailValid = isValidEmail(email)
@@ -223,7 +223,7 @@ fun SignUp(navigateToLogin: () -> Unit) {
                 IconButton(onClick = {
                     email = ""
                 }) {
-                    if (email.isNotEmpty()){
+                    if (email.isNotEmpty()) {
                         Icon(imageVector = Icons.Filled.Clear, null)
 
                     }
@@ -241,19 +241,19 @@ fun SignUp(navigateToLogin: () -> Unit) {
                 unfocusedLabelColor = Color.White,
                 focusedLeadingIconColor = Color.White,
                 focusedIndicatorColor = Color.White
-            )
-            , singleLine = true
+            ), singleLine = true
 
         )
 
-        if (!isEmailValid){
+        if (!isEmailValid) {
             Spacer(Modifier.padding(8.dp))
 
             Text("Invalid Email", color = Color.Red, modifier = Modifier.align(Alignment.Start))
         }
 
         Spacer(modifier = Modifier.padding(8.dp))
-        OutlinedTextField(value = password,
+        OutlinedTextField(
+            value = password,
             onValueChange = {
                 password = it
                 isPasswordValid = isValidPassword(password)
@@ -264,11 +264,12 @@ fun SignUp(navigateToLogin: () -> Unit) {
             isError = !isPasswordValid,
             trailingIcon = {
 
-                val image = if(passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                val image =
+                    if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
 
 
                 IconButton(onClick = {
-                    passwordVisible =! passwordVisible
+                    passwordVisible = !passwordVisible
                 }) {
                     Icon(imageVector = image, null)
                 }
@@ -285,40 +286,59 @@ fun SignUp(navigateToLogin: () -> Unit) {
                 unfocusedLabelColor = Color.White,
                 focusedLeadingIconColor = Color.White,
                 focusedIndicatorColor = Color.White
-            )
-            , singleLine = true
-            , visualTransformation = if(passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            ),
+            singleLine = true,
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
 
-            if (!isPasswordValid){
+        if (!isPasswordValid) {
             Spacer(Modifier.padding(8.dp))
 
-            Text("Password must contain: \n At least 6 characters \n At least 1 uppercase letter \n At least 1 special character.", color = Color.Red, modifier = Modifier.align(Alignment.Start))
+            Text(
+                "Password must contain: \n At least 6 characters \n At least 1 uppercase letter \n At least 1 special character.",
+                color = Color.Red,
+                modifier = Modifier.align(Alignment.Start)
+            )
         }
 
         val activityContext = LocalContext.current as Activity
         Spacer(Modifier.padding(8.dp))
 
-        if (isLoading){
+        if (isLoading) {
             Loader(Color.White)
-        }else{
-            Button(onClick = {
-                isLoading = true
-                if(isEmailValid && isPasswordValid && name.isNotEmpty() && password.isNotEmpty() && email.isNotEmpty()){
+        } else {
+            Button(
+                onClick = {
+                    isLoading = true
+                    if (isEmailValid && isPasswordValid && name.isNotEmpty() && password.isNotEmpty() && email.isNotEmpty()) {
 
-                    if (signUpWithEmailAndPassword(name,email,password,context,activityContext)){
-                        isLoading = false
-                    }else{
+                        if (signUpWithEmailAndPassword(
+                                name,
+                                email,
+                                password,
+                                context,
+                                activityContext
+                            )
+                        ) {
+                            isLoading = false
+                        } else {
+                            isLoading = false
+                        }
+
+
+                    } else {
                         isLoading = false
                     }
 
-
-                }else{
-                    isLoading  = false
-                }
-
-            }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(4.dp), colors = ButtonDefaults.textButtonColors(contentColor = Color.Black, containerColor = Color.White)) {
+                },
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(4.dp),
+                colors = ButtonDefaults.textButtonColors(
+                    contentColor = Color.Black,
+                    containerColor = Color.White
+                )
+            ) {
 //            Text("Create Account", modifier = Modifier.padding(4.dp), fontFamily = sarabunFont, fontSize = 18.sp)
 
                 ButtonText("Create Account")
@@ -335,13 +355,15 @@ fun SignUp(navigateToLogin: () -> Unit) {
             }
         }
         Spacer(Modifier.padding(8.dp))
-        Text(text = annotatedText, modifier = Modifier
-            .align(Alignment.CenterHorizontally)
-            .clickable { navigateToLogin() }, color = Color.White, fontSize = 16.sp, fontFamily = sarabunFont)
+        Text(text = annotatedText,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .clickable { navigateToLogin() },
+            color = Color.White,
+            fontSize = 16.sp,
+            fontFamily = sarabunFont
+        )
 
-
-
-        
 
     }
 }
@@ -354,27 +376,25 @@ fun signUpWithEmailAndPassword(
     context: Context,
     activityContext: Activity
 ): Boolean {
-    auth =FirebaseAuth.getInstance()
+    auth = FirebaseAuth.getInstance()
     var isSuccessful = false
-    auth.createUserWithEmailAndPassword(email,password).addOnCompleteListener{
-        task->
-        if (task.isSuccessful){
+    auth.createUserWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+        if (task.isSuccessful) {
             val user = auth.currentUser
             val profileUpdates = UserProfileChangeRequest.Builder()
                 .setDisplayName(name)
                 .build()
 
-            user?.updateProfile(profileUpdates)?.addOnCompleteListener{
-                profileTask->
-                if (profileTask.isSuccessful){
+            user?.updateProfile(profileUpdates)?.addOnCompleteListener { profileTask ->
+                if (profileTask.isSuccessful) {
                     isSuccessful = true
-                    Toast.makeText(context,"SignUp Successful!!",Toast.LENGTH_SHORT).show()
-                    context.startActivity(Intent(context,GenreActivity::class.java))
+                    Toast.makeText(context, "SignUp Successful!!", Toast.LENGTH_SHORT).show()
+                    context.startActivity(Intent(context, GenreActivity::class.java))
                     activityContext.finish()
                 }
             }
-        }else{
-            Toast.makeText(context,"SignUp Failed: ${task.exception}",Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, "SignUp Failed: ${task.exception}", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -418,7 +438,8 @@ fun Login(navHostController: NavHostController) {
             fontSize = 16.sp
         )
         Spacer(modifier = Modifier.padding(8.dp))
-        OutlinedTextField(value = email,
+        OutlinedTextField(
+            value = email,
             onValueChange = {
                 email = it
                 isEmailValid = isValidEmail(email)
@@ -431,7 +452,7 @@ fun Login(navHostController: NavHostController) {
                 IconButton(onClick = {
                     email = ""
                 }) {
-                    if (email.isNotEmpty()){
+                    if (email.isNotEmpty()) {
                         Icon(imageVector = Icons.Filled.Clear, null)
 
                     }
@@ -449,19 +470,19 @@ fun Login(navHostController: NavHostController) {
                 unfocusedLabelColor = Color.White,
                 focusedLeadingIconColor = Color.White,
                 focusedIndicatorColor = Color.White
-            )
-            , singleLine = true
+            ), singleLine = true
 
         )
 
-        if (!isEmailValid){
+        if (!isEmailValid) {
             Spacer(Modifier.padding(8.dp))
 
             Text("Invalid Email", color = Color.Red, modifier = Modifier.align(Alignment.Start))
         }
 
         Spacer(modifier = Modifier.padding(8.dp))
-        OutlinedTextField(value = password,
+        OutlinedTextField(
+            value = password,
             onValueChange = {
                 password = it
                 isPasswordValid = isValidPassword(password)
@@ -472,11 +493,12 @@ fun Login(navHostController: NavHostController) {
             isError = !isPasswordValid,
             trailingIcon = {
 
-                val image = if(passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
+                val image =
+                    if (passwordVisible) Icons.Filled.Visibility else Icons.Filled.VisibilityOff
 
 
                 IconButton(onClick = {
-                    passwordVisible =! passwordVisible
+                    passwordVisible = !passwordVisible
                 }) {
                     Icon(imageVector = image, null)
                 }
@@ -493,35 +515,47 @@ fun Login(navHostController: NavHostController) {
                 unfocusedLabelColor = Color.White,
                 focusedLeadingIconColor = Color.White,
                 focusedIndicatorColor = Color.White
-            )
-            , singleLine = true
-            , visualTransformation = if(passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
+            ),
+            singleLine = true,
+            visualTransformation = if (passwordVisible) VisualTransformation.None else PasswordVisualTransformation(),
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
         )
 
-        if (!isPasswordValid){
+        if (!isPasswordValid) {
             Spacer(Modifier.padding(8.dp))
 
-            Text("Password must contain: \n At least 6 characters \n At least 1 uppercase letter \n At least 1 special character.", color = Color.Red, modifier = Modifier.align(Alignment.Start))
+            Text(
+                "Password must contain: \n At least 6 characters \n At least 1 uppercase letter \n At least 1 special character.",
+                color = Color.Red,
+                modifier = Modifier.align(Alignment.Start)
+            )
         }
 
         val activityContext = LocalContext.current as Activity
         Spacer(Modifier.padding(8.dp))
 
-            Button(onClick = {
-                if(isEmailValid && isPasswordValid && password.isNotEmpty() && email.isNotEmpty()){
+        Button(
+            onClick = {
+                if (isEmailValid && isPasswordValid && password.isNotEmpty() && email.isNotEmpty()) {
 
-                    loginWithEmailAndPassword(email,password,context,activityContext)
+                    loginWithEmailAndPassword(email, password, context, activityContext)
 
 
                 }
 
-            }, modifier = Modifier.fillMaxWidth(), shape = RoundedCornerShape(4.dp), colors = ButtonDefaults.textButtonColors(contentColor = Color.Black, containerColor = Color.White)) {
+            },
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(4.dp),
+            colors = ButtonDefaults.textButtonColors(
+                contentColor = Color.Black,
+                containerColor = Color.White
+            )
+        ) {
 //            Text("Create Account", modifier = Modifier.padding(4.dp), fontFamily = sarabunFont, fontSize = 18.sp)
 
-                ButtonText("Login")
+            ButtonText("Login")
 
-            }
+        }
 
 
         val annotatedText = buildAnnotatedString {
@@ -533,28 +567,35 @@ fun Login(navHostController: NavHostController) {
             }
         }
         Spacer(Modifier.padding(8.dp))
-        Text(text = annotatedText, modifier = Modifier
-            .align(Alignment.CenterHorizontally)
-            .clickable { navHostController.popBackStack() }, color = Color.White, fontSize = 16.sp, fontFamily = sarabunFont)
-
-
-
+        Text(text = annotatedText,
+            modifier = Modifier
+                .align(Alignment.CenterHorizontally)
+                .clickable { navHostController.popBackStack() },
+            color = Color.White,
+            fontSize = 16.sp,
+            fontFamily = sarabunFont
+        )
 
 
     }
 }
 
-fun loginWithEmailAndPassword(email: String, password: String, context: Context, activityContext: Activity) {
+fun loginWithEmailAndPassword(
+    email: String,
+    password: String,
+    context: Context,
+    activityContext: Activity
+) {
     auth = FirebaseAuth.getInstance()
-    auth.signInWithEmailAndPassword(email,password).addOnCompleteListener{task->
-        if (task.isSuccessful){
+    auth.signInWithEmailAndPassword(email, password).addOnCompleteListener { task ->
+        if (task.isSuccessful) {
             val user = FirebaseAuth.getInstance().currentUser
-            val name = user?.displayName?:" "
-            Toast.makeText(context,"Welcome ${name} !!",Toast.LENGTH_SHORT).show()
-            context.startActivity(Intent(context,MainActivity::class.java))
+            val name = user?.displayName ?: " "
+            Toast.makeText(context, "Welcome ${name} !!", Toast.LENGTH_SHORT).show()
+            context.startActivity(Intent(context, MainActivity::class.java))
             activityContext.finish()
-        }else{
-            Toast.makeText(context,task.exception.toString(),Toast.LENGTH_SHORT).show()
+        } else {
+            Toast.makeText(context, task.exception.toString(), Toast.LENGTH_SHORT).show()
         }
     }
 }

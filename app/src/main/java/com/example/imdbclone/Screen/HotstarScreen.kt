@@ -40,8 +40,10 @@ fun HotstarScreen(navigateToDetail: (ShowDetails) -> Unit, navigateToMarvel: () 
     val viewModel: HotstarViewModel = viewModel()
     val mainViewModel:MainViewModel= viewModel()
     viewModel.fetchTopShows("in", "hotstar", "hotstar", 80)
-    viewModel.fetchActionMovies("in", "hotstar", "hotstar", "movie", 70, "action","")
-    val actionMoviesState = viewModel.actionMovies.value
+//    viewModel.fetchActionMovies("in", "hotstar", "hotstar", "movie", 70, "action","")
+    mainViewModel.fetchFilteredShows(mainViewModel._genreShowState[mainViewModel.hotstarIndex],"in","hotstar","hotstar","movie",75,"action","")
+    val actionMoviesState = mainViewModel.genreShowState[mainViewModel.hotstarIndex].value
+
     viewModel.fetchScifiMovies("in", "hotstar", "hotstar", "movie", 70, "scifi","")
     val scifiMovieState = viewModel.scifiMovies.value
 
@@ -83,12 +85,12 @@ fun HotstarScreen(navigateToDetail: (ShowDetails) -> Unit, navigateToMarvel: () 
                         )
                     }
 
-                    item {
-                        SearchStateScreen(
-                            scifiMovieState, navigateToDetail, false, "Science Fiction Movies",
-                        )
-                    }
-
+//                    item {
+//                        SearchStateScreen(
+//                            scifiMovieState, navigateToDetail, false, "Science Fiction Movies",
+//                        )
+//                    }
+//
 
                 }
             }
