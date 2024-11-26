@@ -97,21 +97,6 @@ fun NetflixScreen(navHostController: NavHostController, navigateToDetail: (ShowD
 
 private lateinit var auth:FirebaseAuth
 
-fun uploadShowList(showData:SavedShowDetails,context:Activity){
-    auth = FirebaseAuth.getInstance()
-
-    val id = auth.currentUser?.uid?:"null"
-    val databaseRef = FirebaseDatabase.getInstance().reference
-    val childRef = databaseRef.child(id).push()
-    childRef.setValue(showData).addOnSuccessListener {task->
-
-            Toast.makeText(context,"Show Added to My List.",Toast.LENGTH_SHORT).show()
-
-    }.addOnFailureListener {task->
-        Toast.makeText(context,task.message,Toast.LENGTH_SHORT).show()
-
-    }
-}
 
 @Composable
 fun NetflixContent(navigateToDetail: (ShowDetails) -> Unit, state: MainViewModel.SearchShowState) {
@@ -225,7 +210,7 @@ fun NetflixContent(navigateToDetail: (ShowDetails) -> Unit, state: MainViewModel
                                 onClick = {
 
                                     //TODO:Store to watchlist
-                                    uploadShowList(showData,context)
+                                    mainViewModel.uploadShowList(showData,context)
 
                                 }, modifier = Modifier
                                     .height(55.dp)

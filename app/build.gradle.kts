@@ -51,7 +51,6 @@ dependencies {
     implementation(platform(libs.firebase.bom.v3223))
     implementation(libs.firebase.auth.ktx)
     implementation(libs.firebase.auth)
-
     implementation(libs.firebase.analytics)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.ui.graphics)

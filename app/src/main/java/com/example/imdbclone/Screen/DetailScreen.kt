@@ -81,6 +81,8 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
     val horizontalImage = data.imageSet.horizontalPoster?.w480
     val serviceMetadata = data.streamingOptions?.`in`
 
+    val mainViewModel:MainViewModel = viewModel()
+
     val showData = SavedShowDetails(showId,title,showType,verticalImage,horizontalImage,serviceMetadata)
 
 
@@ -196,7 +198,7 @@ fun DetailScreen(data: ShowDetails,navHostController: NavHostController) {
                     Button(
                         onClick = {
 
-                            uploadShowList(showData,context)
+                            mainViewModel.uploadShowList(showData,context)
 
                         }, modifier = Modifier
                             .wrapContentSize()

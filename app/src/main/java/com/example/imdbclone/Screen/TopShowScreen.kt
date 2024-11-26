@@ -1,6 +1,7 @@
 package com.example.imdbclone.Screen
 
 
+import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
@@ -27,6 +28,7 @@ import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -59,6 +61,7 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import coil.size.Size
+import com.example.imdbclone.DataClasses.SavedShowDetails
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.ViewModels.HotstarViewModel
 import com.example.imdbclone.ViewModels.MainViewModel
@@ -68,6 +71,8 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.PageSize
 
 private lateinit var auth: FirebaseAuth
 
@@ -297,6 +302,7 @@ fun ShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
 @Composable
 fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit) {
     val viewModel: HotstarViewModel = viewModel()
+    val mainViewModel:MainViewModel = viewModel()
 
     Column(
         modifier = Modifier
@@ -304,7 +310,7 @@ fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails)
             .background(Color.Black)
     ) {
 
-        val pagerState = rememberPagerState(initialPage = 0)
+        val pagerState = rememberPagerState(0)
         LaunchedEffect(Unit) {
             while (true) {
                 delay(4000)
@@ -312,23 +318,32 @@ fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails)
             }
         }
 
-
-
         com.google.accompanist.pager.HorizontalPager(
-            count = data.size,
             state = pagerState,
-            itemSpacing = 0.dp,
-
-            modifier = Modifier.fillMaxWidth()
+            count = data.size,
         ) { page ->
+            val showId = data[page].id
+            val title = data[page].title
+            val showType = data[page].showType
+            val verticalImage = data[page].imageSet?.verticalPoster?.w480
+            val horizontalImage = data[page].imageSet?.horizontalPoster?.w480
+            val serviceMetadata = data[page].streamingOptions?.`in`
 
-            Column {
+            val context = LocalContext.current as Activity
+
+            val showData = SavedShowDetails(showId,title,showType,verticalImage,horizontalImage,serviceMetadata)
+
+            Column(modifier = Modifier.wrapContentSize().align(Alignment.CenterHorizontally).clickable {
+                navigateToDetail(data[page])
+            },
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+                ) {
                 Box(
                     modifier = Modifier
-                        .wrapContentSize()
+//                        .fillMaxWidth()
                         .width(350.dp)
-//                        .weight(1f)
-                        .padding(8.dp)
+//                        .padding(8.dp)
                         .height(450.dp),
                     contentAlignment = Alignment.Center
 
@@ -342,94 +357,123 @@ fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails)
                             .fillMaxSize()
                             .clip(shape = RoundedCornerShape(8.dp))
                     )
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(100.dp)
-                            .background(
-                                brush =
-                                Brush
-                                    .verticalGradient(
-                                        colors = listOf(
-                                            Color.Transparent,
-                                            Color.Black.copy(alpha = 0.2f),
-                                            Color.Black.copy(0.4f)
-                                        ),
-                                        startY = 0f, // Start at the top
-                                        endY = 50f
-                                    )
-                            )
-                            .align(Alignment.BottomCenter)
-                            .zIndex(3f)
+
+
+                }
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .background(
+                            brush =
+                            Brush
+                                .verticalGradient(
+                                    colors = listOf(
+                                        Color.Transparent,
+                                        Color.Black.copy(alpha = 0.2f),
+                                        Color.Black.copy(0.4f)
+                                    ),
+                                    startY = 0f, // Start at the top
+                                    endY = 50f
+                                )
+                        )
+//                        .align(Alignment.BottomCenter)
+                        .zIndex(3f)
+                ) {
+
+                    Row(
+                        modifier = Modifier.align(Alignment.Center),
                     ) {
-
-                        Column(
-                            modifier = Modifier.align(Alignment.Center),
-                            horizontalAlignment = Alignment.CenterHorizontally
-                        ) {
-                            val genreDetailList = data[page].genres
-                            val genreList: MutableList<String> = mutableListOf()
-                            for (i in 0 until genreDetailList.size) {
-                                genreDetailList.get(i)?.name?.let { genreList.add(it) }
-                            }
-
-                            val genres = genreList.joinToString(" • ") { it }
-
-
-                            Text(
-                                text = genres,
-                                fontWeight = FontWeight.W500,
-                                color = Color.White,
-                                fontSize = 16.sp,
-                                modifier = Modifier
-                                    .padding(0.dp)
-                            )
-
-                            var link = data[page].streamingOptions?.`in`?.get(0)?.link.toString()
-                            for (i in 0 until data[page].streamingOptions?.`in`?.size!!) {
-                                if (data[page].streamingOptions?.`in`?.get(i)?.service?.id.equals("hotstar")) {
-                                    link =
-                                        data[page].streamingOptions?.`in`?.get(i)?.link.toString()
-                                }
-                            }
-                            val launcher =
-                                rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
-                            Button(
-                                onClick = {
+//                            val genreDetailList = data[page].genres
+//                            val genreList: MutableList<String> = mutableListOf()
+//                            for (i in 0 until genreDetailList.size) {
+//                                genreDetailList.get(i)?.name?.let { genreList.add(it) }
+//                            }
 //
-                                    val intent = Intent(
-                                        Intent.ACTION_VIEW,
-                                        Uri.parse(link)
-                                    )
-                                    launcher.launch(intent)
+//                            val genres = genreList.joinToString(" • ") { it }
+//
+//
+//                            Text(
+//                                text = genres,
+//                                fontWeight = FontWeight.W500,
+//                                color = Color.White,
+//                                fontSize = 16.sp,
+//                                modifier = Modifier
+//                                    .padding(0.dp)
+//                            )
 
-                                }, modifier = Modifier
-                                    .height(55.dp)
-                                    .padding(8.dp),
-//                            .shadow(shape = RoundedCornerShape(4.dp), elevation = 10.dp),
-                                colors = ButtonDefaults.buttonColors(
-                                    contentColor = Color.White,
-                                    containerColor = DeepGray
-                                ), shape = RoundedCornerShape(8.dp)
-
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Filled.PlayArrow,
-                                    contentDescription = "play"
-                                )
-                                Text(
-                                    text = "Watch Now",
-                                    color = Color.White,
-                                    fontFamily = FontFamily.SansSerif,
-                                    fontSize = 16.sp,
-                                    modifier = Modifier.padding(start = 8.dp),
-                                    fontWeight = FontWeight.Bold
-                                )
+                        var link = data[page].streamingOptions?.`in`?.get(0)?.link.toString()
+                        for (i in 0 until data[page].streamingOptions?.`in`?.size!!) {
+                            if (data[page].streamingOptions?.`in`?.get(i)?.service?.id.equals("hotstar")) {
+                                link =
+                                    data[page].streamingOptions?.`in`?.get(i)?.link.toString()
                             }
                         }
+                        val launcher =
+                            rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
+                        Button(
+                            onClick = {
+//
+                                val intent = Intent(
+                                    Intent.ACTION_VIEW,
+                                    Uri.parse(link)
+                                )
+                                launcher.launch(intent)
 
+                            }, modifier = Modifier
+                                .height(55.dp)
+                                .padding(8.dp),
+//                            .shadow(shape = RoundedCornerShape(4.dp), elevation = 10.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                contentColor = Color.White,
+                                containerColor = DeepGray
+                            ), shape = RoundedCornerShape(8.dp)
 
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.PlayArrow,
+                                contentDescription = "play"
+                            )
+                            Text(
+                                text = "Watch Now",
+                                color = Color.White,
+                                fontFamily = FontFamily.SansSerif,
+                                fontSize = 16.sp,
+                                modifier = Modifier.padding(start = 8.dp),
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
+
+                        Button(
+                            onClick = {
+//
+                                mainViewModel.uploadShowList(showData,context)
+
+                            }, modifier = Modifier
+                                .height(55.dp)
+                                .padding(8.dp),
+//                            .shadow(shape = RoundedCornerShape(4.dp), elevation = 10.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                contentColor = Color.White,
+                                containerColor = DeepGray
+                            ), shape = RoundedCornerShape(8.dp)
+
+                        ) {
+                            Icon(
+                                imageVector = Icons.Filled.Add,
+                                contentDescription = "myList"
+                            )
+                            Text(
+                                text = "My List",
+                                color = Color.White,
+                                fontFamily = FontFamily.SansSerif,
+                                fontSize = 16.sp,
+                                modifier = Modifier.padding(start = 8.dp),
+                                fontWeight = FontWeight.Bold
+                            )
+                        }
                     }
+
 
                 }
             }
