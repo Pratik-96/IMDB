@@ -71,8 +71,6 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.delay
-import androidx.compose.foundation.pager.HorizontalPager
-import androidx.compose.foundation.pager.PageSize
 
 private lateinit var auth: FirebaseAuth
 
@@ -302,7 +300,7 @@ fun ShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
 @Composable
 fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit) {
     val viewModel: HotstarViewModel = viewModel()
-    val mainViewModel:MainViewModel = viewModel()
+    val mainViewModel: MainViewModel = viewModel()
 
     Column(
         modifier = Modifier
@@ -321,6 +319,7 @@ fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails)
         com.google.accompanist.pager.HorizontalPager(
             state = pagerState,
             count = data.size,
+
         ) { page ->
             val showId = data[page].id
             val title = data[page].title
@@ -331,20 +330,29 @@ fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails)
 
             val context = LocalContext.current as Activity
 
-            val showData = SavedShowDetails(showId,title,showType,verticalImage,horizontalImage,serviceMetadata)
+            val showData = SavedShowDetails(
+                showId,
+                title,
+                showType,
+                verticalImage,
+                horizontalImage,
+                serviceMetadata
+            )
 
-            Column(modifier = Modifier.wrapContentSize().align(Alignment.CenterHorizontally).clickable {
+            Column(modifier = Modifier
+                .wrapContentSize()
+                .align(Alignment.CenterHorizontally).clickable {
                 navigateToDetail(data[page])
             },
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
-                ) {
+            ) {
                 Box(
                     modifier = Modifier
 //                        .fillMaxWidth()
-                        .width(350.dp)
+                        .width(300.dp)
 //                        .padding(8.dp)
-                        .height(450.dp),
+                        .height(400.dp),
                     contentAlignment = Alignment.Center
 
 
@@ -447,7 +455,7 @@ fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails)
                         Button(
                             onClick = {
 //
-                                mainViewModel.uploadShowList(showData,context)
+                                mainViewModel.uploadShowList(showData, context)
 
                             }, modifier = Modifier
                                 .height(55.dp)
