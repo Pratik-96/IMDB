@@ -1,6 +1,8 @@
 package com.example.imdbclone.ViewModels
 
+import android.app.Activity
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
@@ -402,6 +404,17 @@ class MainViewModel : ViewModel() {
         )
     )
 
+    fun uploadShowList(showData:SavedShowDetails,context: Activity){
+        auth = FirebaseAuth.getInstance()
+        val id = auth.currentUser?.uid?:"null"
+        val databaseRef = FirebaseDatabase.getInstance().reference
+        val childRef = databaseRef.child(id).push()
+        childRef.setValue(showData).addOnSuccessListener {task->
+            Toast.makeText(context,"Show Added to My List.",Toast.LENGTH_SHORT).show()
+        }.addOnFailureListener {task->
+            Toast.makeText(context,task.message,Toast.LENGTH_SHORT).show()
+        }
+    }
 
     data class ShowState(
         val error: String? = null,
