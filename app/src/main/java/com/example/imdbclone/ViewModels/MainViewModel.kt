@@ -1,5 +1,6 @@
 package com.example.imdbclone.ViewModels
 
+import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.List
@@ -11,6 +12,7 @@ import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,6 +24,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.launch
 
@@ -42,6 +45,7 @@ class MainViewModel : ViewModel() {
     val romanceIndex = 10
     val thrillerIndex = 11
     val hotstarIndex = 12
+    val topGenreShowsIndex = 13
 
 
 
@@ -112,7 +116,17 @@ class MainViewModel : ViewModel() {
     private val _thrillerShows = mutableStateOf(ShowState())
     val thrillerShows: State<ShowState> = _thrillerShows
 
-     val genreShowState: MutableList<State<ShowState>> = mutableListOf(
+    private val _topGenreShows = mutableStateOf(ShowState())
+    val topGenreShows: State<ShowState> = _topGenreShows
+
+    var selectedGenres = ""
+    var fetched = false
+
+    private val _genreState = mutableStateOf(GenreState())
+    val genreState:State<GenreState> = _genreState
+
+
+    val genreShowState: MutableList<State<ShowState>> = mutableListOf(
         actionShows,
         siFiShows,
         adventureShows,
@@ -125,7 +139,8 @@ class MainViewModel : ViewModel() {
         horrorShows,
         romanceShows,
         thrillerShows,
-        hotstarShowDetails
+        hotstarShowDetails,
+        topGenreShows
     )
 
     //TODO: fetch genre data from firebase.
@@ -143,7 +158,8 @@ class MainViewModel : ViewModel() {
         _horrorShows,
         _romanceShows,
         _thrillerShows,
-        _hotstarShowState
+        _hotstarShowState,
+         _topGenreShows
     )
 
     private val _showStates: MutableList<MutableState<ShowState>> = mutableListOf(
@@ -169,6 +185,8 @@ class MainViewModel : ViewModel() {
         fetchDataFromFirebase()
 //        dynamicDataFetching()
     }
+
+
 
     fun fetchFilteredShows(
         state: MutableState<ShowState>,
@@ -270,6 +288,25 @@ class MainViewModel : ViewModel() {
 
 
             })
+
+            database.child("user_data").child(uid).child("selectedGenres")
+                .addValueEventListener(object : ValueEventListener {
+                    override fun onDataChange(snapshot: DataSnapshot) {
+
+                        val genres =
+                            snapshot.getValue(object : GenericTypeIndicator<List<String>>() {})
+                        selectedGenres = genres?.shuffled()?.take(2)?.joinToString(",").toString()
+                        fetched = true
+                        _genreState.value = _genreState.value.copy(
+                            genres = selectedGenres,
+                            loading = false
+                        )
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+                })
         }
     }
 
@@ -374,6 +411,11 @@ class MainViewModel : ViewModel() {
 
     data class ListState(
         var list: List<SavedShowDetails> = emptyList(),
+        var loading: Boolean = true
+    )
+
+    data class GenreState(
+        var genres:String = "emptyList()",
         var loading: Boolean = true
     )
 

@@ -2,10 +2,8 @@ package com.example.imdbclone.Screen
 
 
 import android.content.Intent
-import android.content.res.Resources.Theme
 import android.net.Uri
 import android.util.Log
-import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
@@ -29,7 +27,6 @@ import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -45,12 +42,10 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,24 +59,15 @@ import coil.compose.rememberAsyncImagePainter
 import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import coil.size.Size
-import com.example.imdbclone.DataClasses.GenreData
 import com.example.imdbclone.DataClasses.ShowDetails
-import com.example.imdbclone.R
 import com.example.imdbclone.ViewModels.HotstarViewModel
 import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.ui.theme.DeepGray
-import com.example.imdbclone.ui.theme.HotstarBackground
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
-import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.GenericTypeIndicator
-import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.delay
-import java.util.ArrayList
 
 private lateinit var auth: FirebaseAuth
 
@@ -100,26 +86,7 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
 
     auth = FirebaseAuth.getInstance()
-    val uid = auth.currentUser?.uid ?: "null"
-    val database = FirebaseDatabase.getInstance().reference
-    var selectedGenres: List<String>? = null
 
-    LaunchedEffect(Unit) {
-        database.child("user_data").child(uid).child("selectedGenres")
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
-
-                    selectedGenres =
-                        snapshot.getValue(object : GenericTypeIndicator<List<String>>() {})
-                    Log.d("data", "onDataChange: $selectedGenres")
-                    fetched = true
-                }
-
-                override fun onCancelled(error: DatabaseError) {
-                    TODO("Not yet implemented")
-                }
-            })
-    }
 
 
 
@@ -142,10 +109,40 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 //        item { StateScreen(title = "Top Shows on Hotstar", hostarState,navigateToDetail) }
         item {
 
+            val imageSliderDataState = viewModel.topGenreShows
+            val genreState = viewModel.genreState
+            when {
+                !genreState.value.loading -> {
+                    Text("${viewModel.selectedGenres}", color = Color.White)
+                    viewModel.fetchFilteredShows(
+                        viewModel._genreShowState[viewModel.topGenreShowsIndex],
+                        "in",
+                        "",
+                        "",
+                        "movie",
+                        70,
+                        genreState.value.genres.toLowerCase(),
+                        ""
+                    )
 
-            if (fetched) {
-                Text("${selectedGenres}")
+                }
             }
+            when {
+                imageSliderDataState.value.loading -> {
+                    CircularProgressIndicator()
+                }
+
+                imageSliderDataState.value.error != null -> {
+                    Text(imageSliderDataState.value.error.toString())
+                }
+
+                else -> {
+//                    Text(imageSliderDataState.value.list.toString())
+                    VerticalImageSlider(imageSliderDataState.value.list, navigateToDetail)
+                }
+            }
+//
+
         }
     }
 }
@@ -300,18 +297,17 @@ fun ShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
 @Composable
 fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit) {
     val viewModel: HotstarViewModel = viewModel()
-    val data:List<Int> = listOf(R.drawable.img,R.drawable.interstellar)
 
     Column(
         modifier = Modifier
-            .width(400.dp)
+            .fillMaxWidth()
             .background(Color.Black)
     ) {
 
         val pagerState = rememberPagerState(initialPage = 0)
         LaunchedEffect(Unit) {
             while (true) {
-                delay(5000)
+                delay(4000)
                 pagerState.animateScrollToPage((pagerState.currentPage + 1) % data.size)
             }
         }
@@ -321,24 +317,29 @@ fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails)
         com.google.accompanist.pager.HorizontalPager(
             count = data.size,
             state = pagerState,
-//                itemSpacing = 0.dp,
-            modifier = Modifier.wrapContentSize()
-        ){page->
+            itemSpacing = 0.dp,
+
+            modifier = Modifier.fillMaxWidth()
+        ) { page ->
 
             Column {
                 Box(
-                    modifier = Modifier.wrapContentSize()
+                    modifier = Modifier
+                        .wrapContentSize()
+                        .width(350.dp)
+//                        .weight(1f)
                         .padding(8.dp)
-                        .height(550.dp),
+                        .height(450.dp),
                     contentAlignment = Alignment.Center
 
 
                 ) {
-                    Image(
-                        painterResource(data[page]),
+                    AsyncImage(
+                        data[page].imageSet.verticalPoster?.w360,
                         contentDescription = null,
                         contentScale = ContentScale.FillBounds,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
                             .clip(shape = RoundedCornerShape(8.dp))
                     )
                     Box(
@@ -351,8 +352,8 @@ fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails)
                                     .verticalGradient(
                                         colors = listOf(
                                             Color.Transparent,
-//                                            HotstarBackground.copy(alpha = 0.5f),
-                                            HotstarBackground
+                                            Color.Black.copy(alpha = 0.2f),
+                                            Color.Black.copy(0.4f)
                                         ),
                                         startY = 0f, // Start at the top
                                         endY = 50f
@@ -362,11 +363,14 @@ fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails)
                             .zIndex(3f)
                     ) {
 
-                        Column(modifier = Modifier.align(Alignment.Center), horizontalAlignment = Alignment.CenterHorizontally){
-                            val genreDetailList = listOf("Action","Sci-Fi")
+                        Column(
+                            modifier = Modifier.align(Alignment.Center),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            val genreDetailList = data[page].genres
                             val genreList: MutableList<String> = mutableListOf()
                             for (i in 0 until genreDetailList.size) {
-                                genreDetailList.get(i)?.let { genreList.add(it) }
+                                genreDetailList.get(i)?.name?.let { genreList.add(it) }
                             }
 
                             val genres = genreList.joinToString(" • ") { it }
@@ -381,15 +385,23 @@ fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails)
                                     .padding(0.dp)
                             )
 
-
+                            var link = data[page].streamingOptions?.`in`?.get(0)?.link.toString()
+                            for (i in 0 until data[page].streamingOptions?.`in`?.size!!) {
+                                if (data[page].streamingOptions?.`in`?.get(i)?.service?.id.equals("hotstar")) {
+                                    link =
+                                        data[page].streamingOptions?.`in`?.get(i)?.link.toString()
+                                }
+                            }
+                            val launcher =
+                                rememberLauncherForActivityResult(contract = ActivityResultContracts.StartActivityForResult()) {}
                             Button(
                                 onClick = {
 //
-//                                val intent = Intent(
-//                                    Intent.ACTION_VIEW,
-//                                    Uri.parse(link)
-//                                )
-//                                launcher.launch(intent)
+                                    val intent = Intent(
+                                        Intent.ACTION_VIEW,
+                                        Uri.parse(link)
+                                    )
+                                    launcher.launch(intent)
 
                                 }, modifier = Modifier
                                     .height(55.dp)
@@ -423,7 +435,6 @@ fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails)
             }
 
         }
-
 
 
     }

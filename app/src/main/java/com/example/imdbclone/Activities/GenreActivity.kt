@@ -66,7 +66,7 @@ val genres = mutableListOf(
         img = "https://m.media-amazon.com/images/I/71qjLOFJ1JL.jpg"
     ), checkBoxInfo(
         isChecked = false,
-        text = "Sci-Fi",
+        text = "SciFi",
         img = "https://m.media-amazon.com/images/I/61wrhEawgQL._AC_UF1000,1000_QL80_.jpg"
     ), checkBoxInfo(
         isChecked = false,
@@ -186,7 +186,7 @@ class GenreActivity : ComponentActivity() {
                                         for (item in checkBoxes) {
                                             if (item.isChecked) {
                                                 count++
-                                                selectedGenres.add(item.text)
+                                                selectedGenres.add(item.text.toLowerCase())
                                             }
                                         }
                                         if (count >= 3) {
