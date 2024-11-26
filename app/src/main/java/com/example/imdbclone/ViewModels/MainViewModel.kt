@@ -295,7 +295,7 @@ class MainViewModel : ViewModel() {
 
                         val genres =
                             snapshot.getValue(object : GenericTypeIndicator<List<String>>() {})
-                        selectedGenres = genres?.shuffled()?.take(2)?.joinToString(",").toString()
+                        selectedGenres = genres?.shuffled()?.take(3)?.joinToString(",").toString()
                         fetched = true
                         _genreState.value = _genreState.value.copy(
                             genres = selectedGenres,
