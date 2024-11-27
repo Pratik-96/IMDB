@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.coil.compose)
     implementation(libs.converter.gson)
     implementation(libs.retrofit)
+    implementation(libs.androidx.material)
     implementation(libs.androidx.lifecycle.viewmodel.compose)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

@@ -18,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.imdbclone.DataClasses.SavedShowDetails
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.Screen.Screens
@@ -28,6 +29,9 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.GenericTypeIndicator
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 private lateinit var auth: FirebaseAuth
@@ -127,6 +131,9 @@ class MainViewModel : ViewModel() {
     private val _genreState = mutableStateOf(GenreState())
     val genreState:State<GenreState> = _genreState
 
+    private val _isLoading = mutableStateOf(false)
+    val isLoading  = _isLoading
+
 
     val genreShowState: MutableList<State<ShowState>> = mutableListOf(
         actionShows,
@@ -189,6 +196,14 @@ class MainViewModel : ViewModel() {
     }
 
 
+    fun refreshData(){
+        viewModelScope.launch {
+            _isLoading.value = true
+            delay(3000L)
+            _isLoading.value = false
+        }
+    }
+
 
     fun fetchFilteredShows(
         state: MutableState<ShowState>,
@@ -201,6 +216,7 @@ class MainViewModel : ViewModel() {
         language: String,
     ) {
         viewModelScope.launch {
+            _isLoading.value = true
             try {
 
                 val response =
@@ -218,12 +234,14 @@ class MainViewModel : ViewModel() {
                     list = response.shows,
                     loading = false
                 )
+                _isLoading.value = false
 
             } catch (e: Exception) {
                 state.value = state.value.copy(
                     error = e.message,
                     loading = false
                 )
+                _isLoading.value = false
             }
         }
     }

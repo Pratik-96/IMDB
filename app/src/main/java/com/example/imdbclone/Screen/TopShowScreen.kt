@@ -27,9 +27,13 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.pullrefresh.PullRefreshIndicator
+import androidx.compose.material.pullrefresh.pullRefresh
+import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -40,6 +44,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -53,6 +58,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.util.fastCbrt
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.ImageLoader
@@ -70,10 +76,13 @@ import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import com.google.firebase.auth.FirebaseAuth
+import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 private lateinit var auth: FirebaseAuth
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> Unit) {
 
@@ -87,6 +96,28 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
     var fetched by remember { mutableStateOf(false) }
 
+    val imageSliderDataState = viewModel.topGenreShows
+    val genreState = viewModel.genreState
+    val scope = rememberCoroutineScope()
+    var isRefreshing by remember { mutableStateOf(false) }
+
+    val refreshing by remember { mutableStateOf(viewModel.isLoading)  }
+    val pullRefreshState = rememberPullRefreshState(refreshing = refreshing.value,{
+        isRefreshing= true
+      viewModel.refreshData()
+        isRefreshing = false
+//        TODO: Refresh the genres and again fetch the data from API
+//        viewModel.fetchFilteredShows(
+//            viewModel._genreShowState[viewModel.topGenreShowsIndex],
+//            "in",
+//            "",
+//            "",
+//            "movie",
+//            70,
+//            genreState.value.genres.toLowerCase(),
+//            ""
+//        )
+    })
 
     auth = FirebaseAuth.getInstance()
 
@@ -96,13 +127,13 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
 
 
+    Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(Color.Black),
 
-    LazyColumn(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Black),
-
-        ) {
+            ) {
 //        item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
 //        item { StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail) }
 //        item { StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail) }
@@ -110,44 +141,47 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 //        item { StateScreen(title = "Top Shows on Prime", primeState,navigateToDetail) }
 //        item { StateScreen(title = "Top Movies on Prime", primeMovieState,navigateToDetail) }
 //        item { StateScreen(title = "Top Shows on Hotstar", hostarState,navigateToDetail) }
-        item {
+            item {
 
-            val imageSliderDataState = viewModel.topGenreShows
-            val genreState = viewModel.genreState
-            when {
-                !genreState.value.loading -> {
-                    Text("${viewModel.selectedGenres}", color = Color.White)
-                    viewModel.fetchFilteredShows(
-                        viewModel._genreShowState[viewModel.topGenreShowsIndex],
-                        "in",
-                        "",
-                        "",
-                        "movie",
-                        70,
-                        genreState.value.genres.toLowerCase(),
-                        ""
-                    )
 
-                }
-            }
-            when {
-                imageSliderDataState.value.loading -> {
-                    CircularProgressIndicator()
-                }
+                when {
+                    !genreState.value.loading -> {
+                        Text("${viewModel.selectedGenres}", color = Color.White)
+                        viewModel.fetchFilteredShows(
+                            viewModel._genreShowState[viewModel.topGenreShowsIndex],
+                            "in",
+                            "",
+                            "",
+                            "movie",
+                            70,
+                            genreState.value.genres.toLowerCase(),
+                            ""
+                        )
 
-                imageSliderDataState.value.error != null -> {
-                    Text(imageSliderDataState.value.error.toString())
+                    }
                 }
+                when {
+                    imageSliderDataState.value.loading -> {
+                        CircularProgressIndicator()
+                    }
 
-                else -> {
-//                    Text(imageSliderDataState.value.list.toString())
-                    VerticalImageSlider(imageSliderDataState.value.list, navigateToDetail)
+                    imageSliderDataState.value.error != null -> {
+                        Text(imageSliderDataState.value.error.toString())
+                    }
+
+                    else -> {
+//                    Text(imageSliderDataState.value.list.thoString())
+                        VerticalImageSlider(imageSliderDataState.value.list, navigateToDetail)
+                    }
                 }
-            }
 //
 
+            }
         }
+        PullRefreshIndicator(isRefreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
+
     }
+
 }
 
 @Composable
@@ -301,6 +335,8 @@ fun ShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
 fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails) -> Unit) {
     val viewModel: HotstarViewModel = viewModel()
     val mainViewModel: MainViewModel = viewModel()
+
+
 
     Column(
         modifier = Modifier
