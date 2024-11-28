@@ -31,9 +31,6 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.pullrefresh.PullRefreshIndicator
-import androidx.compose.material.pullrefresh.pullRefresh
-import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
@@ -61,7 +58,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.util.fastCbrt
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.ImageLoader
@@ -79,16 +75,16 @@ import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlin.time.Duration.Companion.seconds
 
 private lateinit var auth: FirebaseAuth
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> Unit) {
+
+    auth = FirebaseAuth.getInstance()
 
     val netflixState by viewModel.showStates[0]
     val netflixMovieState by viewModel.showStates[1]
@@ -98,6 +94,20 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
     val primeMovieState by viewModel.showStates[5]
     val hostarState by viewModel.hotstarShowDetails
 
+    val actionShows by viewModel.genreShowState[viewModel.actionIndex]
+    val sciFiShows by viewModel.genreShowState[viewModel.siFiIndex]
+    val adventureShows by viewModel.genreShowState[viewModel.adventureIndex]
+    val animationShows by viewModel.genreShowState[viewModel.animationIndex]
+    val comedyShows by viewModel.genreShowState[viewModel.comedyIndex]
+    val crimeShows by viewModel.genreShowState[viewModel.crimeIndex]
+    val documentaryShows by viewModel.genreShowState[viewModel.documentaryIndex]
+    val dramaShows by viewModel.genreShowState[viewModel.dramaIndex]
+    val fantasyShows by viewModel.genreShowState[viewModel.fantasyIndex]
+    val horrorShows by viewModel.genreShowState[viewModel.horrorIndex]
+    val romanceShows by viewModel.genreShowState[viewModel.romanceIndex]
+    val thrillerShows by viewModel.genreShowState[viewModel.thrillerIndex]
+
+
     var fetched by remember { mutableStateOf(false) }
 
     val imageSliderDataState = viewModel.topGenreShows
@@ -106,15 +116,16 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
     val refreshState = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
 
-    val refreshing by remember { mutableStateOf(viewModel.isLoading)  }
+    val refreshing by remember { mutableStateOf(viewModel.isLoading) }
 
-    PullToRefreshBox(isRefreshing,state = refreshState, onRefresh = {
+    PullToRefreshBox(isRefreshing, state = refreshState, onRefresh = {
         coroutineScope.launch {
             isRefreshing = true
-            viewModel._genreShowState[viewModel.topGenreShowsIndex].value = viewModel._genreShowState[viewModel.topGenreShowsIndex].value.copy(
-                list = emptyList(),
-                loading = true
-            )
+            viewModel._genreShowState[viewModel.topGenreShowsIndex].value =
+                viewModel._genreShowState[viewModel.topGenreShowsIndex].value.copy(
+                    list = emptyList(),
+                    loading = true
+                )
 
             viewModel.refreshData()
 
@@ -127,13 +138,14 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
     }) {
 
 
-
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(Color.Black),
 
             ) {
+
+
 //        item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
 //        item { StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail) }
 //        item { StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail) }
@@ -141,65 +153,103 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 //        item { StateScreen(title = "Top Shows on Prime", primeState,navigateToDetail) }
 //        item { StateScreen(title = "Top Movies on Prime", primeMovieState,navigateToDetail) }
 //        item { StateScreen(title = "Top Shows on Hotstar", hostarState,navigateToDetail) }
-            item {
+//            item {
+//
+//
+//                when {
+//                    !genreState.value.loading -> {
+//                        Text("${viewModel.selectedGenres}", color = Color.White)
+//                        viewModel.fetchFilteredShows(
+//                            viewModel._genreShowState[viewModel.topGenreShowsIndex],
+//                            "in",
+//                            "",
+//                            "",
+//                            "movie",
+//                            70,
+//                            viewModel.selectedGenres,
+//                            ""
+//                        )
+//
+//                    }
+//                }
+//                when {
+//                    imageSliderDataState.value.loading -> {
+//                        CircularProgressIndicator()
+//                    }
+//
+//                    imageSliderDataState.value.error != null -> {
+//                        Text(imageSliderDataState.value.error.toString())
+//                    }
+//
+//                    else -> {
+////                    Text(imageSliderDataState.value.list.thoString())
+//                        VerticalImageSlider(imageSliderDataState.value.list, navigateToDetail)
+//                    }
+//                }
+//
+//
+////
+//
+//            }
 
+            //TODO: Display shows based on selected genres
+            for (item in viewModel.genres!!) {
 
                 when {
-                    !genreState.value.loading -> {
-                        Text("${viewModel.selectedGenres}", color = Color.White)
+
+                    item.equals("action", ignoreCase = true) -> {
                         viewModel.fetchFilteredShows(
-                            viewModel._genreShowState[viewModel.topGenreShowsIndex],
+                            viewModel._genreShowState[viewModel.siFiIndex],
                             "in",
                             "",
                             "",
-                            "movie",
+                            "series",
                             70,
-                            viewModel.selectedGenres,
+                            "action",
                             ""
                         )
-
+                        item{ StateScreen(title = "Action Shows", sciFiShows, navigateToDetail) }
                     }
+
+                    item.equals("scifi", ignoreCase = true) -> {
+                        viewModel.fetchFilteredShows(
+                            viewModel._genreShowState[viewModel.siFiIndex],
+                            "in",
+                            "",
+                            "",
+                            "series",
+                            70,
+                            "scifi",
+                            ""
+                        )
+                     item{ StateScreen(title = "Science Fiction Shows", sciFiShows, navigateToDetail) }
+                    }
+
+                    item.equals("romance", ignoreCase = true) -> {
+                        viewModel.fetchFilteredShows(
+                            viewModel._genreShowState[viewModel.romanceIndex],
+                            "in",
+                            "",
+                            "",
+                            "series",
+                            70,
+                            "romance",
+                            ""
+                        )
+                        item{StateScreen(title = "Romantic Shows", romanceShows, navigateToDetail)}
+                    }
+
+
                 }
-                when {
-                    imageSliderDataState.value.loading -> {
-                        CircularProgressIndicator()
-                    }
-
-                    imageSliderDataState.value.error != null -> {
-                        Text(imageSliderDataState.value.error.toString())
-                    }
-
-                    else -> {
-//                    Text(imageSliderDataState.value.list.thoString())
-                        VerticalImageSlider(imageSliderDataState.value.list, navigateToDetail)
-                    }
-                }
-//
-
             }
         }
 
 
-
-
     }
 
-
-    auth = FirebaseAuth.getInstance()
-
-
-
-
-
-
-
-    Box(modifier = Modifier) {
-
-//        PullRefreshIndicator(isRefreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
-
-    }
 
 }
+
 
 @Composable
 fun StateScreen(
@@ -373,7 +423,7 @@ fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails)
             state = pagerState,
             count = data.size,
 
-        ) { page ->
+            ) { page ->
             val showId = data[page].id
             val title = data[page].title
             val showType = data[page].showType
@@ -392,11 +442,13 @@ fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails)
                 serviceMetadata
             )
 
-            Column(modifier = Modifier
-                .wrapContentSize()
-                .align(Alignment.CenterHorizontally).clickable {
-                navigateToDetail(data[page])
-            },
+            Column(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(Alignment.CenterHorizontally)
+                    .clickable {
+                        navigateToDetail(data[page])
+                    },
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
