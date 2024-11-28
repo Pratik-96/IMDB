@@ -49,6 +49,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
@@ -546,7 +547,7 @@ fun ButtonText(text: String) {
 
 @Composable
 fun NormalText(text: String) {
-    Text(text = text, color = Color.Gray,fontFamily = sarabunFont, fontSize = 16.sp, modifier = Modifier.padding(8.dp))
+    Text(text = text, color = Color.Gray,fontFamily = sarabunFont, fontSize = 16.sp, modifier = Modifier.padding(8.dp), maxLines = 5,overflow = TextOverflow.Ellipsis)
 }
 @Composable
 fun LargeText(text: String) {
