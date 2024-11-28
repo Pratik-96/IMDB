@@ -196,9 +196,9 @@ fun SearchScreen(showViewModel:MainViewModel,navigateToDetail: (ShowDetails) -> 
                         showViewModel.searchShows.value.loading = true
                     }),
                     textStyle = TextStyle(fontFamily = FontFamily.SansSerif, fontWeight = FontWeight.Bold),
-                    colors = TextFieldDefaults.textFieldColors(
+                    colors = TextFieldDefaults.colors().copy(
                         focusedTextColor = Color.White,
-                        containerColor = Color.DarkGray,
+//                        containerColor = Color.DarkGray,
                         focusedIndicatorColor = Color.Transparent,
                         unfocusedIndicatorColor = Color.Transparent,
                         disabledIndicatorColor = Color.Transparent,

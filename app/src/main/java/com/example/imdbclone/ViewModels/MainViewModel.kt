@@ -123,7 +123,7 @@ class MainViewModel : ViewModel() {
     val thrillerShows: State<ShowState> = _thrillerShows
 
     private val _topGenreShows = mutableStateOf(ShowState())
-    val topGenreShows: State<ShowState> = _topGenreShows
+    var topGenreShows: State<ShowState> = _topGenreShows
 
     var selectedGenres = ""
     var fetched = false
@@ -189,6 +189,7 @@ class MainViewModel : ViewModel() {
         primeMovieDetails
     )
 
+    var genres:List<String>? = emptyList()
 
     init {
         fetchDataFromFirebase()
@@ -199,7 +200,9 @@ class MainViewModel : ViewModel() {
     fun refreshData(){
         viewModelScope.launch {
             _isLoading.value = true
-            delay(3000L)
+            if (genres?.isNotEmpty()!!){
+                selectedGenres = genres?.shuffled()?.take(2)?.joinToString(",").toString()
+            }
             _isLoading.value = false
         }
     }
@@ -313,7 +316,7 @@ class MainViewModel : ViewModel() {
                 .addValueEventListener(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
 
-                        val genres =
+                         genres =
                             snapshot.getValue(object : GenericTypeIndicator<List<String>>() {})
                         selectedGenres = genres?.shuffled()?.take(2)?.joinToString(",").toString()
                         fetched = true
@@ -436,7 +439,7 @@ class MainViewModel : ViewModel() {
 
     data class ShowState(
         val error: String? = null,
-        val list: List<ShowDetails> = emptyList(),
+        var list: List<ShowDetails> = emptyList(),
         var loading: Boolean = true
     )
 

@@ -37,8 +37,11 @@ import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -79,10 +82,11 @@ import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.time.Duration.Companion.seconds
 
 private lateinit var auth: FirebaseAuth
 
-@OptIn(ExperimentalMaterialApi::class)
+@OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> Unit) {
 
@@ -98,36 +102,51 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
     val imageSliderDataState = viewModel.topGenreShows
     val genreState = viewModel.genreState
-    val scope = rememberCoroutineScope()
+    val coroutineScope = rememberCoroutineScope()
+    val refreshState = rememberPullToRefreshState()
     var isRefreshing by remember { mutableStateOf(false) }
 
     val refreshing by remember { mutableStateOf(viewModel.isLoading)  }
-    val pullRefreshState = rememberPullRefreshState(refreshing = refreshing.value,{
-        isRefreshing= true
-      viewModel.refreshData()
-        isRefreshing = false
-//        TODO: Refresh the genres and again fetch the data from API
-//        viewModel.fetchFilteredShows(
-//            viewModel._genreShowState[viewModel.topGenreShowsIndex],
-//            "in",
-//            "",
-//            "",
-//            "movie",
-//            70,
-//            genreState.value.genres.toLowerCase(),
-//            ""
-//        )
-    })
 
-    auth = FirebaseAuth.getInstance()
+    PullToRefreshBox(isRefreshing,state = refreshState, onRefresh = {
+//        viewModel.refreshData()
+        coroutineScope.launch {
+            isRefreshing = true
+//            imageSliderDataState.value.list = emptyList()
+//            imageSliderDataState.value.loading = true
+//            viewModel.topGenreShows.value = viewModel.topGenreShows.value.copy(list = emptyList(), loading = true)
+
+            viewModel._genreShowState[viewModel.topGenreShowsIndex].value = viewModel._genreShowState[viewModel.topGenreShowsIndex].value.copy(
+                list = emptyList(),
+                loading = true
+            )
+
+            viewModel.refreshData()
+
+            viewModel.refreshData()
+
+            delay(1000L)
+            //TODO: Data is not updating in imageSlider
+            viewModel.fetchFilteredShows(
+                viewModel._genreShowState[viewModel.topGenreShowsIndex],
+                "in",
+                "",
+                "",
+                "movie",
+                70,
+                viewModel.selectedGenres.toLowerCase(),
+                ""
+            )
+            delay(3000L)
+
+            isRefreshing = viewModel._genreShowState[viewModel.topGenreShowsIndex].value.loading
+
+        }
+
+    }) {
 
 
 
-
-
-
-
-    Box(modifier = Modifier.pullRefresh(pullRefreshState)) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -178,7 +197,37 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
             }
         }
-        PullRefreshIndicator(isRefreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
+
+
+
+
+    }
+
+
+//        TODO: Refresh the genres and again fetch the data from API
+//        viewModel.fetchFilteredShows(
+//            viewModel._genreShowState[viewModel.topGenreShowsIndex],
+//            "in",
+//            "",
+//            "",
+//            "movie",
+//            70,
+//            genreState.value.genres.toLowerCase(),
+//            ""
+//        )
+
+
+    auth = FirebaseAuth.getInstance()
+
+
+
+
+
+
+
+    Box(modifier = Modifier) {
+
+//        PullRefreshIndicator(isRefreshing, pullRefreshState, Modifier.align(Alignment.TopCenter))
 
     }
 
