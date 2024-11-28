@@ -123,20 +123,20 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
             viewModel.refreshData()
 
-            viewModel.refreshData()
+//            viewModel.refreshData()
 
             delay(1000L)
-            //TODO: Data is not updating in imageSlider
-            viewModel.fetchFilteredShows(
-                viewModel._genreShowState[viewModel.topGenreShowsIndex],
-                "in",
-                "",
-                "",
-                "movie",
-                70,
-                viewModel.selectedGenres.toLowerCase(),
-                ""
-            )
+
+//            viewModel.fetchFilteredShows(
+//                viewModel._genreShowState[viewModel.topGenreShowsIndex],
+//                "in",
+//                "",
+//                "",
+//                "movie",
+//                70,
+//                viewModel.selectedGenres.toLowerCase(),
+//                ""
+//            )
             delay(3000L)
 
             isRefreshing = viewModel._genreShowState[viewModel.topGenreShowsIndex].value.loading
@@ -173,7 +173,7 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
                             "",
                             "movie",
                             70,
-                            genreState.value.genres.toLowerCase(),
+                            viewModel.selectedGenres,
                             ""
                         )
 
