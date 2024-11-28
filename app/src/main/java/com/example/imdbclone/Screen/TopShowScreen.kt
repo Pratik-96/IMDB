@@ -109,13 +109,8 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
     val refreshing by remember { mutableStateOf(viewModel.isLoading)  }
 
     PullToRefreshBox(isRefreshing,state = refreshState, onRefresh = {
-//        viewModel.refreshData()
         coroutineScope.launch {
             isRefreshing = true
-//            imageSliderDataState.value.list = emptyList()
-//            imageSliderDataState.value.loading = true
-//            viewModel.topGenreShows.value = viewModel.topGenreShows.value.copy(list = emptyList(), loading = true)
-
             viewModel._genreShowState[viewModel.topGenreShowsIndex].value = viewModel._genreShowState[viewModel.topGenreShowsIndex].value.copy(
                 list = emptyList(),
                 loading = true
@@ -123,20 +118,6 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
             viewModel.refreshData()
 
-//            viewModel.refreshData()
-
-            delay(1000L)
-
-//            viewModel.fetchFilteredShows(
-//                viewModel._genreShowState[viewModel.topGenreShowsIndex],
-//                "in",
-//                "",
-//                "",
-//                "movie",
-//                70,
-//                viewModel.selectedGenres.toLowerCase(),
-//                ""
-//            )
             delay(3000L)
 
             isRefreshing = viewModel._genreShowState[viewModel.topGenreShowsIndex].value.loading
@@ -202,19 +183,6 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
 
     }
-
-
-//        TODO: Refresh the genres and again fetch the data from API
-//        viewModel.fetchFilteredShows(
-//            viewModel._genreShowState[viewModel.topGenreShowsIndex],
-//            "in",
-//            "",
-//            "",
-//            "movie",
-//            70,
-//            genreState.value.genres.toLowerCase(),
-//            ""
-//        )
 
 
     auth = FirebaseAuth.getInstance()
