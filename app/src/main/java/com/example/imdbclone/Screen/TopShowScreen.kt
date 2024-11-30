@@ -192,56 +192,63 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 //
 //            }
 
-            //TODO: Display shows based on selected genres
-            for (item in viewModel.genres!!) {
 
-                when {
+            item{
+                for (item in viewModel.genres!!) {
 
-                    item.equals("action", ignoreCase = true) -> {
-                        viewModel.fetchFilteredShows(
-                            viewModel._genreShowState[viewModel.siFiIndex],
-                            "in",
-                            "",
-                            "",
-                            "series",
-                            70,
-                            "action",
-                            ""
-                        )
-                        item{ StateScreen(title = "Action Shows", sciFiShows, navigateToDetail) }
+                    when {
+
+                        item.equals("action", ignoreCase = true) -> {
+                            viewModel.fetchFilteredShows(
+                                viewModel._genreShowState[viewModel.siFiIndex],
+                                "in",
+                                "",
+                                "",
+                                "series",
+                                70,
+                                "action",
+                                ""
+                            )
+                            StateScreen(title = "Action Shows", sciFiShows, navigateToDetail)
+
+                        }
+
+                        item.equals("scifi", ignoreCase = true) -> {
+                            viewModel.fetchFilteredShows(
+                                viewModel._genreShowState[viewModel.siFiIndex],
+                                "in",
+                                "",
+                                "",
+                                "series",
+                                70,
+                                "scifi",
+                                ""
+                            )
+                             StateScreen(title = "Science Fiction Shows", sciFiShows, navigateToDetail)
+
+                        }
+
+                        item.equals("romance", ignoreCase = true) -> {
+                            viewModel.fetchFilteredShows(
+                                viewModel._genreShowState[viewModel.romanceIndex],
+                                "in",
+                                "",
+                                "",
+                                "series",
+                                70,
+                                "romance",
+                                ""
+                            )
+                            StateScreen(title = "Romantic Shows", romanceShows, navigateToDetail)
+
+                        }
+
+
                     }
-
-                    item.equals("scifi", ignoreCase = true) -> {
-                        viewModel.fetchFilteredShows(
-                            viewModel._genreShowState[viewModel.siFiIndex],
-                            "in",
-                            "",
-                            "",
-                            "series",
-                            70,
-                            "scifi",
-                            ""
-                        )
-                     item{ StateScreen(title = "Science Fiction Shows", sciFiShows, navigateToDetail) }
-                    }
-
-                    item.equals("romance", ignoreCase = true) -> {
-                        viewModel.fetchFilteredShows(
-                            viewModel._genreShowState[viewModel.romanceIndex],
-                            "in",
-                            "",
-                            "",
-                            "series",
-                            70,
-                            "romance",
-                            ""
-                        )
-                        item{StateScreen(title = "Romantic Shows", romanceShows, navigateToDetail)}
-                    }
-
-
                 }
             }
+            //TODO: Display shows based on selected genres
+
         }
 
 
