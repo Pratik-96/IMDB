@@ -26,6 +26,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
@@ -118,6 +119,74 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
     val refreshing by remember { mutableStateOf(viewModel.isLoading) }
 
+
+    val genreItems = mutableListOf<@Composable () -> Unit>()
+
+    for (item in viewModel.genres!!) {
+        when {
+            item.equals("action", ignoreCase = true) -> {
+                genreItems.add {
+                  LaunchedEffect(Unit) {
+                      viewModel.fetchFilteredShows(viewModel._genreShowState[viewModel.siFiIndex],
+                          "in",
+                          "",
+                          "",
+                          "series",
+                          70,
+                          "action",
+                          "" )
+                  }
+                    StateScreen(title = "Action Shows", sciFiShows, navigateToDetail)
+                }
+            }
+
+            item.equals("scifi", ignoreCase = true) -> {
+                genreItems.add{
+                    LaunchedEffect(Unit) {
+                        viewModel.fetchFilteredShows(
+                            viewModel._genreShowState[viewModel.siFiIndex],
+                            "in",
+                            "",
+                            "",
+                            "series",
+                            70,
+                            "scifi",
+                            ""
+                        )
+                    }
+
+                    StateScreen(title = "Science Fiction Shows", sciFiShows, navigateToDetail)
+                }
+
+
+            }
+
+            item.equals("romance", ignoreCase = true) -> {
+
+                genreItems.add{
+                    LaunchedEffect(Unit) {
+                        viewModel.fetchFilteredShows(
+                            viewModel._genreShowState[viewModel.romanceIndex],
+                            "in",
+                            "",
+                            "",
+                            "series",
+                            70,
+                            "romance",
+                            ""
+                        )
+                    }
+
+                    StateScreen(title = "Romantic Shows", romanceShows, navigateToDetail)
+
+                }
+
+            }
+
+        }
+    }
+
+
     PullToRefreshBox(isRefreshing, state = refreshState, onRefresh = {
         coroutineScope.launch {
             isRefreshing = true
@@ -144,6 +213,12 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
                 .background(Color.Black),
 
             ) {
+
+           items(genreItems){ item->
+
+               item()
+
+           }
 
 
 //        item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
@@ -193,60 +268,7 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 //            }
 
 
-            item{
-                for (item in viewModel.genres!!) {
 
-                    when {
-
-                        item.equals("action", ignoreCase = true) -> {
-                            viewModel.fetchFilteredShows(
-                                viewModel._genreShowState[viewModel.siFiIndex],
-                                "in",
-                                "",
-                                "",
-                                "series",
-                                70,
-                                "action",
-                                ""
-                            )
-                            StateScreen(title = "Action Shows", sciFiShows, navigateToDetail)
-
-                        }
-
-                        item.equals("scifi", ignoreCase = true) -> {
-                            viewModel.fetchFilteredShows(
-                                viewModel._genreShowState[viewModel.siFiIndex],
-                                "in",
-                                "",
-                                "",
-                                "series",
-                                70,
-                                "scifi",
-                                ""
-                            )
-                             StateScreen(title = "Science Fiction Shows", sciFiShows, navigateToDetail)
-
-                        }
-
-                        item.equals("romance", ignoreCase = true) -> {
-                            viewModel.fetchFilteredShows(
-                                viewModel._genreShowState[viewModel.romanceIndex],
-                                "in",
-                                "",
-                                "",
-                                "series",
-                                70,
-                                "romance",
-                                ""
-                            )
-                            StateScreen(title = "Romantic Shows", romanceShows, navigateToDetail)
-
-                        }
-
-
-                    }
-                }
-            }
             //TODO: Display shows based on selected genres
 
         }
