@@ -16,6 +16,7 @@ import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -207,6 +208,8 @@ class MainViewModel : ViewModel() {
         }
     }
 
+    private var count = mutableStateOf(0)
+
 
     fun fetchFilteredShows(
         state: MutableState<ShowState>,
@@ -219,6 +222,8 @@ class MainViewModel : ViewModel() {
         language: String,
     ) {
         viewModelScope.launch {
+            count.value++
+            Log.d("count", "fetchFilteredShows: Called "+count)
             _isLoading.value = true
             try {
 

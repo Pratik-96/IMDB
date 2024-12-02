@@ -109,6 +109,8 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
     val thrillerShows by viewModel.genreShowState[viewModel.thrillerIndex]
 
 
+
+
     var fetched by remember { mutableStateOf(false) }
 
     val imageSliderDataState = viewModel.topGenreShows
@@ -127,7 +129,7 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
             item.equals("action", ignoreCase = true) -> {
                 genreItems.add {
                   LaunchedEffect(Unit) {
-                      viewModel.fetchFilteredShows(viewModel._genreShowState[viewModel.siFiIndex],
+                      viewModel.fetchFilteredShows(viewModel._genreShowState[viewModel.actionIndex],
                           "in",
                           "",
                           "",
@@ -136,7 +138,7 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
                           "action",
                           "" )
                   }
-                    StateScreen(title = "Action Shows", sciFiShows, navigateToDetail)
+                    StateScreen(title = "Action Shows", actionShows, navigateToDetail)
                 }
             }
 
@@ -200,7 +202,7 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
             delay(3000L)
 
-            isRefreshing = viewModel._genreShowState[viewModel.topGenreShowsIndex].value.loading
+            isRefreshing = false
 
         }
 
@@ -343,13 +345,13 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String, navigateToDetail: (Show
                     .build(),
                 imageLoader = imageLoader
             )
-            Image(
-                painter = painter,
-                modifier = Modifier.size(width = 50.dp, height = 24.dp),
-                contentDescription = title,
-                contentScale = ContentScale.Crop
-
-            )
+//            Image(
+//                painter = painter,
+//                modifier = Modifier.size(width = 50.dp, height = 24.dp),
+//                contentDescription = title,
+//                contentScale = ContentScale.Crop
+//
+//            )
 
             Spacer(Modifier.padding(4.dp))
             Text(
