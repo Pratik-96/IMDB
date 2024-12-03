@@ -222,8 +222,6 @@ class MainViewModel : ViewModel() {
         language: String,
     ) {
         viewModelScope.launch {
-            count.value++
-            Log.d("count", "fetchFilteredShows: Called "+count)
             _isLoading.value = true
             try {
 
@@ -233,6 +231,47 @@ class MainViewModel : ViewModel() {
                         service,
                         catalogs,
                         showType,
+                        ratingMin,
+                        genres,
+                        language
+                    )
+                state.value = state.value.copy(
+                    error = null,
+                    list = response.shows,
+                    loading = false
+                )
+                _isLoading.value = false
+
+            } catch (e: Exception) {
+                state.value = state.value.copy(
+                    error = e.message,
+                    loading = false
+                )
+                _isLoading.value = false
+            }
+        }
+    }
+
+fun fetchGenreShows(
+        state: MutableState<ShowState>,
+        country: String = "in",
+        service: String,
+        catalogs: String,
+        ratingMin: Int,
+        genres: String,
+        language: String,
+    ) {
+        viewModelScope.launch {
+            count.value++
+            Log.d("count", "genre: Called "+count)
+            _isLoading.value = true
+            try {
+
+                val response =
+                    imdbService.getGenreShows(
+                        country,
+                        service,
+                        catalogs,
                         ratingMin,
                         genres,
                         language
@@ -318,7 +357,7 @@ class MainViewModel : ViewModel() {
             })
 
             database.child("user_data").child(uid).child("selectedGenres")
-                .addValueEventListener(object : ValueEventListener {
+                .addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onDataChange(snapshot: DataSnapshot) {
 
                          genres =

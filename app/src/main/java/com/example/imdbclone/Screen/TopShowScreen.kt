@@ -27,7 +27,9 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
@@ -109,8 +111,6 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
     val thrillerShows by viewModel.genreShowState[viewModel.thrillerIndex]
 
 
-
-
     var fetched by remember { mutableStateOf(false) }
 
     val imageSliderDataState = viewModel.topGenreShows
@@ -128,29 +128,29 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
         when {
             item.equals("action", ignoreCase = true) -> {
                 genreItems.add {
-                  LaunchedEffect(Unit) {
-                      viewModel.fetchFilteredShows(viewModel._genreShowState[viewModel.actionIndex],
-                          "in",
-                          "",
-                          "",
-                          "series",
-                          70,
-                          "action",
-                          "" )
-                  }
+                    LaunchedEffect(Unit) {
+                        viewModel.fetchGenreShows(
+                            viewModel._genreShowState[viewModel.actionIndex],
+                            "in",
+                            "",
+                            "",
+                            70,
+                            "action",
+                            ""
+                        )
+                    }
                     StateScreen(title = "Action Shows", actionShows, navigateToDetail)
                 }
             }
 
             item.equals("scifi", ignoreCase = true) -> {
-                genreItems.add{
+                genreItems.add {
                     LaunchedEffect(Unit) {
-                        viewModel.fetchFilteredShows(
+                        viewModel.fetchGenreShows(
                             viewModel._genreShowState[viewModel.siFiIndex],
                             "in",
                             "",
                             "",
-                            "series",
                             70,
                             "scifi",
                             ""
@@ -165,14 +165,13 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
             item.equals("romance", ignoreCase = true) -> {
 
-                genreItems.add{
+                genreItems.add {
                     LaunchedEffect(Unit) {
-                        viewModel.fetchFilteredShows(
+                        viewModel.fetchGenreShows(
                             viewModel._genreShowState[viewModel.romanceIndex],
                             "in",
                             "",
                             "",
-                            "series",
                             70,
                             "romance",
                             ""
@@ -184,6 +183,186 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
                 }
 
             }
+
+            item.equals("adventure", ignoreCase = true) -> {
+
+                genreItems.add {
+                    LaunchedEffect(Unit) {
+                        viewModel.fetchGenreShows(
+                            viewModel._genreShowState[viewModel.adventureIndex],
+                            "in",
+                            "",
+                            "",
+                            70,
+                            "adventure",
+                            ""
+                        )
+                    }
+
+                    StateScreen(title = "Adventure Shows", adventureShows, navigateToDetail)
+
+                }
+
+            }
+
+            item.equals("animation", ignoreCase = true) -> {
+
+                genreItems.add {
+                    LaunchedEffect(Unit) {
+                        viewModel.fetchGenreShows(
+                            viewModel._genreShowState[viewModel.animationIndex],
+                            "in",
+                            "",
+                            "",
+                            70,
+                            "animation",
+                            ""
+                        )
+                    }
+
+                    StateScreen(title = "Animation Shows", animationShows, navigateToDetail)
+
+                }
+
+            }
+
+            item.equals("comedy", ignoreCase = true) -> {
+
+                genreItems.add {
+                    LaunchedEffect(Unit) {
+                        viewModel.fetchGenreShows(
+                            viewModel._genreShowState[viewModel.comedyIndex],
+                            "in",
+                            "",
+                            "",
+                            70,
+                            "comedy",
+                            ""
+                        )
+                    }
+
+                    StateScreen(title = "Comedy Shows", comedyShows, navigateToDetail)
+
+                }
+            }
+            item.equals("crime", ignoreCase = true) -> {
+
+                genreItems.add {
+                    LaunchedEffect(Unit) {
+                        viewModel.fetchGenreShows(
+                            viewModel._genreShowState[viewModel.crimeIndex],
+                            "in",
+                            "",
+                            "",
+                            70,
+                            "crime",
+                            ""
+                        )
+                    }
+
+                    StateScreen(title = "Crime Shows", crimeShows, navigateToDetail)
+
+                }
+            }
+
+            item.equals("documentary", ignoreCase = true) -> {
+
+                genreItems.add {
+                    LaunchedEffect(Unit) {
+                        viewModel.fetchGenreShows(
+                            viewModel._genreShowState[viewModel.documentaryIndex],
+                            "in",
+                            "",
+                            "",
+                            70,
+                            "documentary",
+                            ""
+                        )
+                    }
+
+                    StateScreen(title = "Documentary Shows", documentaryShows, navigateToDetail)
+
+                }
+            }
+            item.equals("drama", ignoreCase = true) -> {
+
+                genreItems.add {
+                    LaunchedEffect(Unit) {
+                        viewModel.fetchGenreShows(
+                            viewModel._genreShowState[viewModel.dramaIndex],
+                            "in",
+                            "",
+                            "",
+                            70,
+                            "drama",
+                            ""
+                        )
+                    }
+
+                    StateScreen(title = "Drama Shows", dramaShows, navigateToDetail)
+
+                }
+            }
+
+            item.equals("fantasy", ignoreCase = true) -> {
+
+                genreItems.add {
+                    LaunchedEffect(Unit) {
+                        viewModel.fetchGenreShows(
+                            viewModel._genreShowState[viewModel.fantasyIndex],
+                            "in",
+                            "",
+                            "",
+                            70,
+                            "fantasy",
+                            ""
+                        )
+                    }
+
+                    StateScreen(title = "Fantasy Shows", fantasyShows, navigateToDetail)
+
+                }
+            }
+            item.equals("horror", ignoreCase = true) -> {
+
+                genreItems.add {
+                    LaunchedEffect(Unit) {
+                        viewModel.fetchGenreShows(
+                            viewModel._genreShowState[viewModel.horrorIndex],
+                            "in",
+                            "",
+                            "",
+                            70,
+                            "horror",
+                            ""
+                        )
+                    }
+
+                    StateScreen(title = "Horror Shows", horrorShows, navigateToDetail)
+
+                }
+            }
+
+            item.equals("thriller", ignoreCase = true) -> {
+
+                genreItems.add {
+                    LaunchedEffect(Unit) {
+                        viewModel.fetchGenreShows(
+                            viewModel._genreShowState[viewModel.thrillerIndex],
+                            "in",
+                            "",
+                            "",
+                            70,
+                            "thriller",
+                            ""
+                        )
+                    }
+
+                    StateScreen(title = "Thriller Shows", thrillerShows, navigateToDetail)
+
+                }
+            }
+
 
         }
     }
@@ -209,18 +388,64 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
     }) {
 
 
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
+                .verticalScroll(rememberScrollState())
                 .background(Color.Black),
 
             ) {
 
-           items(genreItems){ item->
 
-               item()
 
-           }
+
+
+//            item {
+                when {
+                    !genreState.value.loading -> {
+                        Text("${viewModel.selectedGenres}", color = Color.White)
+
+
+
+                    }
+                    genreState.value.genres.isNotEmpty() ->{
+                        viewModel.fetchGenreShows(
+                            viewModel._genreShowState[viewModel.topGenreShowsIndex],
+                            "in",
+                            "",
+                            "",
+                            70,
+                            viewModel.selectedGenres,
+                            ""
+                        )
+                    }
+                }
+                when {
+                    imageSliderDataState.value.loading -> {
+                        CircularProgressIndicator()
+                    }
+
+                    imageSliderDataState.value.error != null -> {
+                        Text(imageSliderDataState.value.error.toString())
+                    }
+
+                    else -> {
+//                    Text(imageSliderDataState.value.list.thoString())
+                        VerticalImageSlider(imageSliderDataState.value.list, navigateToDetail)
+                    }
+                }
+//            }
+//
+
+            for (item in genreItems){
+                item()
+            }
+
+//            items(genreItems) { item ->
+//
+//                item()
+//
+//            }
 
 
 //        item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
@@ -230,45 +455,12 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 //        item { StateScreen(title = "Top Shows on Prime", primeState,navigateToDetail) }
 //        item { StateScreen(title = "Top Movies on Prime", primeMovieState,navigateToDetail) }
 //        item { StateScreen(title = "Top Shows on Hotstar", hostarState,navigateToDetail) }
-//            item {
-//
-//
-//                when {
-//                    !genreState.value.loading -> {
-//                        Text("${viewModel.selectedGenres}", color = Color.White)
-//                        viewModel.fetchFilteredShows(
-//                            viewModel._genreShowState[viewModel.topGenreShowsIndex],
-//                            "in",
-//                            "",
-//                            "",
-//                            "movie",
-//                            70,
-//                            viewModel.selectedGenres,
-//                            ""
-//                        )
-//
-//                    }
-//                }
-//                when {
-//                    imageSliderDataState.value.loading -> {
-//                        CircularProgressIndicator()
-//                    }
-//
-//                    imageSliderDataState.value.error != null -> {
-//                        Text(imageSliderDataState.value.error.toString())
-//                    }
-//
-//                    else -> {
-////                    Text(imageSliderDataState.value.list.thoString())
-//                        VerticalImageSlider(imageSliderDataState.value.list, navigateToDetail)
-//                    }
-//                }
-//
-//
-////
-//
-//            }
 
+
+
+//
+
+            }
 
 
             //TODO: Display shows based on selected genres
@@ -279,7 +471,7 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
     }
 
 
-}
+
 
 
 @Composable
@@ -353,7 +545,7 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String, navigateToDetail: (Show
 //
 //            )
 
-            Spacer(Modifier.padding(4.dp))
+//            Spacer(Modifier.padding(4.dp))
             Text(
                 text = title,
                 fontSize = 16.sp,
@@ -367,7 +559,7 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String, navigateToDetail: (Show
         LazyHorizontalGrid(
             modifier = Modifier
                 .wrapContentSize(unbounded = false)
-                .height(80.dp),
+                .height(200.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             rows = GridCells.Fixed(1)
         ) {
@@ -409,14 +601,14 @@ fun ShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
     ) {
 
         val painter = rememberAsyncImagePainter(
-            model = item.imageSet.horizontalPoster?.w360 // Adjust as needed
+            model = item.imageSet.verticalPoster?.w360 // Adjust as needed
             ,
             imageLoader = imageLoader
         )
         Image(
             painter = painter,
             modifier = Modifier
-                .size(width = 150.dp, height = 80.dp)
+                .size(width = 130.dp, height = 200.dp)
                 .clip(RoundedCornerShape(8.dp)),
             contentDescription = item.title,
             contentScale = ContentScale.Crop

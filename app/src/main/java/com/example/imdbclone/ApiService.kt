@@ -16,7 +16,7 @@ private val retrofit = Retrofit.Builder().baseUrl("https://streaming-availabilit
     .addConverterFactory(GsonConverterFactory.create())
     .client(
         OkHttpClient.Builder()
-            .addInterceptor(ApiKeyInterceptor("bab36f277fmsh56ed2f8e4dd010fp1fbe80jsnb9a02525833c"))
+            .addInterceptor(ApiKeyInterceptor("896c65d7d9mshf78dfc3883d4d14p1000c5jsn1e1bb24ddb1e"))
             .build()
     ).build()
 
@@ -46,6 +46,18 @@ interface ApiService {
         @Query("service") service: String,
         @Query("catalogs") catalogs: String,
         @Query("show_type") showType: String,
+        @Query("rating_min") rating_min: Int,
+        @Query("genres") genre: String,
+        @Query("show_original_language") language: String
+
+
+    ): Show
+
+    @GET("shows/search/filters")
+    suspend fun getGenreShows(
+        @Query("country") country: String,
+        @Query("service") service: String,
+        @Query("catalogs") catalogs: String,
         @Query("rating_min") rating_min: Int,
         @Query("genres") genre: String,
         @Query("show_original_language") language: String
