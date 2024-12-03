@@ -1,5 +1,6 @@
 package com.example.imdbclone.ViewModels
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -121,9 +122,12 @@ class HotstarViewModel:ViewModel() {
             }
         }
     }
+    private var count = mutableStateOf(0)
 
         fun fetchTopShows(country: String, service: String, catalogs: String, ratingMin: Int) {
             viewModelScope.launch {
+                count.value++
+                Log.d("count", "slider: Called "+count)
                 try {
 
                     val response = imdbService.getTopShows(country, service, catalogs, ratingMin)

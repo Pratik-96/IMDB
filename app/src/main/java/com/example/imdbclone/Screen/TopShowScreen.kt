@@ -73,6 +73,7 @@ import com.example.imdbclone.DataClasses.SavedShowDetails
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.ViewModels.HotstarViewModel
 import com.example.imdbclone.ViewModels.MainViewModel
+import com.example.imdbclone.ui.ImageSlider
 import com.example.imdbclone.ui.theme.DeepGray
 import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
@@ -408,32 +409,37 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
 
                     }
-                    genreState.value.genres.isNotEmpty() ->{
-                        viewModel.fetchGenreShows(
-                            viewModel._genreShowState[viewModel.topGenreShowsIndex],
-                            "in",
-                            "",
-                            "",
-                            70,
-                            viewModel.selectedGenres,
-                            ""
-                        )
-                    }
-                }
-                when {
-                    imageSliderDataState.value.loading -> {
-                        CircularProgressIndicator()
-                    }
+//
 
-                    imageSliderDataState.value.error != null -> {
-                        Text(imageSliderDataState.value.error.toString())
-                    }
-
-                    else -> {
-//                    Text(imageSliderDataState.value.list.thoString())
-                        VerticalImageSlider(imageSliderDataState.value.list, navigateToDetail)
-                    }
                 }
+
+
+//            viewModel.fetchGenreShows(
+//                viewModel._genreShowState[viewModel.topGenreShowsIndex],
+//                "in",
+//                "",
+//                "",
+//                70,
+//                viewModel.selectedGenres,
+//                ""
+//            )
+
+
+//                when {
+//                    imageSliderDataState.value.loading -> {
+//                        CircularProgressIndicator()
+//                    }
+//
+//                    imageSliderDataState.value.error != null -> {
+//                        Text(imageSliderDataState.value.error.toString())
+//                    }
+//
+//                    else -> {
+//                        ImageSlider(imageSliderDataState.value.list,navigateToDetail)
+////                    Text(imageSliderDataState.value.list.thoString())
+////                        VerticalImageSlider(imageSliderDataState.value.list, navigateToDetail)
+//                    }
+//                }
 //            }
 //
 
@@ -447,13 +453,13 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 //
 //            }
 
-
-     StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail)
-     StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail)
-            StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail)
-   StateScreen(title = "Top Apple Tv Movies", appleMovieState,navigateToDetail)
-   StateScreen(title = "Top Shows on Prime", primeState,navigateToDetail)
-       StateScreen(title = "Top Movies on Prime", primeMovieState,navigateToDetail)
+//
+//     StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail)
+//     StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail)
+//            StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail)
+//   StateScreen(title = "Top Apple Tv Movies", appleMovieState,navigateToDetail)
+//   StateScreen(title = "Top Shows on Prime", primeState,navigateToDetail)
+//       StateScreen(title = "Top Movies on Prime", primeMovieState,navigateToDetail)
 //        item { StateScreen(title = "Top Shows on Hotstar", hostarState,navigateToDetail)
 
 
