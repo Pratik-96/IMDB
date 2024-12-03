@@ -89,13 +89,13 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
     auth = FirebaseAuth.getInstance()
 
-    val netflixState by viewModel.showStates[0]
-    val netflixMovieState by viewModel.showStates[1]
-    val appleState by viewModel.showStates[2]
-    val appleMovieState by viewModel.showStates[3]
-    val primeState by viewModel.showStates[4]
-    val primeMovieState by viewModel.showStates[5]
-    val hostarState by viewModel.hotstarShowDetails
+    val netflixState by viewModel.showStates[viewModel.netflixSeriesIndex]
+    val netflixMovieState by viewModel.showStates[viewModel.netflixMoviesIndex]
+    val appleState by viewModel.showStates[viewModel.appleSeriesIndex]
+    val appleMovieState by viewModel.showStates[viewModel.appleMoviesIndex]
+    val primeState by viewModel.showStates[viewModel.primeSeriesIndex]
+    val primeMovieState by viewModel.showStates[viewModel.primeMoviesIndex]
+//    val hostarState by viewModel.showStates[viewModel.hotstarSeriesIndex]
 
     val actionShows by viewModel.genreShowState[viewModel.actionIndex]
     val sciFiShows by viewModel.genreShowState[viewModel.siFiIndex]
@@ -448,13 +448,13 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 //            }
 
 
-//        item { StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail) }
-//        item { StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail) }
-//        item { StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail) }
-//        item { StateScreen(title = "Top Apple Tv Movies", appleMovieState,navigateToDetail) }
-//        item { StateScreen(title = "Top Shows on Prime", primeState,navigateToDetail) }
-//        item { StateScreen(title = "Top Movies on Prime", primeMovieState,navigateToDetail) }
-//        item { StateScreen(title = "Top Shows on Hotstar", hostarState,navigateToDetail) }
+     StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail)
+     StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail)
+            StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail)
+   StateScreen(title = "Top Apple Tv Movies", appleMovieState,navigateToDetail)
+   StateScreen(title = "Top Shows on Prime", primeState,navigateToDetail)
+       StateScreen(title = "Top Movies on Prime", primeMovieState,navigateToDetail)
+//        item { StateScreen(title = "Top Shows on Hotstar", hostarState,navigateToDetail)
 
 
 

@@ -54,6 +54,14 @@ class MainViewModel : ViewModel() {
     val hotstarIndex = 12
     val topGenreShowsIndex = 13
 
+    val netflixSeriesIndex = 0
+    val netflixMoviesIndex = 1
+    val appleSeriesIndex = 2
+    val appleMoviesIndex = 3
+    val primeSeriesIndex = 4
+    val primeMoviesIndex = 5
+    val hotstarSeriesIndex = 6
+
 
 
     private val _netflixShowState = mutableStateOf(ShowState())
@@ -194,7 +202,7 @@ class MainViewModel : ViewModel() {
 
     init {
         fetchDataFromFirebase()
-//        dynamicDataFetching()
+        dynamicDataFetching()
     }
 
 
@@ -295,12 +303,13 @@ fun fetchGenreShows(
 
 
     private fun dynamicDataFetching() {
-        fetchData(_showStates[0], "netflix", "in", "series")
-        fetchData(_showStates[1], "netflix", "in", "movie")
-        fetchData(_showStates[2], "apple", "in", "series")
-        fetchData(_showStates[3], "apple", "in", "movie")
-        fetchData(_showStates[3], "prime", "in", "series")
-        fetchData(_showStates[3], "prime", "in", "movie")
+        fetchData(_showStates[netflixSeriesIndex], "netflix", "in", "series")
+        fetchData(_showStates[netflixMoviesIndex], "netflix", "in", "movie")
+        fetchData(_showStates[appleSeriesIndex], "apple", "in", "series")
+        fetchData(_showStates[appleMoviesIndex], "apple", "in", "movie")
+        fetchData(_showStates[primeSeriesIndex], "prime", "in", "series")
+        fetchData(_showStates[primeMoviesIndex], "prime", "in", "movie")
+//        fetchData(_showStates[hotstarSeriesIndex], "prime", "in", "movie")
     }
 
     private fun fetchData(
