@@ -45,6 +45,7 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -84,12 +85,14 @@ import kotlinx.coroutines.launch
 
 private lateinit var auth: FirebaseAuth
 
+
+
+
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> Unit) {
 
     auth = FirebaseAuth.getInstance()
-
     val netflixState by viewModel.showStates[viewModel.netflixSeriesIndex]
     val netflixMovieState by viewModel.showStates[viewModel.netflixMoviesIndex]
     val appleState by viewModel.showStates[viewModel.appleSeriesIndex]
@@ -121,255 +124,263 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
     var isRefreshing by remember { mutableStateOf(false) }
 
     val refreshing by remember { mutableStateOf(viewModel.isLoading) }
-
-
     val genreItems = mutableListOf<@Composable () -> Unit>()
-
-    for (item in viewModel.genres!!) {
-        when {
-            item.equals("action", ignoreCase = true) -> {
-                genreItems.add {
-                    LaunchedEffect(Unit) {
-                        viewModel.fetchGenreShows(
-                            viewModel._genreShowState[viewModel.actionIndex],
-                            "in",
-                            "",
-                            "",
-                            70,
-                            "action",
-                            ""
-                        )
-                    }
-                    StateScreen(title = "Action Shows", actionShows, navigateToDetail)
-                }
-            }
-
-            item.equals("scifi", ignoreCase = true) -> {
-                genreItems.add {
-                    LaunchedEffect(Unit) {
-                        viewModel.fetchGenreShows(
-                            viewModel._genreShowState[viewModel.siFiIndex],
-                            "in",
-                            "",
-                            "",
-                            70,
-                            "scifi",
-                            ""
-                        )
+    var showGenreItems by remember { mutableStateOf(false) }
+    when{
+        genreState.value.genres.isNotEmpty()->{
+            for (item in viewModel.genres!!) {
+                when {
+                    item.equals("action", ignoreCase = true) -> {
+                        genreItems.add {
+                            LaunchedEffect(Unit) {
+                                viewModel.fetchGenreShows(
+                                    viewModel._genreShowState[viewModel.actionIndex],
+                                    "in",
+                                    "",
+                                    "",
+                                    70,
+                                    "action",
+                                    ""
+                                )
+                            }
+                            StateScreen(title = "Action Shows", actionShows, navigateToDetail)
+                        }
                     }
 
-                    StateScreen(title = "Science Fiction Shows", sciFiShows, navigateToDetail)
-                }
+                    item.equals("scifi", ignoreCase = true) -> {
+                        genreItems.add {
+                            LaunchedEffect(Unit) {
+                                viewModel.fetchGenreShows(
+                                    viewModel._genreShowState[viewModel.siFiIndex],
+                                    "in",
+                                    "",
+                                    "",
+                                    70,
+                                    "scifi",
+                                    ""
+                                )
+                            }
+
+                            StateScreen(title = "Science Fiction Shows", sciFiShows, navigateToDetail)
+                        }
 
 
-            }
-
-            item.equals("romance", ignoreCase = true) -> {
-
-                genreItems.add {
-                    LaunchedEffect(Unit) {
-                        viewModel.fetchGenreShows(
-                            viewModel._genreShowState[viewModel.romanceIndex],
-                            "in",
-                            "",
-                            "",
-                            70,
-                            "romance",
-                            ""
-                        )
                     }
 
-                    StateScreen(title = "Romantic Shows", romanceShows, navigateToDetail)
+                    item.equals("romance", ignoreCase = true) -> {
 
-                }
+                        genreItems.add {
+                            LaunchedEffect(Unit) {
+                                viewModel.fetchGenreShows(
+                                    viewModel._genreShowState[viewModel.romanceIndex],
+                                    "in",
+                                    "",
+                                    "",
+                                    70,
+                                    "romance",
+                                    ""
+                                )
+                            }
 
-            }
+                            StateScreen(title = "Romantic Shows", romanceShows, navigateToDetail)
 
-            item.equals("adventure", ignoreCase = true) -> {
+                        }
 
-                genreItems.add {
-                    LaunchedEffect(Unit) {
-                        viewModel.fetchGenreShows(
-                            viewModel._genreShowState[viewModel.adventureIndex],
-                            "in",
-                            "",
-                            "",
-                            70,
-                            "adventure",
-                            ""
-                        )
                     }
 
-                    StateScreen(title = "Adventure Shows", adventureShows, navigateToDetail)
+                    item.equals("adventure", ignoreCase = true) -> {
 
-                }
+                        genreItems.add {
+                            LaunchedEffect(Unit) {
+                                viewModel.fetchGenreShows(
+                                    viewModel._genreShowState[viewModel.adventureIndex],
+                                    "in",
+                                    "",
+                                    "",
+                                    70,
+                                    "adventure",
+                                    ""
+                                )
+                            }
 
-            }
+                            StateScreen(title = "Adventure Shows", adventureShows, navigateToDetail)
 
-            item.equals("animation", ignoreCase = true) -> {
+                        }
 
-                genreItems.add {
-                    LaunchedEffect(Unit) {
-                        viewModel.fetchGenreShows(
-                            viewModel._genreShowState[viewModel.animationIndex],
-                            "in",
-                            "",
-                            "",
-                            70,
-                            "animation",
-                            ""
-                        )
                     }
 
-                    StateScreen(title = "Animation Shows", animationShows, navigateToDetail)
+                    item.equals("animation", ignoreCase = true) -> {
 
-                }
+                        genreItems.add {
+                            LaunchedEffect(Unit) {
+                                viewModel.fetchGenreShows(
+                                    viewModel._genreShowState[viewModel.animationIndex],
+                                    "in",
+                                    "",
+                                    "",
+                                    70,
+                                    "animation",
+                                    ""
+                                )
+                            }
 
-            }
+                            StateScreen(title = "Animation Shows", animationShows, navigateToDetail)
 
-            item.equals("comedy", ignoreCase = true) -> {
+                        }
 
-                genreItems.add {
-                    LaunchedEffect(Unit) {
-                        viewModel.fetchGenreShows(
-                            viewModel._genreShowState[viewModel.comedyIndex],
-                            "in",
-                            "",
-                            "",
-                            70,
-                            "comedy",
-                            ""
-                        )
                     }
 
-                    StateScreen(title = "Comedy Shows", comedyShows, navigateToDetail)
+                    item.equals("comedy", ignoreCase = true) -> {
 
-                }
-            }
-            item.equals("crime", ignoreCase = true) -> {
+                        genreItems.add {
+                            LaunchedEffect(Unit) {
+                                viewModel.fetchGenreShows(
+                                    viewModel._genreShowState[viewModel.comedyIndex],
+                                    "in",
+                                    "",
+                                    "",
+                                    70,
+                                    "comedy",
+                                    ""
+                                )
+                            }
 
-                genreItems.add {
-                    LaunchedEffect(Unit) {
-                        viewModel.fetchGenreShows(
-                            viewModel._genreShowState[viewModel.crimeIndex],
-                            "in",
-                            "",
-                            "",
-                            70,
-                            "crime",
-                            ""
-                        )
+                            StateScreen(title = "Comedy Shows", comedyShows, navigateToDetail)
+
+                        }
                     }
 
-                    StateScreen(title = "Crime Shows", crimeShows, navigateToDetail)
+                    item.equals("crime", ignoreCase = true) -> {
 
-                }
-            }
+                        genreItems.add {
+                            LaunchedEffect(Unit) {
+                                viewModel.fetchGenreShows(
+                                    viewModel._genreShowState[viewModel.crimeIndex],
+                                    "in",
+                                    "",
+                                    "",
+                                    70,
+                                    "crime",
+                                    ""
+                                )
+                            }
 
-            item.equals("documentary", ignoreCase = true) -> {
+                            StateScreen(title = "Crime Shows", crimeShows, navigateToDetail)
 
-                genreItems.add {
-                    LaunchedEffect(Unit) {
-                        viewModel.fetchGenreShows(
-                            viewModel._genreShowState[viewModel.documentaryIndex],
-                            "in",
-                            "",
-                            "",
-                            70,
-                            "documentary",
-                            ""
-                        )
+                        }
                     }
 
-                    StateScreen(title = "Documentary Shows", documentaryShows, navigateToDetail)
+                    item.equals("documentary", ignoreCase = true) -> {
 
-                }
-            }
-            item.equals("drama", ignoreCase = true) -> {
+                        genreItems.add {
+                            LaunchedEffect(Unit) {
+                                viewModel.fetchGenreShows(
+                                    viewModel._genreShowState[viewModel.documentaryIndex],
+                                    "in",
+                                    "",
+                                    "",
+                                    70,
+                                    "documentary",
+                                    ""
+                                )
+                            }
 
-                genreItems.add {
-                    LaunchedEffect(Unit) {
-                        viewModel.fetchGenreShows(
-                            viewModel._genreShowState[viewModel.dramaIndex],
-                            "in",
-                            "",
-                            "",
-                            70,
-                            "drama",
-                            ""
-                        )
+                            StateScreen(title = "Documentary Shows", documentaryShows, navigateToDetail)
+
+                        }
                     }
 
-                    StateScreen(title = "Drama Shows", dramaShows, navigateToDetail)
+                    item.equals("drama", ignoreCase = true) -> {
 
-                }
-            }
+                        genreItems.add {
+                            LaunchedEffect(Unit) {
+                                viewModel.fetchGenreShows(
+                                    viewModel._genreShowState[viewModel.dramaIndex],
+                                    "in",
+                                    "",
+                                    "",
+                                    70,
+                                    "drama",
+                                    ""
+                                )
+                            }
 
-            item.equals("fantasy", ignoreCase = true) -> {
+                            StateScreen(title = "Drama Shows", dramaShows, navigateToDetail)
 
-                genreItems.add {
-                    LaunchedEffect(Unit) {
-                        viewModel.fetchGenreShows(
-                            viewModel._genreShowState[viewModel.fantasyIndex],
-                            "in",
-                            "",
-                            "",
-                            70,
-                            "fantasy",
-                            ""
-                        )
+                        }
                     }
 
-                    StateScreen(title = "Fantasy Shows", fantasyShows, navigateToDetail)
+                    item.equals("fantasy", ignoreCase = true) -> {
 
-                }
-            }
-            item.equals("horror", ignoreCase = true) -> {
+                        genreItems.add {
+                            LaunchedEffect(Unit) {
+                                viewModel.fetchGenreShows(
+                                    viewModel._genreShowState[viewModel.fantasyIndex],
+                                    "in",
+                                    "",
+                                    "",
+                                    70,
+                                    "fantasy",
+                                    ""
+                                )
+                            }
 
-                genreItems.add {
-                    LaunchedEffect(Unit) {
-                        viewModel.fetchGenreShows(
-                            viewModel._genreShowState[viewModel.horrorIndex],
-                            "in",
-                            "",
-                            "",
-                            70,
-                            "horror",
-                            ""
-                        )
+                            StateScreen(title = "Fantasy Shows", fantasyShows, navigateToDetail)
+
+                        }
                     }
 
-                    StateScreen(title = "Horror Shows", horrorShows, navigateToDetail)
+                    item.equals("horror", ignoreCase = true) -> {
 
-                }
-            }
+                        genreItems.add {
+                            LaunchedEffect(Unit) {
+                                viewModel.fetchGenreShows(
+                                    viewModel._genreShowState[viewModel.horrorIndex],
+                                    "in",
+                                    "",
+                                    "",
+                                    70,
+                                    "horror",
+                                    ""
+                                )
+                            }
 
-            item.equals("thriller", ignoreCase = true) -> {
+                            StateScreen(title = "Horror Shows", horrorShows, navigateToDetail)
 
-                genreItems.add {
-                    LaunchedEffect(Unit) {
-                        viewModel.fetchGenreShows(
-                            viewModel._genreShowState[viewModel.thrillerIndex],
-                            "in",
-                            "",
-                            "",
-                            70,
-                            "thriller",
-                            ""
-                        )
+                        }
                     }
 
-                    StateScreen(title = "Thriller Shows", thrillerShows, navigateToDetail)
+                    item.equals("thriller", ignoreCase = true) -> {
+
+                        genreItems.add {
+                            LaunchedEffect(Unit) {
+                                viewModel.fetchGenreShows(
+                                    viewModel._genreShowState[viewModel.thrillerIndex],
+                                    "in",
+                                    "",
+                                    "",
+                                    70,
+                                    "thriller",
+                                    ""
+                                )
+                            }
+
+                            StateScreen(title = "Thriller Shows", thrillerShows, navigateToDetail)
+
+                        }
+                    }
+
 
                 }
             }
-
-
         }
     }
 
 
+
+
     PullToRefreshBox(isRefreshing, state = refreshState, onRefresh = {
+
         coroutineScope.launch {
             isRefreshing = true
             viewModel._genreShowState[viewModel.topGenreShowsIndex].value =
@@ -378,7 +389,26 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
                     loading = true
                 )
 
+
+
+
+
+
             viewModel.refreshData()
+
+            viewModel.fetchGenreShows(
+                viewModel._genreShowState[viewModel.topGenreShowsIndex],
+                "in",
+                "",
+                "",
+                70,
+                viewModel.selectedGenres,
+                ""
+            )
+
+
+
+
 
             delay(3000L)
 
@@ -387,6 +417,13 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
         }
 
     }) {
+
+
+
+
+
+
+        //TODO: category wise shows are not displaying.!!!
 
 
         Column(
@@ -398,54 +435,58 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
             ) {
 
 
-
-
-
 //            item {
-                when {
-                    !genreState.value.loading -> {
-                        Text("${viewModel.selectedGenres}", color = Color.White)
+            when {
+                !genreState.value.loading -> {
+                    Text("${viewModel.selectedGenres}", color = Color.White)
+                }
+            }
 
+            LaunchedEffect(Unit) {
+                viewModel.fetchGenreShows(
+                    viewModel._genreShowState[viewModel.topGenreShowsIndex],
+                    "in",
+                    "",
+                    "",
+                    70,
+                    viewModel.selectedGenres,
+                    ""
+                )
+            }
 
-
-                    }
-//
-
+            when {
+                imageSliderDataState.value.loading -> {
+                    CircularProgressIndicator()
                 }
 
+                imageSliderDataState.value.error != null -> {
+                    Text(imageSliderDataState.value.error.toString())
+                }
 
-//            viewModel.fetchGenreShows(
-//                viewModel._genreShowState[viewModel.topGenreShowsIndex],
-//                "in",
-//                "",
-//                "",
-//                70,
-//                viewModel.selectedGenres,
-//                ""
-//            )
+                else -> {
+                    ImageSlider(imageSliderDataState.value.list, navigateToDetail)
+
+//                    Text(imageSliderDataState.value.list.thoString())
+//                        VerticalImageSlider(imageSliderDataState.value.list, navigateToDetail)
+            }
+        }
 
 
-//                when {
-//                    imageSliderDataState.value.loading -> {
-//                        CircularProgressIndicator()
-//                    }
-//
-//                    imageSliderDataState.value.error != null -> {
-//                        Text(imageSliderDataState.value.error.toString())
-//                    }
-//
-//                    else -> {
-//                        ImageSlider(imageSliderDataState.value.list,navigateToDetail)
-////                    Text(imageSliderDataState.value.list.thoString())
-////                        VerticalImageSlider(imageSliderDataState.value.list, navigateToDetail)
-//                    }
-//                }
-//            }
-//
 
-            for (item in genreItems){
+
+            for (item in genreItems) {
                 item()
             }
+
+
+
+
+
+
+
+
+
+
 
 //            items(genreItems) { item ->
 //
@@ -463,18 +504,23 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 //        item { StateScreen(title = "Top Shows on Hotstar", hostarState,navigateToDetail)
 
 
-
 //
 
-            }
+        }
 
+        Column {
 
-            //TODO: Display shows based on selected genres
 
         }
 
 
+        //TODO: Display shows based on selected genres
+
     }
+}
+
+
+
 
 
 
