@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.List
 import androidx.compose.material.icons.outlined.Logout
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
@@ -23,6 +24,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.imdbclone.DataClasses.SavedShowDetails
 import com.example.imdbclone.DataClasses.ShowDetails
 import com.example.imdbclone.Screen.Screens
+import com.example.imdbclone.Screen.StateScreen
 import com.example.imdbclone.imdbService
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -204,6 +206,9 @@ class MainViewModel : ViewModel() {
         fetchDataFromFirebase()
 //        dynamicDataFetching()
     }
+
+
+
 
 
     fun refreshData(){
