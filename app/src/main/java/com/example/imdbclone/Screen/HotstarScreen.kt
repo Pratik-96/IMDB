@@ -12,6 +12,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -39,7 +40,10 @@ fun HotstarScreen(navigateToDetail: (ShowDetails) -> Unit, navigateToMarvel: () 
 
     val viewModel: HotstarViewModel = viewModel()
     val mainViewModel:MainViewModel= viewModel()
-    viewModel.fetchTopShows("in", "hotstar", "hotstar", 80)
+    LaunchedEffect(Unit) {
+
+        viewModel.fetchTopShows("in", "hotstar", "hotstar", 80)
+    }
 //    viewModel.fetchActionMovies("in", "hotstar", "hotstar", "movie", 70, "action","")
     mainViewModel.fetchFilteredShows(mainViewModel._genreShowState[mainViewModel.hotstarIndex],"in","hotstar","hotstar","movie",75,"action","")
     val actionMoviesState = mainViewModel.genreShowState[mainViewModel.hotstarIndex].value
