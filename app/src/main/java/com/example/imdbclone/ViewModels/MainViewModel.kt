@@ -204,7 +204,7 @@ class MainViewModel : ViewModel() {
 
     init {
         fetchDataFromFirebase()
-//        dynamicDataFetching()
+        dynamicDataFetching()
     }
 
 

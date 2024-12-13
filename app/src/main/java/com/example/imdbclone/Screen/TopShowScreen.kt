@@ -1,6 +1,5 @@
 package com.example.imdbclone.Screen
 
-
 import android.app.Activity
 import android.content.Intent
 import android.net.Uri
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -22,11 +20,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyHorizontalGrid
 import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -45,7 +41,6 @@ import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -59,7 +54,6 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.zIndex
@@ -76,7 +70,6 @@ import com.example.imdbclone.ViewModels.HotstarViewModel
 import com.example.imdbclone.ViewModels.MainViewModel
 import com.example.imdbclone.ui.ImageSlider
 import com.example.imdbclone.ui.theme.DeepGray
-import com.example.imdbclone.ui.theme.IMDBCloneTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.rememberPagerState
 import com.google.firebase.auth.FirebaseAuth
@@ -84,9 +77,6 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 private lateinit var auth: FirebaseAuth
-
-
-
 
 @OptIn(ExperimentalMaterialApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -114,7 +104,6 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
     val romanceShows by viewModel.genreShowState[viewModel.romanceIndex]
     val thrillerShows by viewModel.genreShowState[viewModel.thrillerIndex]
 
-
     var fetched by remember { mutableStateOf(false) }
 
     val imageSliderDataState = viewModel.topGenreShows
@@ -126,8 +115,8 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
     val refreshing by remember { mutableStateOf(viewModel.isLoading) }
     val genreItems = mutableListOf<@Composable () -> Unit>()
     var showGenreItems by remember { mutableStateOf(false) }
-    when{
-        genreState.value.genres.isNotEmpty()->{
+    when {
+        genreState.value.genres.isNotEmpty() -> {
             for (item in viewModel.genres!!) {
                 when {
                     item.equals("action", ignoreCase = true) -> {
@@ -161,7 +150,11 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
                                 )
                             }
 
-                            StateScreen(title = "Science Fiction Shows", sciFiShows, navigateToDetail)
+                            StateScreen(
+                                title = "Science Fiction Shows",
+                                sciFiShows,
+                                navigateToDetail
+                            )
                         }
 
 
@@ -285,7 +278,11 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
                                 )
                             }
 
-                            StateScreen(title = "Documentary Shows", documentaryShows, navigateToDetail)
+                            StateScreen(
+                                title = "Documentary Shows",
+                                documentaryShows,
+                                navigateToDetail
+                            )
 
                         }
                     }
@@ -389,11 +386,6 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
                     loading = true
                 )
 
-
-
-
-
-
             viewModel.refreshData()
 
             viewModel.fetchGenreShows(
@@ -406,10 +398,6 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
                 ""
             )
 
-
-
-
-
             delay(3000L)
 
             isRefreshing = false
@@ -417,14 +405,6 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
         }
 
     }) {
-
-
-
-
-
-
-        //TODO: category wise shows are not displaying.!!!
-
 
         Column(
             modifier = Modifier
@@ -434,14 +414,11 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
             ) {
 
-
-//            item {
             when {
                 !genreState.value.loading -> {
                     Text("${viewModel.selectedGenres}", color = Color.White)
                 }
             }
-
             LaunchedEffect(Unit) {
                 viewModel.fetchGenreShows(
                     viewModel._genreShowState[viewModel.topGenreShowsIndex],
@@ -453,7 +430,6 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
                     ""
                 )
             }
-
             when {
                 imageSliderDataState.value.loading -> {
                     CircularProgressIndicator()
@@ -465,64 +441,19 @@ fun TopShowScreen(viewModel: MainViewModel, navigateToDetail: (ShowDetails) -> U
 
                 else -> {
                     ImageSlider(imageSliderDataState.value.list, navigateToDetail)
-
-//                    Text(imageSliderDataState.value.list.thoString())
-//                        VerticalImageSlider(imageSliderDataState.value.list, navigateToDetail)
+                }
             }
-        }
-
-
-
-
             for (item in genreItems) {
                 item()
             }
-
-
-
-
-
-
-
-
-
-
-
-//            items(genreItems) { item ->
-//
-//                item()
-//
-//            }
-
-//
-//     StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail)
-//     StateScreen(title = "Top Netflix Movies", netflixMovieState,navigateToDetail)
-//            StateScreen(title = "Top Apple Tv Shows", appleState,navigateToDetail)
-//   StateScreen(title = "Top Apple Tv Movies", appleMovieState,navigateToDetail)
-//   StateScreen(title = "Top Shows on Prime", primeState,navigateToDetail)
-//       StateScreen(title = "Top Movies on Prime", primeMovieState,navigateToDetail)
-//        item { StateScreen(title = "Top Shows on Hotstar", hostarState,navigateToDetail)
-
-
-//
-
+            StateScreen(title = "Top Netflix Shows", netflixState, navigateToDetail)
+            StateScreen(title = "Top Netflix Movies", netflixMovieState, navigateToDetail)
+            StateScreen(title = "Top Apple Tv Shows", appleState, navigateToDetail)
+            StateScreen(title = "Top Apple Tv Movies", appleMovieState, navigateToDetail)
+            StateScreen(title = "Top Movies on Prime", primeMovieState, navigateToDetail)
         }
-
-        Column {
-
-
-        }
-
-
-        //TODO: Display shows based on selected genres
-
     }
 }
-
-
-
-
-
 
 
 
@@ -581,7 +512,6 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String, navigateToDetail: (Show
                 .padding(8.dp)
         ) {
 
-            // Use the custom ImageLoader with the ImageRequest
             val painter = rememberAsyncImagePainter(
                 model = ImageRequest.Builder(context)
                     .data(logo)
@@ -611,7 +541,7 @@ fun ShowsScreen(shows: List<ShowDetails>, title: String, navigateToDetail: (Show
         LazyHorizontalGrid(
             modifier = Modifier
                 .wrapContentSize(unbounded = false)
-                .height(200.dp),
+                .height(100.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             rows = GridCells.Fixed(1)
         ) {
@@ -653,14 +583,14 @@ fun ShowItem(item: ShowDetails, navigateToDetail: (ShowDetails) -> Unit) {
     ) {
 
         val painter = rememberAsyncImagePainter(
-            model = item.imageSet.verticalPoster?.w360 // Adjust as needed
+            model = item.imageSet.horizontalPoster?.w360 // Adjust as needed
             ,
             imageLoader = imageLoader
         )
         Image(
             painter = painter,
             modifier = Modifier
-                .size(width = 130.dp, height = 200.dp)
+                .size(width = 180.dp, height = 100.dp)
                 .clip(RoundedCornerShape(8.dp)),
             contentDescription = item.title,
             contentScale = ContentScale.Crop
@@ -872,16 +802,3 @@ fun VerticalImageSlider(data: List<ShowDetails>, navigateToDetail: (ShowDetails)
     }
 
 }
-
-@OptIn(ExperimentalPagerApi::class)
-@Preview(showBackground = true)
-@Composable
-private fun ImagePrev() {
-    IMDBCloneTheme {
-
-    }
-}
-
-
-
-

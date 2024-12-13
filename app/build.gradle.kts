@@ -5,7 +5,6 @@ plugins {
     id ("kotlin-parcelize")
     kotlin("plugin.serialization") version "1.8.22"
     id("com.google.gms.google-services")
-
 }
 
 
